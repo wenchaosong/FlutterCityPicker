@@ -1,0 +1,24 @@
+name: city_picker_example
+description: Demonstrates how to use the city_pickers plugin.
+publish_to: 'none'
+
+environment:
+  sdk: ">=2.10.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^0.1.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  city_picker:
+    path: ../
+  flutter_colorpicker: ^0.2.2
+
+flutter:
+
+  uses-material-design: true
