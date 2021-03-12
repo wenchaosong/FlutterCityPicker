@@ -27,6 +27,9 @@ class BaseView extends StatefulWidget {
   /// 容器高度
   final double height;
 
+  /// 当用户设置该属性. 会优先使用用户设置的widget, 否则使用代码中默认的文本, 使用primary主题色
+  final Widget selectionOverlay;
+
   /// 取消按钮的Widget
   /// 当用户设置该属性. 会优先使用用户设置的widget, 否则使用代码中默认的文本, 使用primary主题色
   final Widget cancelWidget;
@@ -44,6 +47,7 @@ class BaseView extends StatefulWidget {
       this.provincesData,
       this.itemBuilder,
       this.itemExtent,
+      this.selectionOverlay,
       this.cancelWidget,
       this.confirmWidget,
       this.isSort})
@@ -349,7 +353,7 @@ class _BaseView extends State<BaseView> {
           children: <Widget>[
             new Row(
               children: <Widget>[
-                FlatButton(
+                TextButton(
                   onPressed: () {
                     Navigator.pop(context);
                   },
@@ -361,7 +365,7 @@ class _BaseView extends State<BaseView> {
                         ),
                       ),
                 ),
-                FlatButton(
+                TextButton(
                   onPressed: () {
                     Navigator.pop(context, _buildResult());
                   },
@@ -388,6 +392,7 @@ class _BaseView extends State<BaseView> {
                     controller: provinceController,
                     itemBuilder: widget.itemBuilder,
                     itemExtent: widget.itemExtent,
+                    selectionOverlay: widget.selectionOverlay,
                     value: targetProvince.name,
                     itemList: provinces.toList().map((v) => v.name).toList(),
                     changed: (index) {
@@ -401,6 +406,7 @@ class _BaseView extends State<BaseView> {
                     controller: cityController,
                     itemBuilder: widget.itemBuilder,
                     itemExtent: widget.itemExtent,
+                    selectionOverlay: widget.selectionOverlay,
                     height: widget.height,
                     value: targetCity == null ? null : targetCity.name,
                     itemList: getCityItemList(),
@@ -414,6 +420,7 @@ class _BaseView extends State<BaseView> {
                     controller: areaController,
                     itemBuilder: widget.itemBuilder,
                     itemExtent: widget.itemExtent,
+                    selectionOverlay: widget.selectionOverlay,
                     value: targetArea == null ? null : targetArea.name,
                     height: widget.height,
                     itemList: getAreaItemList(),
@@ -428,6 +435,7 @@ class _BaseView extends State<BaseView> {
                     controller: villageController,
                     itemBuilder: widget.itemBuilder,
                     itemExtent: widget.itemExtent,
+                    selectionOverlay: widget.selectionOverlay,
                     value: targetVillage == null ? null : targetVillage.name,
                     height: widget.height,
                     itemList: getVillageItemList(),
@@ -472,6 +480,7 @@ class _MyCityPicker extends StatefulWidget {
   final ValueChanged<int> changed;
   final double height;
   final ItemWidgetBuilder itemBuilder;
+  final Widget selectionOverlay;
 
   // ios选择框的高度. 配合 itemBuilder中的字体使用.
   final double itemExtent;
@@ -485,6 +494,7 @@ class _MyCityPicker extends StatefulWidget {
       this.itemList,
       this.itemExtent,
       this.itemBuilder,
+      this.selectionOverlay,
       this.value});
 
   @override
@@ -519,6 +529,15 @@ class _MyCityPickerState extends State<_MyCityPicker> {
           child: CupertinoPicker.builder(
               magnification: 1.0,
               itemExtent: widget.itemExtent ?? 40.0,
+              selectionOverlay: widget.selectionOverlay ??
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        top: BorderSide(width: 0.0, color: Colors.black26),
+                        bottom: BorderSide(width: 0.0, color: Colors.black26),
+                      ),
+                    ),
+                  ),
               backgroundColor: Theme.of(context).scaffoldBackgroundColor,
               scrollController: widget.controller,
               onSelectedItemChanged: (index) {

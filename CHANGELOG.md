@@ -1,4 +1,8 @@
-# 更新日志
+## 0.0.2
+
+- Solved CupertinoPicker selectionOverlay color
 
 ## 0.0.1
-* 正式版本上线
+
+- Initial release
+

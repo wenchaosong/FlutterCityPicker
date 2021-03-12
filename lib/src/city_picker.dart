@@ -73,6 +73,7 @@ class CityPicker {
       double barrierOpacity = 0.5,
       ItemWidgetBuilder itemBuilder,
       double itemExtent,
+      Widget selectionOverlay,
       Widget cancelWidget,
       Widget confirmWidget,
       bool isSort = false}) {
@@ -88,6 +89,7 @@ class CityPicker {
               showType: showType,
               height: height,
               itemExtent: itemExtent,
+              selectionOverlay: selectionOverlay,
               itemBuilder: itemBuilder,
               cancelWidget: cancelWidget,
               confirmWidget: confirmWidget,
