@@ -14,20 +14,20 @@ dependencies:
 ```
 ...
 // type 1
-Result result = await CityPickers.showCityPicker(
+Result result = await CityPicker.showCityPicker(
   context: context,
 );
 // type 2
-Result result2 = await CityPickers.showFullPageCityPicker(
+Result result2 = await CityPicker.showFullPageCityPicker(
   context: context,
 );
 // type 3
-Result result2 = await CityPickers.showCitiesSelector(
+Result result2 = await CityPicker.showCitiesSelector(
   context: context,
 );
 ```
 
-## CityPickers 静态方法
+## CityPicker 静态方法
 
 |Name|Type|Desc|
 |:---------------|:--------|:----------|
@@ -91,7 +91,7 @@ utils 是用来封装常用的一些方法, 方便使用者能更好的使用该
 
 ```
 // 声明实例
-CityPickerUtil cityPickerUtils = CityPickers.utils();
+CityPickerUtil cityPickerUtils = CityPicker.utils();
 ```
 
 #### Result getAreaResultByCode(String code)
