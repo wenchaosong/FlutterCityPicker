@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:city_picker/city_picker.dart';
+import 'package:flutter_city_picker/city_picker.dart';
 
 class LocationSelector extends StatelessWidget {
   /// 触发对象

@@ -1,4 +1,4 @@
-library city_picker;
+library citypicker;
 
 export 'modal/point.dart';
 export 'src/cities_selector/cities_style.dart';

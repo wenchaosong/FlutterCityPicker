@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:city_picker/city_picker.dart';
+import 'package:flutter_city_picker/city_picker.dart';
 
 import '../src/attr_item_container.dart';
 

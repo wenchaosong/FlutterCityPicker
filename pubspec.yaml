@@ -1,4 +1,4 @@
-name: city_picker
+name: flutter_city_picker
 description:  Flutter plugin for city picker,  Popups widgets, call by function,  support china.
 version: 0.0.1
 homepage: https://github.com/wenchaosong/CityPicker

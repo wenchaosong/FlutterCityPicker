@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:city_picker/city_picker.dart';
+import 'package:flutter_city_picker/city_picker.dart';
 import '../src/attr_item_container.dart';
 import '../src/location_selector.dart';
 import '../src/picker.dart';

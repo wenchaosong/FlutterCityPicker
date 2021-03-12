@@ -15,7 +15,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  city_picker:
+  flutter_city_picker:
     path: ../
   flutter_colorpicker: ^0.2.2
 

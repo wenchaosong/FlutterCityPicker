@@ -1,28 +1,15 @@
-# city_picker
+### 地址选择器
 
-中国的城市三级联动选择器
+在原项目[city_pickers](https://github.com/hanxu317317/city_pickers) 基础上修改了升级 2.0 出现的问题
 
-# Demo
-<image src="https://img.alicdn.com/tfs/TB16H9XGCzqK1RjSZPcXXbTepXa-329-687.gif" style="width: 300px" />
-<image src="https://img.alicdn.com/tfs/TB1CXEhLlLoK1RjSZFuXXXn0XXa-347-705.gif" style="width: 300px" />
-
-# 开始
-
-在flutter的项目文件中增加依赖
+#### 导入方式
 
 ```
 dependencies:
-  ...
-    city_picker:^0.0.1
+    flutter_city_picker: ^0.0.1
 ```
 
-# 使用方法
-
-```
-import 'package:city_picker/city_picker.dart';
-```
-
-简单使用方法
+#### 使用方法
 
 ```
 ...
@@ -39,7 +26,6 @@ Result result2 = await CityPickers.showCitiesSelector(
   context: context,
 );
 ```
-
 
 ## CityPickers 静态方法
 

@@ -1,4 +1,4 @@
-import 'package:city_picker/city_picker.dart';
+import 'package:flutter_city_picker/city_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
