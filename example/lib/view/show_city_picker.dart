@@ -270,7 +270,8 @@ class _ShowCityPickerState extends State<ShowCityPicker> {
       appBar: AppBar(
         title: Text("ios风格城市选择器"),
       ),
-      body: SingleChildScrollView(// 防止边界超出
+      body: SingleChildScrollView(
+        // 防止边界超出
         child: Column(
           children: <Widget>[
             AttrItemContainer(title: '级联方式', editor: _buildShowTypes()),
@@ -294,15 +295,17 @@ class _ShowCityPickerState extends State<ShowCityPicker> {
                     theme: themeAttr != null ? themeAttr.value : null,
                     locationCode: resultAttr != null
                         ? resultAttr.areaId ??
-                        resultAttr.cityId ??
-                        resultAttr.provinceId
+                            resultAttr.cityId ??
+                            resultAttr.provinceId
                         : null,
                     showType: showTypeAttr.value,
+                    height: 300,
                     isSort: isSort,
                     barrierOpacity: barrierOpacityAttr,
                     barrierDismissible: barrierDismissibleAttr,
                     citiesData: customerMeta == true ? citiesDataNm : null,
-                    provincesData: customerMeta == true ? provincesDataNm : null,
+                    provincesData:
+                        customerMeta == true ? provincesDataNm : null,
                     itemExtent: customerItemExtent,
                     cancelWidget: customerButtons ? Text('cancle') : null,
                     confirmWidget: customerButtons ? Text('confirm') : null,
