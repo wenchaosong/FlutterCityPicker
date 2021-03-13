@@ -93,5 +93,6 @@ class HotCity {
   final String name;
   final int id;
   final String tag;
+
   HotCity({@required this.name, @required this.id, this.tag = "★"});
 }
