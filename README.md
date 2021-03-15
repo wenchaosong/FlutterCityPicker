@@ -1,7 +1,7 @@
 ### 地址选择器
 
-[![Pub Package](https://img.shields.io/pub/v/flutter_city_picker.svg?color=blue)](https://pub.dartlang.org/packages/flutter_city_picker)
-[![](https://img.shields.io/github/last-commit/wenchaosong/FlutterCityPicker?color=yellow)](https://github.com/wenchaosong/flutter_city_picker)
+![](https://img.shields.io/pub/v/flutter_city_picker.svg?color=blue)
+![](https://img.shields.io/github/last-commit/wenchaosong/FlutterCityPicker?color=yellow)
 
 在原项目[city_pickers](https://github.com/hanxu317317/city_pickers) 基础上修改了升级 2.0 出现的问题
 
