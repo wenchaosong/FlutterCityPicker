@@ -55,5 +55,4 @@ ios/.symlinks
 ios/Runner.xcworkspace/xcuserdata
 ios/Runner.xcodeproj/project.xcworkspace/xcuserdata
 ios/Runner.xcodeproj/project.xcworkspace/xcshareddata
-Podfile
 Podfile.lock

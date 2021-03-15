@@ -100,4 +100,9 @@ CityPickerUtil cityPickerUtils = CityPicker.utils();
 ```
 
 #### Result getAreaResultByCode(String code)
+使用者通过地区ID, 获取所在区域的省市县等相关信息. 当未查询到具体信息. 返回空的Result对象.
 
+```
+print('result>>> ${cityPickerUtils.getAreaResultByCode('100100)}');
+// 输出为: result>>>> {"provinceName":"北京市","provinceId":"110000","cityName":"东城区","cityId":"110101"}
+```
