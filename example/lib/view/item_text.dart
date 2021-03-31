@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
 
-class AttrItemContainer extends StatefulWidget {
+class ItemTextWidget extends StatefulWidget {
   final String title;
-  final Widget editor;
+  final Widget subWidget;
 
-  AttrItemContainer({this.title, this.editor});
+  ItemTextWidget({this.title, this.subWidget});
 
   @override
-  _AttrItemContainerState createState() => _AttrItemContainerState();
+  ItemTextWidgetState createState() => ItemTextWidgetState();
 }
 
-class _AttrItemContainerState extends State<AttrItemContainer> {
+class ItemTextWidgetState extends State<ItemTextWidget> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(24, 0, 24, 0),
+      padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
       child: Container(
-        padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
         decoration: BoxDecoration(
             border: Border(
                 bottom: BorderSide(
@@ -26,7 +25,8 @@ class _AttrItemContainerState extends State<AttrItemContainer> {
             Text("${widget.title}"),
             Expanded(
                 child: Padding(
-                    padding: EdgeInsets.only(left: 30), child: widget.editor))
+                    padding: EdgeInsets.only(left: 25),
+                    child: widget.subWidget))
           ],
         ),
       ),

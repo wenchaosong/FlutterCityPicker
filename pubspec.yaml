@@ -11,4 +11,4 @@ dependencies:
     sdk: flutter
 
   # https://pub.dev/packages/lpinyin
-  lpinyin: ^1.1.1
+  #lpinyin: ^1.1.1
