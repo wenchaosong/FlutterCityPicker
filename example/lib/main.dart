@@ -45,7 +45,7 @@ class HomeWidgetState extends State<HomeWidget> implements CityPickerListener {
   Color _backgroundColor = Colors.blue;
   double _height = 400.0;
   double _opacity = 0.5;
-  double _corner = 10;
+  double _corner = 20;
   bool _dismissible = true;
   bool _showTabIndicator = true;
 
@@ -57,6 +57,9 @@ class HomeWidgetState extends State<HomeWidget> implements CityPickerListener {
   void show() {
     CityPicker.show(
       context: context,
+      theme: ThemeData(
+        dialogBackgroundColor: Colors.white,
+      ),
       duration: 200,
       opacity: _opacity,
       dismissible: _dismissible,
@@ -77,6 +80,7 @@ class HomeWidgetState extends State<HomeWidget> implements CityPickerListener {
         ),
       ),
       closeWidget: Icon(Icons.close),
+      tabHeight: 40,
       showTabIndicator: _showTabIndicator,
       tabIndicatorColor: Theme.of(context).primaryColor,
       tabIndicatorHeight: 2,
@@ -260,7 +264,7 @@ class HomeWidgetState extends State<HomeWidget> implements CityPickerListener {
 
   @override
   Future<List<City>> loadProvinceData() async {
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(Duration(milliseconds: 200));
 
     List<City> provinces = [
       City(name: "北京", code: "1"),
@@ -302,20 +306,20 @@ class HomeWidgetState extends State<HomeWidget> implements CityPickerListener {
   @override
   Future<List<City>> onProvinceSelected(
       String provinceCode, String provinceName) async {
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(Duration(milliseconds: 200));
 
     List<City> provinces = [
-      City(name: "南昌市", code: "1"),
-      City(name: "景德镇市", code: "2"),
-      City(name: "萍乡市", code: "3"),
-      City(name: "九江市", code: "4"),
-      City(name: "新余市", code: "5"),
-      City(name: "鹰潭市", code: "6"),
-      City(name: "赣州市", code: "7"),
-      City(name: "吉安市", code: "8"),
-      City(name: "宜春市", code: "9"),
-      City(name: "抚州市", code: "10"),
-      City(name: "上饶市", code: "11"),
+      City(name: "石家庄市", code: "1"),
+      City(name: "唐山市", code: "2"),
+      City(name: "秦皇岛市", code: "3"),
+      City(name: "邯郸市", code: "4"),
+      City(name: "邢台市", code: "5"),
+      City(name: "保定市", code: "6"),
+      City(name: "张家口市", code: "7"),
+      City(name: "承德市", code: "8"),
+      City(name: "沧州市", code: "9"),
+      City(name: "廊坊市", code: "10"),
+      City(name: "衡水市", code: "11"),
     ];
 
     return Future.value(provinces);
@@ -323,22 +327,16 @@ class HomeWidgetState extends State<HomeWidget> implements CityPickerListener {
 
   @override
   Future<List<City>> onCitySelected(String cityCode, String cityName) async {
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(Duration(milliseconds: 200));
 
     List<City> provinces = [
-      City(name: "濂溪区", code: "1"),
-      City(name: "浔阳区", code: "2"),
-      City(name: "柴桑区", code: "3"),
-      City(name: "武宁县", code: "4"),
-      City(name: "修水县", code: "5"),
-      City(name: "永修县", code: "6"),
-      City(name: "德安县", code: "7"),
-      City(name: "都昌县", code: "8"),
-      City(name: "湖口县", code: "9"),
-      City(name: "彭泽县", code: "10"),
-      City(name: "瑞昌市", code: "11"),
-      City(name: "共青城市", code: "12"),
-      City(name: "庐山市", code: "13"),
+      City(name: "海港区", code: "1"),
+      City(name: "山海关区", code: "2"),
+      City(name: "北戴河区", code: "3"),
+      City(name: "抚宁区", code: "4"),
+      City(name: "青龙县", code: "5"),
+      City(name: "昌黎县", code: "6"),
+      City(name: "卢龙县", code: "7"),
     ];
 
     return Future.value(provinces);

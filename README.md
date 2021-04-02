@@ -3,106 +3,131 @@
 [![](https://img.shields.io/pub/v/flutter_city_picker.svg?color=blue)](https://pub.dev/packages/flutter_city_picker)
 [![](https://img.shields.io/github/last-commit/wenchaosong/FlutterCityPicker?color=yellow)](https://github.com/wenchaosong/FlutterCityPicker)
 
-在原项目[city_pickers](https://github.com/hanxu317317/city_pickers) 基础上修改了升级 2.0 出现的问题
+由于地址选择的数据来源会更新，为了统一，在后台配置一份城市数据，前端获取，这是最好的处理方式，否则各个平台都配置
+一份数据，维护会很麻烦，而且有可能每个平台城市的数据结构都不一样。本库就是由此而来，数据从后台实时获取，只要解析
+成固定的数据结构就可以
 
-<image src="https://img.alicdn.com/tfs/TB16H9XGCzqK1RjSZPcXXbTepXa-329-687.gif" style="width: 300px" />
-<image src="https://img.alicdn.com/tfs/TB1CXEhLlLoK1RjSZFuXXXn0XXa-347-705.gif" style="width: 300px" />
+
+![效果示例](/pic/city_picker.gif)
+
 
 #### 导入方式
 
 ```
 dependencies:
-    flutter_city_picker: ^0.0.3
+    flutter_city_picker: ^0.0.4
 ```
 
 #### 使用方法
 
+// 简单使用
 ```
-...
-// type 1
-Result result = await CityPicker.showCityPicker(
-  context: context,
-);
-// type 2
-Result result2 = await CityPicker.showFullPageCityPicker(
-  context: context,
-);
-// type 3
-Result result2 = await CityPicker.showCitiesSelector(
-  context: context,
-);
-```
+    1.首先实现监听事件
+    <你的组件> implements CityPickerListener
+    2.直接调用
+    CityPicker.show(context: context, cityPickerListener: this);
 
-## CityPicker 静态方法
+    // 监听回调
+    @override
+      Future<List<City>> loadProvinceData() async {
+        // 发起网络请求，获取省级数据
+        return 返回省级数据;
+      }
 
-|Name|Type|Desc|
-|:---------------|:--------|:----------|
-|showCityPicker|Function|呼出弹出层,显示多级选择器 |
-|showFullPageCityPicker|Function|呼出一层界面, 显示多级选择器|
-|showCitiesSelector |Function|呼出一层, 显示支持字母定位城市选择器|
-|utils|Function|获取utils接口的钩子|
+      @override
+      Future<List<City>> onProvinceSelected(String provinceCode, String provinceName) async {
+        // 点击省份后的回调，根据城市代码或名称去请求市级数据
+        return 返回市级数据;
+      }
 
+      @override
+      Future<List<City>> onCitySelected(String cityCode, String cityName) async {
+        // 点击城市后的回调，根据城市代码或名称去请求区级数据
+        return 返回区级数据;
+      }
 
-### showCityPicker 参数说明
-
-|Name|Type|Default|Desc|
-|:---------------|:--------|:----|:----------|
-|context|BuildContext|上下文对象|
-|theme|ThemeData|Theme.of(context)| 主题, 可以自定义|
-|locationCode|String|110000| 初始化地址信息, 可以是省, 市, 区的地区码|
-|height|double|300| 弹出层的高度, 过高或者过低会导致容器报错|
-|showType|ShowType|ShowType.pca| 三级联动, 显示类型|
-|barrierOpacity|double|0.5|弹出层的背景透明度, 应该是大于0, 小于1|
-|barrierDismissible|bool|true| 是否可以通过点击弹出层背景, 关闭弹出层|
-|cancelWidget|Widget|用户自定义取消按钮|
-|confirmWidget| Widget | 用户自定义确认按钮 |
-|itemExtent|double|目标框高度|
-|selectionOverlay|Widget|选中的悬浮层控件|
-|itemBuilder|Widget|item生成器, function(String value, List<String> lists, item){}, 当itemBuilder不为空的时候. 必须设置itemExtent|
-|citiesData|Map|城市数据|选择器的城市与区的数据源|
-|provincesData|Map|省份数据|选择器的省份数据源|
-
-
-### showFullPageCityPicker 参数说明
-
-|Name|Type|Default|Desc|
-|:---------------|:--------|:----|:----------|
-|context|BuildContext|null|上下文对象|
-|theme|ThemeData|Theme.of(context)| 主题, 可以自定义|
-|locationCode|String|110000| 初始化地址信息, 可以是省, 市, 区的地区码|
-|showType|ShowType|ShowType.pca| 三级联动, 显示类型|
-|citiesData|Map|城市数据|选择器的城市与区的数据源|
-|provincesData|Map|省份数据|选择器的省份数据源|
-
-
-### showCitiesSelector 参数说明
-
-|Name|Type|Default|Desc|
-|:---------------|:--------|:----|:----------|
-|context|BuildContext|null|上下文对象|
-|theme|ThemeData|Theme.of(context)| 主题, 可以自定义|
-|locationCode|String|110000| 初始化地址信息, 可以是省, 市, 区的地区码|
-|title|String|城市选择器|弹出层界面标题|
-|citiesData|Map|城市数据|选择器的城市与区的数据源|
-|provincesData|Map|省份数据|选择器的省份数据源|
-|hotCities|List\<HotCity\>|null|热门城市|
-|sideBarStyle|BaseStyle|初始默认样式| 右侧字母索引集样式|
-|cityItemStyle|BaseStyle|初始默认样式| 城市选项样式|
-|topStickStyle|BaseStyle|初始默认样式| 顶部索引吸顶样式|
-
-
-### utils 说明
-utils 是用来封装常用的一些方法, 方便使用者能更好的使用该插件. 使用者通过以下方式声明实例, 可以**获取所有的工具类方法**
-
-```
-// 声明实例
-CityPickerUtil cityPickerUtils = CityPicker.utils();
+      @override
+      void onFinish(String provinceCode, String provinceName, String cityCode,
+          String cityName, String districtCode, String districtName) {
+        // 最终回调，返回省市区的代码和名称
+        setState(() {
+          _address = provinceName + " " + cityName + " " + districtName;
+        });
+      }
 ```
 
-#### Result getAreaResultByCode(String code)
-使用者通过地区ID, 获取所在区域的省市县等相关信息. 当未查询到具体信息. 返回空的Result对象.
+// 多配置的使用
+```
+    CityPicker.show(
+          context: context,
+          // 主题颜色
+          theme: ThemeData(
+            // 弹窗的背景颜色
+            dialogBackgroundColor: Colors.white,
+          ),
+          // 底部弹出框动画时间
+          duration: 200,
+          // 背景透明度
+          opacity: 0.5,
+          // 点击外部是否消失
+          dismissible: true,
+          // 高度
+          height: 400,
+          // 标题高度
+          titleHeight: 50,
+          // 顶部圆角
+          corner: 20,
+          // 距离左边的间距
+          paddingLeft: 15,
+          // 列表高度
+          itemExtent: 40,
+          // 标题组件
+          titleWidget: Container(
+            padding: EdgeInsets.only(left: 15),
+            child: Text(
+              '请选择地址',
+              style: TextStyle(
+                color: Colors.black54,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          // 关闭图标组件
+          closeWidget: Icon(Icons.close),
+          // tab 高度
+          tabHeight: 40,
+          // 是否显示指示器
+          showTabIndicator: _showTabIndicator,
+          // 指示器颜色
+          tabIndicatorColor: Theme.of(context).primaryColor,
+          // 指示器高度
+          tabIndicatorHeight: 2,
+          // tab 字体大小
+          labelTextSize: 15,
+          // tab 选中的字体颜色
+          selectedLabelColor: Theme.of(context).primaryColor,
+          // tab 未选中的字体颜色
+          unselectedLabelColor: Colors.black54,
+          // 列表选中的图标组件
+          itemSelectedIconWidget:
+              Icon(Icons.done, color: Theme.of(context).primaryColor, size: 16),
+          // 列表选中的文字样式
+          itemSelectedTextStyle: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).primaryColor),
+          // 列表未选中的文字样式
+          itemUnSelectedTextStyle: TextStyle(fontSize: 14, color: Colors.black54),
+          cityPickerListener: this,
+        );
+```
 
-```
-print('result>>> ${cityPickerUtils.getAreaResultByCode('100100)}');
-// 输出为: result>>>> {"provinceName":"北京市","provinceId":"110000","cityName":"东城区","cityId":"110101"}
-```
+#### 下个版本
+
+1.列表城市排序
+2.添加热门城市
+3.添加悬浮字母索引
+
+
+##### 欢迎提 PR 或者 ISSUE

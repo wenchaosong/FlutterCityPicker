@@ -9,27 +9,49 @@ class CityPicker {
   /// 展示
   static void show({
     @required BuildContext context,
+    // 主题颜色
     ThemeData theme,
+    // 底部弹出框动画时间
     int duration = 200,
+    // 背景透明度
     double opacity = 0.5,
+    // 点击外部是否消失
     bool dismissible = true,
+    // 高度
     double height = 400.0,
+    // 标题高度
     double titleHeight,
+    // 顶部圆角
     double corner,
+    // 距离左边的间距
     double paddingLeft,
+    // 列表高度
     double itemExtent,
+    // 标题组件
     Widget titleWidget,
+    // 关闭图标组件
     Widget closeWidget,
+    // tab 高度
     double tabHeight,
+    // 是否显示指示器
     bool showTabIndicator = true,
+    // 指示器颜色
     Color tabIndicatorColor,
+    // 指示器高度
     double tabIndicatorHeight,
+    // tab 字体大小
     double labelTextSize,
+    // tab 选中的字体颜色
     Color selectedLabelColor,
+    // tab 未选中的字体颜色
     Color unselectedLabelColor,
+    // 列表选中的图标组件
     Widget itemSelectedIconWidget,
+    // 列表选中的文字样式
     TextStyle itemSelectedTextStyle,
+    // 列表未选中的文字样式
     TextStyle itemUnSelectedTextStyle,
+    // 地址选择器监听事件
     @required CityPickerListener cityPickerListener,
   }) {
     Navigator.of(context, rootNavigator: true).push(
@@ -46,6 +68,7 @@ class CityPicker {
             itemExtent: itemExtent,
             titleWidget: titleWidget,
             closeWidget: closeWidget,
+            tabHeight: tabHeight,
             showTabIndicator: showTabIndicator,
             tabIndicatorColor: tabIndicatorColor,
             tabIndicatorHeight: tabIndicatorHeight,
