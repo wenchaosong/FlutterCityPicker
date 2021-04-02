@@ -1,16 +1,18 @@
 ## 0.0.4
 
-- New version
+- 发布全新版本
+- 修改数据来源为网络获取
+- 底部城市列表可以左右滑动
 
 ## 0.0.3
 
-- Update files
+- 解决部分 bug
 
 ## 0.0.2
 
-- Solved CupertinoPicker selectionOverlay color
+- 解决升级到 2.0 阴影的问题
 
 ## 0.0.1
 
-- Initial release
+- 发布第一个版本，根据 city_pikers 项目修改而来
 

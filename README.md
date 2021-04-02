@@ -3,13 +3,10 @@
 [![](https://img.shields.io/pub/v/flutter_city_picker.svg?color=blue)](https://pub.dev/packages/flutter_city_picker)
 [![](https://img.shields.io/github/last-commit/wenchaosong/FlutterCityPicker?color=yellow)](https://github.com/wenchaosong/FlutterCityPicker)
 
-由于地址选择的数据来源会更新，为了统一，在后台配置一份城市数据，前端获取，这是最好的处理方式，否则各个平台都配置
-一份数据，维护会很麻烦，而且有可能每个平台城市的数据结构都不一样。本库就是由此而来，数据从后台实时获取，只要解析
-成固定的数据结构就可以
-
+由于地址选择的数据来源会更新，为了统一，在后台配置一份城市数据，前端获取，这是最好的处理方式，否则各个平台都配置一份数据，
+维护会很麻烦，而且有可能每个平台城市的数据结构都不一样。本库就是由此而来，数据从后台实时获取，只要解析成固定的数据结构就可以
 
 ![效果示例](/pic/city_picker.gif)
-
 
 #### 导入方式
 
@@ -20,43 +17,12 @@ dependencies:
 
 #### 使用方法
 
-// 简单使用
+1. 简单使用
 ```
-    1.首先实现监听事件
-    <你的组件> implements CityPickerListener
-    2.直接调用
     CityPicker.show(context: context, cityPickerListener: this);
-
-    // 监听回调
-    @override
-      Future<List<City>> loadProvinceData() async {
-        // 发起网络请求，获取省级数据
-        return 返回省级数据;
-      }
-
-      @override
-      Future<List<City>> onProvinceSelected(String provinceCode, String provinceName) async {
-        // 点击省份后的回调，根据城市代码或名称去请求市级数据
-        return 返回市级数据;
-      }
-
-      @override
-      Future<List<City>> onCitySelected(String cityCode, String cityName) async {
-        // 点击城市后的回调，根据城市代码或名称去请求区级数据
-        return 返回区级数据;
-      }
-
-      @override
-      void onFinish(String provinceCode, String provinceName, String cityCode,
-          String cityName, String districtCode, String districtName) {
-        // 最终回调，返回省市区的代码和名称
-        setState(() {
-          _address = provinceName + " " + cityName + " " + districtName;
-        });
-      }
 ```
 
-// 多配置的使用
+2. 多配置的使用
 ```
     CityPicker.show(
           context: context,
@@ -123,11 +89,36 @@ dependencies:
         );
 ```
 
-#### 下个版本
+3. 监听事件
+```
+    <你的组件> implements CityPickerListener
 
-1.列表城市排序
-2.添加热门城市
-3.添加悬浮字母索引
+    @override
+      Future<List<City>> loadProvinceData() async {
+        // 发起网络请求，获取省级数据
+        return 返回省级数据;
+      }
 
+      @override
+      Future<List<City>> onProvinceSelected(String provinceCode, String provinceName) async {
+        // 点击省份后的回调，根据城市代码或名称去请求市级数据
+        return 返回市级数据;
+      }
 
-##### 欢迎提 PR 或者 ISSUE
+      @override
+      Future<List<City>> onCitySelected(String cityCode, String cityName) async {
+        // 点击城市后的回调，根据城市代码或名称去请求区级数据
+        return 返回区级数据;
+      }
+
+      @override
+      void onFinish(String provinceCode, String provinceName, String cityCode,
+          String cityName, String districtCode, String districtName) {
+        // 最终回调，返回省市区的代码和名称
+        setState(() {
+          _address = provinceName + " " + cityName + " " + districtName;
+        });
+      }
+```
+
+#### 欢迎提 PR 或者 ISSUE
