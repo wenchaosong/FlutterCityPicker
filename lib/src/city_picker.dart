@@ -25,8 +25,6 @@ class CityPicker {
     double corner,
     // 距离左边的间距
     double paddingLeft,
-    // 列表高度
-    double itemExtent,
     // 标题组件
     Widget titleWidget,
     // 关闭图标组件
@@ -45,6 +43,18 @@ class CityPicker {
     Color selectedLabelColor,
     // tab 未选中的字体颜色
     Color unselectedLabelColor,
+    // item 头部高度
+    double itemHeadHeight,
+    // item 头部背景颜色
+    Color itemHeadBackgroundColor,
+    // item 头部分割线颜色
+    Color itemHeadLineColor,
+    // item 头部分割线高度
+    double itemHeadLineHeight,
+    // item 头部文字样式
+    TextStyle itemHeadTextStyle,
+    // item 高度
+    double itemHeight,
     // 列表选中的图标组件
     Widget itemSelectedIconWidget,
     // 列表选中的文字样式
@@ -65,7 +75,6 @@ class CityPicker {
             titleHeight: titleHeight,
             corner: corner,
             paddingLeft: paddingLeft,
-            itemExtent: itemExtent,
             titleWidget: titleWidget,
             closeWidget: closeWidget,
             tabHeight: tabHeight,
@@ -75,6 +84,12 @@ class CityPicker {
             labelTextSize: labelTextSize,
             selectedLabelColor: selectedLabelColor,
             unselectedLabelColor: unselectedLabelColor,
+            itemHeadHeight: itemHeadHeight,
+            itemHeadBackgroundColor: itemHeadBackgroundColor,
+            itemHeadLineColor: itemHeadLineColor,
+            itemHeadLineHeight: itemHeadLineHeight,
+            itemHeadTextStyle: itemHeadTextStyle,
+            itemHeight: itemHeight,
             itemSelectedIconWidget: itemSelectedIconWidget,
             itemSelectedTextStyle: itemSelectedTextStyle,
             itemUnSelectedTextStyle: itemUnSelectedTextStyle,

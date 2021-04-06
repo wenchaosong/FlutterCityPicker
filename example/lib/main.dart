@@ -67,7 +67,6 @@ class HomeWidgetState extends State<HomeWidget> implements CityPickerListener {
       titleHeight: 50,
       corner: _corner,
       paddingLeft: 15,
-      itemExtent: 40,
       titleWidget: Container(
         padding: EdgeInsets.only(left: 15),
         child: Text(
@@ -87,6 +86,11 @@ class HomeWidgetState extends State<HomeWidget> implements CityPickerListener {
       labelTextSize: 15,
       selectedLabelColor: Theme.of(context).primaryColor,
       unselectedLabelColor: Colors.black54,
+      itemHeadHeight: 30,
+      itemHeadLineColor: Colors.black,
+      itemHeadLineHeight: 0.1,
+      itemHeadTextStyle: TextStyle(fontSize: 15, color: Colors.black),
+      itemHeight: 40,
       itemSelectedIconWidget:
           Icon(Icons.done, color: Theme.of(context).primaryColor, size: 16),
       itemSelectedTextStyle: TextStyle(

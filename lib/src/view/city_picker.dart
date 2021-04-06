@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
+
 import '../../src/listener/item_listener.dart';
+import '../../src/listener/picker_listener.dart';
 import '../../src/model/tab.dart';
 import '../../src/view/item_widget.dart';
-import '../../src/listener/picker_listener.dart';
-import '../../src/model/city.dart';
-
 import 'inherited_widget.dart';
 import 'layout_delegate.dart';
 
@@ -24,9 +23,6 @@ class CityPickerWidget extends StatefulWidget {
 
   /// 左边间距
   final double paddingLeft;
-
-  /// item 高度
-  final double itemExtent;
 
   /// 标题样式
   final Widget titleWidget;
@@ -55,6 +51,24 @@ class CityPickerWidget extends StatefulWidget {
   /// 未选中 label 颜色
   final Color unselectedLabelColor;
 
+  /// item 头部高度
+  final double itemHeadHeight;
+
+  /// item 头部背景颜色
+  final Color itemHeadBackgroundColor;
+
+  /// item 头部分割线颜色
+  final Color itemHeadLineColor;
+
+  /// item 头部分割线高度
+  final double itemHeadLineHeight;
+
+  /// item 头部文字样式
+  final TextStyle itemHeadTextStyle;
+
+  /// item 高度
+  final double itemHeight;
+
   /// 选中城市的图标组件
   final Widget itemSelectedIconWidget;
 
@@ -72,7 +86,6 @@ class CityPickerWidget extends StatefulWidget {
     this.titleHeight,
     this.corner,
     this.paddingLeft,
-    this.itemExtent,
     this.titleWidget,
     this.closeWidget,
     this.tabHeight,
@@ -82,6 +95,12 @@ class CityPickerWidget extends StatefulWidget {
     this.labelTextSize,
     this.selectedLabelColor,
     this.unselectedLabelColor,
+    this.itemHeadHeight,
+    this.itemHeadBackgroundColor,
+    this.itemHeadLineColor,
+    this.itemHeadLineHeight,
+    this.itemHeadTextStyle,
+    this.itemHeight,
     this.itemSelectedIconWidget,
     this.itemSelectedTextStyle,
     this.itemUnSelectedTextStyle,
@@ -99,18 +118,21 @@ class CityPickerState extends State<CityPickerWidget>
 
   TabController _tabController;
 
-  // 三级联动选择的position
-  var _positions = [-1, -1, -1];
-
   List<TabTitle> _myTabs = [
     TabTitle(index: 0, title: "请选择", name: "", code: ""),
   ];
 
-  // 省列表
-  List<City> _provinceList = [];
+  // 省级名称
+  String _provinceName = "";
 
-  // 市列表
-  List<City> _cityList = [];
+  // 省级代码
+  String _provinceCode = "";
+
+  // 市级名称
+  String _cityName = "";
+
+  // 市级代码
+  String _cityCode = "";
 
   @override
   void initState() {
@@ -128,21 +150,20 @@ class CityPickerState extends State<CityPickerWidget>
   }
 
   @override
-  void onItemClick(int tabIndex, int position, List<City> data) {
+  void onItemClick(int tabIndex, String name, String code) {
     switch (tabIndex) {
       case 0:
         if (mounted) {
           setState(() {
-            _provinceList = data;
-            _positions = [position, -1, -1];
+            _provinceName = name;
+            _provinceCode = code;
             _myTabs = [
-              TabTitle(
-                  index: 0, title: data[position].name, name: "", code: ""),
+              TabTitle(index: 0, title: _provinceName, name: "", code: ""),
               TabTitle(
                   index: 1,
                   title: "请选择",
-                  name: data[position].name,
-                  code: data[position].code),
+                  name: _provinceName,
+                  code: _provinceCode),
             ];
             _tabController = TabController(vsync: this, length: _myTabs.length);
           });
@@ -153,22 +174,14 @@ class CityPickerState extends State<CityPickerWidget>
       case 1:
         if (mounted) {
           setState(() {
-            _cityList = data;
-            _positions = [_positions[0], position, -1];
+            _cityName = name;
+            _cityCode = code;
 
             _myTabs = [
+              TabTitle(index: 0, title: _provinceName, name: "", code: ""),
+              TabTitle(index: 1, title: _cityName, name: "", code: ""),
               TabTitle(
-                  index: 0,
-                  title: _provinceList[_positions[0]].name,
-                  name: "",
-                  code: ""),
-              TabTitle(
-                  index: 1, title: data[position].name, name: "", code: ""),
-              TabTitle(
-                  index: 2,
-                  title: "请选择",
-                  name: data[position].name,
-                  code: data[position].code),
+                  index: 2, title: "请选择", name: _cityName, code: _cityCode),
             ];
             _tabController = TabController(vsync: this, length: _myTabs.length);
           });
@@ -177,16 +190,14 @@ class CityPickerState extends State<CityPickerWidget>
         _tabController.index = 2;
         break;
       case 2:
-        _positions = [_positions[0], _positions[1], position];
-
         if (_cityPickerListener != null) {
           _cityPickerListener.onFinish(
-            _provinceList[_positions[0]].code,
-            _provinceList[_positions[0]].name,
-            _cityList[_positions[1]].code,
-            _cityList[_positions[1]].name,
-            data[position].code,
-            data[position].name,
+            _provinceCode,
+            _provinceName,
+            _cityCode,
+            _cityName,
+            code,
+            name,
           );
         }
         Navigator.pop(context);
@@ -296,8 +307,13 @@ class CityPickerState extends State<CityPickerWidget>
           index: tab.index,
           code: tab.code,
           name: tab.name,
-          itemExtent: widget.itemExtent,
           paddingLeft: widget.paddingLeft,
+          itemHeadHeight: widget.itemHeadHeight,
+          itemHeadBackgroundColor: widget.itemHeadBackgroundColor,
+          itemHeadLineColor: widget.itemHeadLineColor,
+          itemHeadLineHeight: widget.itemHeadLineHeight,
+          itemHeadTextStyle: widget.itemHeadTextStyle,
+          itemHeight: widget.itemHeight,
           itemSelectedIconWidget: widget.itemSelectedIconWidget,
           itemSelectedTextStyle: widget.itemSelectedTextStyle,
           itemUnSelectedTextStyle: widget.itemUnSelectedTextStyle,

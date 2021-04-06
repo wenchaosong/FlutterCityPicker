@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:lpinyin/lpinyin.dart';
+import '../../src/model/section_city.dart';
 import '../../src/listener/item_listener.dart';
 import '../../city_picker.dart';
+import 'listview_section.dart';
 
 /// 城市列表组件
 class ItemWidget extends StatefulWidget {
@@ -13,11 +16,26 @@ class ItemWidget extends StatefulWidget {
   /// 上一级城市名称
   final String name;
 
-  /// item 高度
-  final double itemExtent;
-
   /// 左边间距
   final double paddingLeft;
+
+  /// item 头部高度
+  final double itemHeadHeight;
+
+  /// item 头部背景颜色
+  final Color itemHeadBackgroundColor;
+
+  /// item 头部分割线颜色
+  final Color itemHeadLineColor;
+
+  /// item 头部分割线高度
+  final double itemHeadLineHeight;
+
+  /// item 头部文字样式
+  final TextStyle itemHeadTextStyle;
+
+  /// item 高度
+  final double itemHeight;
 
   /// 选中城市的图标组件
   final Widget itemSelectedIconWidget;
@@ -36,8 +54,13 @@ class ItemWidget extends StatefulWidget {
     @required this.index,
     @required this.code,
     @required this.name,
-    @required this.itemExtent,
     @required this.paddingLeft,
+    @required this.itemHeadHeight,
+    @required this.itemHeadBackgroundColor,
+    @required this.itemHeadLineColor,
+    @required this.itemHeadLineHeight,
+    @required this.itemHeadTextStyle,
+    @required this.itemHeight,
     @required this.itemSelectedIconWidget,
     @required this.itemSelectedTextStyle,
     @required this.itemUnSelectedTextStyle,
@@ -61,7 +84,7 @@ class ItemWidgetState extends State<ItemWidget>
   String _preName = "";
 
   // 列表数据
-  List<City> _mList = [];
+  List<SectionCity> _mList = [];
 
   @override
   void initState() {
@@ -75,7 +98,7 @@ class ItemWidgetState extends State<ItemWidget>
           _cityPickerListener.loadProvinceData().then((value) {
             if (mounted) {
               setState(() {
-                _mList = value;
+                _mList = sortCity(value);
               });
             }
           });
@@ -86,7 +109,7 @@ class ItemWidgetState extends State<ItemWidget>
               .then((value) {
             if (mounted) {
               setState(() {
-                _mList = value;
+                _mList = sortCity(value);
                 _preName = widget.name;
               });
             }
@@ -98,7 +121,7 @@ class ItemWidgetState extends State<ItemWidget>
               .then((value) {
             if (mounted) {
               setState(() {
-                _mList = value;
+                _mList = sortCity(value);
                 _preName = widget.name;
               });
             }
@@ -124,7 +147,7 @@ class ItemWidgetState extends State<ItemWidget>
                 .then((value) {
               if (mounted) {
                 setState(() {
-                  _mList = value;
+                  _mList = sortCity(value);
                 });
               }
             });
@@ -147,7 +170,7 @@ class ItemWidgetState extends State<ItemWidget>
                 .then((value) {
               if (mounted) {
                 setState(() {
-                  _mList = value;
+                  _mList = sortCity(value);
                 });
               }
             });
@@ -164,9 +187,39 @@ class ItemWidgetState extends State<ItemWidget>
     }
   }
 
-  @override
-  void dispose() {
-    super.dispose();
+  /// 排序数据
+  List<SectionCity> sortCity(List<City> value) {
+    // 先排序
+    List<City> _cityList = [];
+    value.forEach((city) {
+      String letter = PinyinHelper.getFirstWordPinyin(city.name)
+          .substring(0, 1)
+          .toUpperCase();
+      _cityList.add(City(code: city.code, letter: letter, name: city.name));
+    });
+    _cityList.sort((a, b) => a.letter.compareTo(b.letter));
+    // 组装数据
+    List<SectionCity> _sectionList = [];
+    String _letter = "A";
+    List<City> _cityList2 = [];
+    for (int i = 0; i < _cityList.length; i++) {
+      if (_letter == _cityList[i].letter) {
+        _cityList2.add(_cityList[i]);
+      } else {
+        if (_cityList2.length > 0) {
+          _sectionList.add(SectionCity(letter: _letter, data: _cityList2));
+        }
+        _cityList2 = [];
+        _cityList2.add(_cityList[i]);
+        _letter = _cityList[i].letter;
+      }
+      if (i == _cityList.length - 1) {
+        if (_cityList2.length > 0) {
+          _sectionList.add(SectionCity(letter: _letter, data: _cityList2));
+        }
+      }
+    }
+    return _sectionList;
   }
 
   @override
@@ -176,46 +229,69 @@ class ItemWidgetState extends State<ItemWidget>
       width: double.infinity,
       height: double.infinity,
       color: Theme.of(context).dialogBackgroundColor,
-      child: ListView.builder(
-        itemCount: _mList.length,
-        itemBuilder: (_, index) {
-          bool isSelect = _mList[index].name == _title;
-          return InkWell(
-            onTap: () {
-              if (mounted) {
-                setState(() {
-                  _title = _mList[index].name;
-                });
-              }
-              if (_itemClickListener != null) {
-                _itemClickListener.onItemClick(widget.index, index, _mList);
-              }
-            },
-            child: Container(
-              height: widget.itemExtent ?? 40,
-              padding: EdgeInsets.only(left: widget.paddingLeft ?? 15),
-              alignment: Alignment.centerLeft,
-              child: Row(children: <Widget>[
-                Offstage(
-                  offstage: !isSelect,
-                  child: widget.itemSelectedIconWidget ??
-                      Icon(Icons.done,
-                          color: Theme.of(context).primaryColor, size: 16),
+      child: ExpandableListView(
+        builder: SliverExpandableChildDelegate<City, SectionCity>(
+            sectionList: _mList,
+            headerBuilder: (context, sectionIndex, index) {
+              return Container(
+                width: double.infinity,
+                height: widget.itemHeadHeight ?? 30,
+                decoration: BoxDecoration(
+                  border: Border(
+                      bottom: BorderSide(
+                    width: widget.itemHeadLineHeight ?? 0.1,
+                    color: widget.itemHeadLineColor ?? Colors.black38,
+                  )),
+                  color: widget.itemHeadBackgroundColor ??
+                      Theme.of(context).dialogBackgroundColor,
                 ),
-                SizedBox(width: isSelect ? 3 : 0),
-                Text(_mList[index].name,
-                    style: isSelect
-                        ? widget.itemSelectedTextStyle ??
-                            TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                                color: Theme.of(context).primaryColor)
-                        : widget.itemUnSelectedTextStyle ??
-                            TextStyle(fontSize: 14, color: Colors.black54))
-              ]),
-            ),
-          );
-        },
+                alignment: Alignment.centerLeft,
+                padding: EdgeInsets.only(left: widget.paddingLeft ?? 15),
+                child: Text(_mList[sectionIndex].letter,
+                    style: widget.itemHeadTextStyle ??
+                        TextStyle(fontSize: 15, color: Colors.black)),
+              );
+            },
+            itemBuilder: (context, sectionIndex, itemIndex, index) {
+              City city = _mList[sectionIndex].data[itemIndex];
+              bool isSelect = city.name == _title;
+              return InkWell(
+                onTap: () {
+                  if (mounted) {
+                    setState(() {
+                      _title = city.name;
+                    });
+                  }
+                  if (_itemClickListener != null) {
+                    _itemClickListener.onItemClick(
+                        widget.index, city.name, city.code);
+                  }
+                },
+                child: Container(
+                  height: widget.itemHeight ?? 40,
+                  padding: EdgeInsets.only(left: widget.paddingLeft ?? 15),
+                  alignment: Alignment.centerLeft,
+                  child: Row(children: <Widget>[
+                    Offstage(
+                      offstage: !isSelect,
+                      child: widget.itemSelectedIconWidget ??
+                          Icon(Icons.done,
+                              color: Theme.of(context).primaryColor, size: 16),
+                    ),
+                    SizedBox(width: isSelect ? 3 : 0),
+                    Text(city.name,
+                        style: isSelect
+                            ? widget.itemSelectedTextStyle ??
+                                TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: Theme.of(context).primaryColor)
+                            : widget.itemUnSelectedTextStyle ??
+                                TextStyle(fontSize: 14, color: Colors.black54))
+                  ]),
+                ),
+              );
+            }),
       ),
     );
   }

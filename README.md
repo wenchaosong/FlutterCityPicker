@@ -45,8 +45,6 @@ dependencies:
           corner: 20,
           // 距离左边的间距
           paddingLeft: 15,
-          // 列表高度
-          itemExtent: 40,
           // 标题组件
           titleWidget: Container(
             padding: EdgeInsets.only(left: 15),
@@ -75,6 +73,18 @@ dependencies:
           selectedLabelColor: Theme.of(context).primaryColor,
           // tab 未选中的字体颜色
           unselectedLabelColor: Colors.black54,
+          // item 头部高度
+          itemHeadHeight: 30,
+          // item 头部背景颜色
+          itemHeadBackgroundColor: Colors.white,
+          // item 头部分割线颜色
+          itemHeadLineColor: Colors.black,
+          // item 头部分割线高度
+          itemHeadLineHeight: 0.1,
+          // item 头部文字样式
+          itemHeadTextStyle: TextStyle(fontSize: 15, color: Colors.black),
+          // item 高度
+          itemHeight: 40,
           // 列表选中的图标组件
           itemSelectedIconWidget:
               Icon(Icons.done, color: Theme.of(context).primaryColor, size: 16),
@@ -94,31 +104,31 @@ dependencies:
     <你的组件> implements CityPickerListener
 
     @override
-      Future<List<City>> loadProvinceData() async {
-        // 发起网络请求，获取省级数据
-        return 返回省级数据;
-      }
+    Future<List<City>> loadProvinceData() async {
+      // 发起网络请求，获取省级数据
+      return 返回省级数据;
+    }
 
-      @override
-      Future<List<City>> onProvinceSelected(String provinceCode, String provinceName) async {
-        // 点击省份后的回调，根据城市代码或名称去请求市级数据
-        return 返回市级数据;
-      }
+    @override
+    Future<List<City>> onProvinceSelected(String provinceCode, String provinceName) async {
+      // 点击省份后的回调，根据城市代码或名称去请求市级数据
+      return 返回市级数据;
+    }
 
-      @override
-      Future<List<City>> onCitySelected(String cityCode, String cityName) async {
-        // 点击城市后的回调，根据城市代码或名称去请求区级数据
-        return 返回区级数据;
-      }
+    @override
+    Future<List<City>> onCitySelected(String cityCode, String cityName) async {
+      // 点击城市后的回调，根据城市代码或名称去请求区级数据
+      return 返回区级数据;
+    }
 
-      @override
-      void onFinish(String provinceCode, String provinceName, String cityCode,
-          String cityName, String districtCode, String districtName) {
-        // 最终回调，返回省市区的代码和名称
-        setState(() {
-          _address = provinceName + " " + cityName + " " + districtName;
-        });
-      }
+    @override
+    void onFinish(String provinceCode, String provinceName, String cityCode,
+        String cityName, String districtCode, String districtName) {
+      // 最终回调，返回省市区的代码和名称
+      setState(() {
+        _address = provinceName + " " + cityName + " " + districtName;
+      });
+    }
 ```
 
 #### 欢迎提 PR 或者 ISSUE
