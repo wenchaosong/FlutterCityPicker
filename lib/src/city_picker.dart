@@ -20,41 +20,49 @@ class CityPicker {
     // 高度
     double height = 400.0,
     // 标题高度
-    double titleHeight,
+    double titleHeight = 50.0,
     // 顶部圆角
-    double corner,
+    double corner = 20.0,
     // 距离左边的间距
-    double paddingLeft,
+    double paddingLeft = 15.0,
     // 标题组件
     Widget titleWidget,
     // 关闭图标组件
     Widget closeWidget,
     // tab 高度
-    double tabHeight,
+    double tabHeight = 40.0,
     // 是否显示指示器
     bool showTabIndicator = true,
     // 指示器颜色
     Color tabIndicatorColor,
     // 指示器高度
-    double tabIndicatorHeight,
+    double tabIndicatorHeight = 3.0,
     // tab 字体大小
-    double labelTextSize,
+    double labelTextSize = 15.0,
     // tab 选中的字体颜色
     Color selectedLabelColor,
     // tab 未选中的字体颜色
     Color unselectedLabelColor,
     // item 头部高度
-    double itemHeadHeight,
+    double itemHeadHeight = 30.0,
     // item 头部背景颜色
     Color itemHeadBackgroundColor,
     // item 头部分割线颜色
     Color itemHeadLineColor,
     // item 头部分割线高度
-    double itemHeadLineHeight,
+    double itemHeadLineHeight = 0.1,
     // item 头部文字样式
     TextStyle itemHeadTextStyle,
     // item 高度
-    double itemHeight,
+    double itemHeight = 40.0,
+    // 索引组件宽度
+    double indexBarWidth = 28,
+    // 索引组件 item 高度
+    double indexBarItemHeight = 20,
+    // 索引组件背景颜色
+    Color indexBarBackgroundColor = Colors.black12,
+    // 索引组件文字样式
+    TextStyle indexBarTextStyle,
     // 列表选中的图标组件
     Widget itemSelectedIconWidget,
     // 列表选中的文字样式
@@ -90,6 +98,10 @@ class CityPicker {
             itemHeadLineHeight: itemHeadLineHeight,
             itemHeadTextStyle: itemHeadTextStyle,
             itemHeight: itemHeight,
+            indexBarWidth: indexBarWidth,
+            indexBarItemHeight: indexBarItemHeight,
+            indexBarBackgroundColor: indexBarBackgroundColor,
+            indexBarTextStyle: indexBarTextStyle,
             itemSelectedIconWidget: itemSelectedIconWidget,
             itemSelectedTextStyle: itemSelectedTextStyle,
             itemUnSelectedTextStyle: itemUnSelectedTextStyle,

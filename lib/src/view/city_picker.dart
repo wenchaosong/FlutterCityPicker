@@ -69,6 +69,18 @@ class CityPickerWidget extends StatefulWidget {
   /// item 高度
   final double itemHeight;
 
+  /// 索引组件宽度
+  final double indexBarWidth;
+
+  /// 索引组件 item 高度
+  final double indexBarItemHeight;
+
+  /// 索引组件背景颜色
+  final Color indexBarBackgroundColor;
+
+  /// 索引组件文字样式
+  final TextStyle indexBarTextStyle;
+
   /// 选中城市的图标组件
   final Widget itemSelectedIconWidget;
 
@@ -101,6 +113,10 @@ class CityPickerWidget extends StatefulWidget {
     this.itemHeadLineHeight,
     this.itemHeadTextStyle,
     this.itemHeight,
+    this.indexBarWidth,
+    this.indexBarItemHeight,
+    this.indexBarBackgroundColor,
+    this.indexBarTextStyle,
     this.itemSelectedIconWidget,
     this.itemSelectedTextStyle,
     this.itemUnSelectedTextStyle,
@@ -234,18 +250,18 @@ class CityPickerState extends State<CityPickerWidget>
   /// 头部文字组件
   Widget _topTextWidget() {
     return Container(
-      height: widget.titleHeight ?? 50,
+      height: widget.titleHeight,
       decoration: BoxDecoration(
           color: Theme.of(context).dialogBackgroundColor,
           borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(widget.corner ?? 20),
-              topRight: Radius.circular(widget.corner ?? 20))),
+              topLeft: Radius.circular(widget.corner),
+              topRight: Radius.circular(widget.corner))),
       child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             widget.titleWidget ??
                 Container(
-                  padding: EdgeInsets.only(left: 15),
+                  padding: EdgeInsets.only(left: widget.paddingLeft),
                   child: Text(
                     '请选择所在地区',
                     style: TextStyle(
@@ -258,7 +274,7 @@ class CityPickerState extends State<CityPickerWidget>
             InkWell(
                 onTap: () => {Navigator.pop(context)},
                 child: Container(
-                  width: widget.titleHeight ?? 50,
+                  width: widget.titleHeight,
                   height: double.infinity,
                   child: widget.closeWidget ?? Icon(Icons.close, size: 26),
                 )),
@@ -270,18 +286,18 @@ class CityPickerState extends State<CityPickerWidget>
   Widget _middleTabWidget() {
     return Container(
       width: double.infinity,
-      height: widget.tabHeight ?? 40,
+      height: widget.tabHeight,
       color: Theme.of(context).dialogBackgroundColor,
       child: TabBar(
         controller: _tabController,
         isScrollable: true,
         indicatorSize: TabBarIndicatorSize.tab,
-        labelPadding: EdgeInsets.only(left: widget.paddingLeft ?? 15),
+        labelPadding: EdgeInsets.only(left: widget.paddingLeft),
         indicator: widget.showTabIndicator
             ? UnderlineTabIndicator(
-                insets: EdgeInsets.only(left: widget.paddingLeft ?? 15),
+                insets: EdgeInsets.only(left: widget.paddingLeft),
                 borderSide: BorderSide(
-                    width: widget.tabIndicatorHeight ?? 3,
+                    width: widget.tabIndicatorHeight,
                     color: widget.tabIndicatorColor ??
                         Theme.of(context).primaryColor),
               )
@@ -292,7 +308,7 @@ class CityPickerState extends State<CityPickerWidget>
         labelColor: widget.selectedLabelColor ?? Theme.of(context).primaryColor,
         tabs: _myTabs.map((data) {
           return Text(data.title,
-              style: TextStyle(fontSize: widget.labelTextSize ?? 15));
+              style: TextStyle(fontSize: widget.labelTextSize));
         }).toList(),
       ),
     );
@@ -314,6 +330,10 @@ class CityPickerState extends State<CityPickerWidget>
           itemHeadLineHeight: widget.itemHeadLineHeight,
           itemHeadTextStyle: widget.itemHeadTextStyle,
           itemHeight: widget.itemHeight,
+          indexBarWidth: widget.indexBarWidth,
+          indexBarItemHeight: widget.indexBarItemHeight,
+          indexBarBackgroundColor: widget.indexBarBackgroundColor,
+          indexBarTextStyle: widget.indexBarTextStyle,
           itemSelectedIconWidget: widget.itemSelectedIconWidget,
           itemSelectedTextStyle: widget.itemSelectedTextStyle,
           itemUnSelectedTextStyle: widget.itemUnSelectedTextStyle,

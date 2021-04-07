@@ -37,6 +37,18 @@ class ItemWidget extends StatefulWidget {
   /// item 高度
   final double itemHeight;
 
+  /// 索引组件宽度
+  final double indexBarWidth;
+
+  /// 索引组件 item 高度
+  final double indexBarItemHeight;
+
+  /// 索引组件背景颜色
+  final Color indexBarBackgroundColor;
+
+  /// 索引组件文字样式
+  final TextStyle indexBarTextStyle;
+
   /// 选中城市的图标组件
   final Widget itemSelectedIconWidget;
 
@@ -61,6 +73,10 @@ class ItemWidget extends StatefulWidget {
     @required this.itemHeadLineHeight,
     @required this.itemHeadTextStyle,
     @required this.itemHeight,
+    @required this.indexBarWidth,
+    @required this.indexBarItemHeight,
+    @required this.indexBarBackgroundColor,
+    @required this.indexBarTextStyle,
     @required this.itemSelectedIconWidget,
     @required this.itemSelectedTextStyle,
     @required this.itemUnSelectedTextStyle,
@@ -229,69 +245,130 @@ class ItemWidgetState extends State<ItemWidget>
       width: double.infinity,
       height: double.infinity,
       color: Theme.of(context).dialogBackgroundColor,
-      child: ExpandableListView(
-        builder: SliverExpandableChildDelegate<City, SectionCity>(
-            sectionList: _mList,
-            headerBuilder: (context, sectionIndex, index) {
-              return Container(
-                width: double.infinity,
-                height: widget.itemHeadHeight ?? 30,
-                decoration: BoxDecoration(
-                  border: Border(
-                      bottom: BorderSide(
-                    width: widget.itemHeadLineHeight ?? 0.1,
-                    color: widget.itemHeadLineColor ?? Colors.black38,
-                  )),
-                  color: widget.itemHeadBackgroundColor ??
-                      Theme.of(context).dialogBackgroundColor,
-                ),
-                alignment: Alignment.centerLeft,
-                padding: EdgeInsets.only(left: widget.paddingLeft ?? 15),
-                child: Text(_mList[sectionIndex].letter,
-                    style: widget.itemHeadTextStyle ??
-                        TextStyle(fontSize: 15, color: Colors.black)),
-              );
-            },
-            itemBuilder: (context, sectionIndex, itemIndex, index) {
-              City city = _mList[sectionIndex].data[itemIndex];
-              bool isSelect = city.name == _title;
-              return InkWell(
-                onTap: () {
-                  if (mounted) {
-                    setState(() {
-                      _title = city.name;
-                    });
-                  }
-                  if (_itemClickListener != null) {
-                    _itemClickListener.onItemClick(
-                        widget.index, city.name, city.code);
-                  }
-                },
-                child: Container(
-                  height: widget.itemHeight ?? 40,
-                  padding: EdgeInsets.only(left: widget.paddingLeft ?? 15),
-                  alignment: Alignment.centerLeft,
-                  child: Row(children: <Widget>[
-                    Offstage(
-                      offstage: !isSelect,
-                      child: widget.itemSelectedIconWidget ??
-                          Icon(Icons.done,
-                              color: Theme.of(context).primaryColor, size: 16),
+      child: Stack(
+        children: [
+          ExpandableListView(
+            builder: SliverExpandableChildDelegate<City, SectionCity>(
+                sectionList: _mList,
+                headerBuilder: (context, sectionIndex, index) {
+                  return Container(
+                    width: double.infinity,
+                    height: widget.itemHeadHeight,
+                    decoration: BoxDecoration(
+                      border: Border(
+                          bottom: BorderSide(
+                        width: widget.itemHeadLineHeight,
+                        color: widget.itemHeadLineColor ?? Colors.black38,
+                      )),
+                      color: widget.itemHeadBackgroundColor ??
+                          Theme.of(context).dialogBackgroundColor,
                     ),
-                    SizedBox(width: isSelect ? 3 : 0),
-                    Text(city.name,
-                        style: isSelect
-                            ? widget.itemSelectedTextStyle ??
-                                TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                    color: Theme.of(context).primaryColor)
-                            : widget.itemUnSelectedTextStyle ??
-                                TextStyle(fontSize: 14, color: Colors.black54))
-                  ]),
-                ),
-              );
-            }),
+                    alignment: Alignment.centerLeft,
+                    padding: EdgeInsets.only(left: widget.paddingLeft),
+                    child: Text(_mList[sectionIndex].letter,
+                        style: widget.itemHeadTextStyle ??
+                            TextStyle(fontSize: 15, color: Colors.black)),
+                  );
+                },
+                itemBuilder: (context, sectionIndex, itemIndex, index) {
+                  City city = _mList[sectionIndex].data[itemIndex];
+                  bool isSelect = city.name == _title;
+                  return InkWell(
+                    onTap: () {
+                      if (mounted) {
+                        setState(() {
+                          _title = city.name;
+                        });
+                      }
+                      if (_itemClickListener != null) {
+                        _itemClickListener.onItemClick(
+                            widget.index, city.name, city.code);
+                      }
+                    },
+                    child: Container(
+                      width: double.infinity,
+                      height: widget.itemHeight,
+                      padding: EdgeInsets.only(left: widget.paddingLeft),
+                      alignment: Alignment.centerLeft,
+                      child: Row(children: <Widget>[
+                        Offstage(
+                          offstage: !isSelect,
+                          child: widget.itemSelectedIconWidget ??
+                              Icon(Icons.done,
+                                  color: Theme.of(context).primaryColor,
+                                  size: 16),
+                        ),
+                        SizedBox(width: isSelect ? 3 : 0),
+                        Text(city.name,
+                            style: isSelect
+                                ? widget.itemSelectedTextStyle ??
+                                    TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                        color: Theme.of(context).primaryColor)
+                                : widget.itemUnSelectedTextStyle ??
+                                    TextStyle(
+                                        fontSize: 14, color: Colors.black54))
+                      ]),
+                    ),
+                  );
+                }),
+          ),
+          Positioned(
+            right: widget.paddingLeft,
+            top: 0,
+            bottom: 0,
+            child: Container(
+              width: widget.indexBarWidth,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(_mList.length, (index) {
+                  if (index == 0) {
+                    return Container(
+                      width: widget.indexBarWidth,
+                      height: widget.indexBarItemHeight + 4,
+                      alignment: Alignment.bottomCenter,
+                      padding: EdgeInsets.only(bottom: 2),
+                      decoration: BoxDecoration(
+                          color: widget.indexBarBackgroundColor,
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(50),
+                              topRight: Radius.circular(50))),
+                      child: Text(_mList[index].letter,
+                          style: widget.indexBarTextStyle ??
+                              TextStyle(fontSize: 13, color: Colors.black54)),
+                    );
+                  } else if (index == _mList.length - 1) {
+                    return Container(
+                      width: widget.indexBarWidth,
+                      height: widget.indexBarItemHeight + 4,
+                      alignment: Alignment.topCenter,
+                      padding: EdgeInsets.only(top: 2),
+                      decoration: BoxDecoration(
+                          color: widget.indexBarBackgroundColor,
+                          borderRadius: BorderRadius.only(
+                              bottomRight: Radius.circular(50),
+                              bottomLeft: Radius.circular(50))),
+                      child: Text(_mList[index].letter,
+                          style: widget.indexBarTextStyle ??
+                              TextStyle(fontSize: 13, color: Colors.black54)),
+                    );
+                  } else {
+                    return Container(
+                      color: widget.indexBarBackgroundColor,
+                      width: widget.indexBarWidth,
+                      height: widget.indexBarItemHeight,
+                      alignment: Alignment.center,
+                      child: Text(_mList[index].letter,
+                          style: widget.indexBarTextStyle ??
+                              TextStyle(fontSize: 13, color: Colors.black54)),
+                    );
+                  }
+                }),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
