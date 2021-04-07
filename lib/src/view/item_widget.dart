@@ -90,6 +90,8 @@ class ItemWidget extends StatefulWidget {
 
 class ItemWidgetState extends State<ItemWidget>
     with AutomaticKeepAliveClientMixin {
+  ScrollController _scrollController;
+
   CityPickerListener _cityPickerListener;
   ItemClickListener _itemClickListener;
 
@@ -106,8 +108,11 @@ class ItemWidgetState extends State<ItemWidget>
   void initState() {
     super.initState();
 
+    _scrollController = ScrollController();
+
     _itemClickListener = widget.itemClickListener;
     _cityPickerListener = widget.cityPickerListener;
+
     if (_cityPickerListener != null) {
       switch (widget.index) {
         case 0:
@@ -238,6 +243,33 @@ class ItemWidgetState extends State<ItemWidget>
     return _sectionList;
   }
 
+  /// 点击索引，列表滑动
+  void clickIndexBar(int index) {
+    double position = 0;
+    int length = 0;
+    // 计算位置
+    for (int i = 0; i < _mList.length; i++) {
+      if (_mList[index].letter == _mList[i].letter) {
+        if (i == 0) {
+          position = 0;
+        } else {
+          position = i * widget.itemHeadHeight + length * widget.itemHeight;
+        }
+      }
+      length += _mList[i].data.length;
+    }
+    _scrollController.animateTo(position,
+        duration: Duration(milliseconds: 10), curve: Curves.linear);
+  }
+
+  @override
+  void dispose() {
+    if (mounted) {
+      _scrollController?.dispose();
+    }
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -248,6 +280,7 @@ class ItemWidgetState extends State<ItemWidget>
       child: Stack(
         children: [
           ExpandableListView(
+            controller: _scrollController,
             builder: SliverExpandableChildDelegate<City, SectionCity>(
                 sectionList: _mList,
                 headerBuilder: (context, sectionIndex, index) {
@@ -324,44 +357,59 @@ class ItemWidgetState extends State<ItemWidget>
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(_mList.length, (index) {
                   if (index == 0) {
-                    return Container(
-                      width: widget.indexBarWidth,
-                      height: widget.indexBarItemHeight + 4,
-                      alignment: Alignment.bottomCenter,
-                      padding: EdgeInsets.only(bottom: 2),
-                      decoration: BoxDecoration(
-                          color: widget.indexBarBackgroundColor,
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(50),
-                              topRight: Radius.circular(50))),
-                      child: Text(_mList[index].letter,
-                          style: widget.indexBarTextStyle ??
-                              TextStyle(fontSize: 13, color: Colors.black54)),
+                    return InkWell(
+                      onTap: () {
+                        clickIndexBar(index);
+                      },
+                      child: Container(
+                        width: widget.indexBarWidth,
+                        height: widget.indexBarItemHeight + 4,
+                        alignment: Alignment.bottomCenter,
+                        padding: EdgeInsets.only(bottom: 2),
+                        decoration: BoxDecoration(
+                            color: widget.indexBarBackgroundColor,
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(50),
+                                topRight: Radius.circular(50))),
+                        child: Text(_mList[index].letter,
+                            style: widget.indexBarTextStyle ??
+                                TextStyle(fontSize: 14, color: Colors.black54)),
+                      ),
                     );
                   } else if (index == _mList.length - 1) {
-                    return Container(
-                      width: widget.indexBarWidth,
-                      height: widget.indexBarItemHeight + 4,
-                      alignment: Alignment.topCenter,
-                      padding: EdgeInsets.only(top: 2),
-                      decoration: BoxDecoration(
-                          color: widget.indexBarBackgroundColor,
-                          borderRadius: BorderRadius.only(
-                              bottomRight: Radius.circular(50),
-                              bottomLeft: Radius.circular(50))),
-                      child: Text(_mList[index].letter,
-                          style: widget.indexBarTextStyle ??
-                              TextStyle(fontSize: 13, color: Colors.black54)),
+                    return InkWell(
+                      onTap: () {
+                        clickIndexBar(index);
+                      },
+                      child: Container(
+                        width: widget.indexBarWidth,
+                        height: widget.indexBarItemHeight + 4,
+                        alignment: Alignment.topCenter,
+                        padding: EdgeInsets.only(top: 2),
+                        decoration: BoxDecoration(
+                            color: widget.indexBarBackgroundColor,
+                            borderRadius: BorderRadius.only(
+                                bottomRight: Radius.circular(50),
+                                bottomLeft: Radius.circular(50))),
+                        child: Text(_mList[index].letter,
+                            style: widget.indexBarTextStyle ??
+                                TextStyle(fontSize: 14, color: Colors.black54)),
+                      ),
                     );
                   } else {
-                    return Container(
-                      color: widget.indexBarBackgroundColor,
-                      width: widget.indexBarWidth,
-                      height: widget.indexBarItemHeight,
-                      alignment: Alignment.center,
-                      child: Text(_mList[index].letter,
-                          style: widget.indexBarTextStyle ??
-                              TextStyle(fontSize: 13, color: Colors.black54)),
+                    return InkWell(
+                      onTap: () {
+                        clickIndexBar(index);
+                      },
+                      child: Container(
+                        color: widget.indexBarBackgroundColor,
+                        width: widget.indexBarWidth,
+                        height: widget.indexBarItemHeight,
+                        alignment: Alignment.center,
+                        child: Text(_mList[index].letter,
+                            style: widget.indexBarTextStyle ??
+                                TextStyle(fontSize: 14, color: Colors.black54)),
+                      ),
                     );
                   }
                 }),

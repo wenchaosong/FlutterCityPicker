@@ -6,13 +6,13 @@
 由于地址选择的数据来源会更新，为了统一，在后台配置一份城市数据，前端获取，这是最好的处理方式，否则各个平台都配置一份数据，
 维护会很麻烦，而且有可能每个平台城市的数据结构都不一样。本库就是由此而来，数据从后台实时获取，只要解析成固定的数据结构就可以
 
-![效果示例](https://upload-images.jianshu.io/upload_images/9913211-568da87eb465a969.gif)
+![效果示例](https://upload-images.jianshu.io/upload_images/9913211-03e856c0bc68663e.gif)
 
 #### 导入方式
 
 ```
 dependencies:
-    flutter_city_picker: ^0.0.5
+    flutter_city_picker: ^0.0.6
 ```
 
 #### 使用方法
@@ -63,9 +63,9 @@ dependencies:
           tabHeight: 40,
           // 是否显示指示器
           showTabIndicator: _showTabIndicator,
-          // 指示器颜色
+          // tab 指示器颜色
           tabIndicatorColor: Theme.of(context).primaryColor,
-          // 指示器高度
+          // tab 指示器高度
           tabIndicatorHeight: 2,
           // tab 字体大小
           labelTextSize: 15,
@@ -73,18 +73,26 @@ dependencies:
           selectedLabelColor: Theme.of(context).primaryColor,
           // tab 未选中的字体颜色
           unselectedLabelColor: Colors.black54,
-          // item 头部高度
+          // 列表 item 头部高度
           itemHeadHeight: 30,
-          // item 头部背景颜色
+          // 列表 item 头部背景颜色
           itemHeadBackgroundColor: Colors.white,
-          // item 头部分割线颜色
+          // 列表 item 头部分割线颜色
           itemHeadLineColor: Colors.black,
-          // item 头部分割线高度
+          // 列表 item 头部分割线高度
           itemHeadLineHeight: 0.1,
-          // item 头部文字样式
+          // 列表 item 头部文字样式
           itemHeadTextStyle: TextStyle(fontSize: 15, color: Colors.black),
-          // item 高度
+          // 列表 item 高度
           itemHeight: 40,
+          // 索引组件宽度
+          indexBarWidth: 28,
+          // 索引组件 item 高度
+          indexBarItemHeight: 20,
+          // 索引组件背景颜色
+          indexBarBackgroundColor: Colors.black12,
+          // 索引组件文字样式
+          indexBarTextStyle: TextStyle(fontSize: 14, color: Colors.black54),
           // 列表选中的图标组件
           itemSelectedIconWidget:
               Icon(Icons.done, color: Theme.of(context).primaryColor, size: 16),

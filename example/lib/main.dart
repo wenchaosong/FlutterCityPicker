@@ -42,7 +42,8 @@ class HomeWidget extends StatefulWidget {
 
 class HomeWidgetState extends State<HomeWidget> implements CityPickerListener {
   String _address = "请选择地区";
-  Color _backgroundColor = Colors.blue;
+  Color _themeColor = Colors.blue;
+  Color _backgroundColor = Colors.white;
   double _height = 400.0;
   double _opacity = 0.5;
   double _corner = 20;
@@ -58,7 +59,7 @@ class HomeWidgetState extends State<HomeWidget> implements CityPickerListener {
     CityPicker.show(
       context: context,
       theme: ThemeData(
-        dialogBackgroundColor: Colors.white,
+        dialogBackgroundColor: _backgroundColor,
       ),
       duration: 200,
       opacity: _opacity,
@@ -91,6 +92,10 @@ class HomeWidgetState extends State<HomeWidget> implements CityPickerListener {
       itemHeadLineHeight: 0.1,
       itemHeadTextStyle: TextStyle(fontSize: 15, color: Colors.black),
       itemHeight: 40,
+      indexBarWidth: 28,
+      indexBarItemHeight: 20,
+      indexBarBackgroundColor: Colors.black12,
+      indexBarTextStyle: TextStyle(fontSize: 14, color: Colors.black54),
       itemSelectedIconWidget:
           Icon(Icons.done, color: Theme.of(context).primaryColor, size: 16),
       itemSelectedTextStyle: TextStyle(
@@ -112,13 +117,44 @@ class HomeWidgetState extends State<HomeWidget> implements CityPickerListener {
               title: Text('选择颜色'),
               content: SingleChildScrollView(
                 child: BlockPicker(
+                  pickerColor: _themeColor,
+                  onColorChanged: (color) {
+                    setState(() {
+                      _themeColor = color;
+                    });
+                    Provider.of<ThemeProvider>(context, listen: false)
+                        .setTheme(color);
+                  },
+                ),
+              ),
+            );
+          },
+        );
+      },
+      child: Container(
+        color: _themeColor,
+        width: double.infinity,
+        padding: EdgeInsets.all(10),
+        margin: EdgeInsets.fromLTRB(80, 10, 80, 10),
+      ),
+    );
+  }
+
+  Widget _buildColor() {
+    return InkWell(
+      onTap: () {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('选择颜色'),
+              content: SingleChildScrollView(
+                child: BlockPicker(
                   pickerColor: _backgroundColor,
                   onColorChanged: (color) {
                     setState(() {
                       _backgroundColor = color;
                     });
-                    Provider.of<ThemeProvider>(context, listen: false)
-                        .setTheme(color);
                   },
                 ),
               ),
@@ -257,6 +293,7 @@ class HomeWidgetState extends State<HomeWidget> implements CityPickerListener {
             ItemTextWidget(title: '主题颜色', subWidget: _buildTheme()),
             ItemTextWidget(title: '透明度', subWidget: _buildOpacity()),
             ItemTextWidget(title: '外部点击消失', subWidget: _buildDismissible()),
+            ItemTextWidget(title: '弹窗背景颜色', subWidget: _buildColor()),
             ItemTextWidget(title: '弹窗高度', subWidget: _buildHeight()),
             ItemTextWidget(title: '顶部圆角', subWidget: _buildCorner()),
             ItemTextWidget(title: '显示 Indicator', subWidget: _buildIndicator()),

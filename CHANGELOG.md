@@ -1,22 +1,26 @@
+## 0.0.6
+
+- add indexBar (添加索引选择)
+
 ## 0.0.5
 
-- 底部城市列表排序，添加悬浮头部
+- add stickyHeader and sort the data (添加悬浮头部,底部城市列表排序)
 
 ## 0.0.4
 
-- 发布全新版本
-- 修改数据来源为网络获取
-- 底部城市列表可以左右滑动
+- publish new version (发布全新版本)
+- get data from internet (数据来源为网络获取)
+- city list can move left and right (底部城市列表可以左右滑动)
 
 ## 0.0.3
 
-- 解决部分 bug
+- fix bug (修复 bug)
 
 ## 0.0.2
 
-- 解决升级到 2.0 阴影的问题
+- resolve shadow problem when upgrade to 2.0 (解决升级到 2.0 阴影的问题)
 
 ## 0.0.1
 
-- 发布第一个版本，根据 city_pikers 项目修改而来
+- publish first version (发布第一个版本)
 
