@@ -305,6 +305,7 @@ class HomeWidgetState extends State<HomeWidget> implements CityPickerListener {
 
   @override
   Future<List<City>> loadProvinceData() async {
+    print("loadProvinceData");
     await Future.delayed(Duration(milliseconds: 200));
 
     List<City> provinces = [
@@ -347,6 +348,7 @@ class HomeWidgetState extends State<HomeWidget> implements CityPickerListener {
   @override
   Future<List<City>> onProvinceSelected(
       String provinceCode, String provinceName) async {
+    print("onProvinceSelected --- provinceName: $provinceName");
     await Future.delayed(Duration(milliseconds: 200));
 
     List<City> provinces = [
@@ -368,6 +370,7 @@ class HomeWidgetState extends State<HomeWidget> implements CityPickerListener {
 
   @override
   Future<List<City>> onCitySelected(String cityCode, String cityName) async {
+    print("onCitySelected --- cityName: $cityName");
     await Future.delayed(Duration(milliseconds: 200));
 
     List<City> provinces = [
@@ -386,6 +389,7 @@ class HomeWidgetState extends State<HomeWidget> implements CityPickerListener {
   @override
   void onFinish(String provinceCode, String provinceName, String cityCode,
       String cityName, String districtCode, String districtName) {
+    print("onFinish");
     setState(() {
       _address = provinceName + " " + cityName + " " + districtName;
     });

@@ -169,16 +169,10 @@ class ItemWidgetState extends State<ItemWidget>
               if (mounted) {
                 setState(() {
                   _mList = sortCity(value);
+                  _preName = widget.name;
                 });
               }
             });
-          }
-          if (widget.name.isNotEmpty) {
-            if (mounted) {
-              setState(() {
-                _preName = widget.name;
-              });
-            }
           }
           break;
         case 2:
@@ -192,16 +186,10 @@ class ItemWidgetState extends State<ItemWidget>
               if (mounted) {
                 setState(() {
                   _mList = sortCity(value);
+                  _preName = widget.name;
                 });
               }
             });
-          }
-          if (widget.name.isNotEmpty) {
-            if (mounted) {
-              setState(() {
-                _preName = widget.name;
-              });
-            }
           }
           break;
       }
@@ -356,67 +344,66 @@ class ItemWidgetState extends State<ItemWidget>
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(_mList.length, (index) {
-                  if (index == 0) {
-                    return InkWell(
-                      onTap: () {
-                        clickIndexBar(index);
-                      },
-                      child: Container(
-                        width: widget.indexBarWidth,
-                        height: widget.indexBarItemHeight + 4,
-                        alignment: Alignment.bottomCenter,
-                        padding: EdgeInsets.only(bottom: 2),
-                        decoration: BoxDecoration(
-                            color: widget.indexBarBackgroundColor,
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(50),
-                                topRight: Radius.circular(50))),
-                        child: Text(_mList[index].letter,
-                            style: widget.indexBarTextStyle ??
-                                TextStyle(fontSize: 14, color: Colors.black54)),
-                      ),
-                    );
-                  } else if (index == _mList.length - 1) {
-                    return InkWell(
-                      onTap: () {
-                        clickIndexBar(index);
-                      },
-                      child: Container(
-                        width: widget.indexBarWidth,
-                        height: widget.indexBarItemHeight + 4,
-                        alignment: Alignment.topCenter,
-                        padding: EdgeInsets.only(top: 2),
-                        decoration: BoxDecoration(
-                            color: widget.indexBarBackgroundColor,
-                            borderRadius: BorderRadius.only(
-                                bottomRight: Radius.circular(50),
-                                bottomLeft: Radius.circular(50))),
-                        child: Text(_mList[index].letter,
-                            style: widget.indexBarTextStyle ??
-                                TextStyle(fontSize: 14, color: Colors.black54)),
-                      ),
-                    );
-                  } else {
-                    return InkWell(
-                      onTap: () {
-                        clickIndexBar(index);
-                      },
-                      child: Container(
-                        color: widget.indexBarBackgroundColor,
-                        width: widget.indexBarWidth,
-                        height: widget.indexBarItemHeight,
-                        alignment: Alignment.center,
-                        child: Text(_mList[index].letter,
-                            style: widget.indexBarTextStyle ??
-                                TextStyle(fontSize: 14, color: Colors.black54)),
-                      ),
-                    );
-                  }
+                  return _indexBarItem(index);
                 }),
               ),
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _indexBarItem(int index) {
+    // 有4种类型
+    int type = 0;
+    if (index == 0 && index == _mList.length - 1) {
+      type = 1;
+    } else if (index == 0) {
+      type = 2;
+    } else if (index == _mList.length - 1) {
+      type = 3;
+    } else {
+      type = 4;
+    }
+    return InkWell(
+      onTap: () {
+        clickIndexBar(index);
+      },
+      child: Container(
+        width: widget.indexBarWidth,
+        height: type == 4
+            ? widget.indexBarItemHeight
+            : widget.indexBarItemHeight + 4,
+        alignment: type == 2
+            ? Alignment.bottomCenter
+            : type == 3
+                ? Alignment.topCenter
+                : Alignment.center,
+        padding: type == 2
+            ? EdgeInsets.only(bottom: 2)
+            : type == 3
+                ? EdgeInsets.only(top: 2)
+                : EdgeInsets.all(0),
+        decoration: BoxDecoration(
+            color: widget.indexBarBackgroundColor,
+            borderRadius: BorderRadius.only(
+              topLeft: (type == 1 || type == 2)
+                  ? Radius.circular(50)
+                  : Radius.circular(0),
+              topRight: (type == 1 || type == 2)
+                  ? Radius.circular(50)
+                  : Radius.circular(0),
+              bottomLeft: (type == 1 || type == 3)
+                  ? Radius.circular(50)
+                  : Radius.circular(0),
+              bottomRight: (type == 1 || type == 3)
+                  ? Radius.circular(50)
+                  : Radius.circular(0),
+            )),
+        child: Text(_mList[index].letter,
+            style: widget.indexBarTextStyle ??
+                TextStyle(fontSize: 14, color: Colors.black54)),
       ),
     );
   }

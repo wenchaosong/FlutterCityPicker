@@ -12,7 +12,7 @@
 
 ```
 dependencies:
-    flutter_city_picker: ^0.0.6
+    flutter_city_picker: ^0.0.7
 ```
 
 #### 使用方法
@@ -139,4 +139,8 @@ dependencies:
     }
 ```
 
-#### 欢迎提 PR 或者 ISSUE
+#### 待优化
+
+目前 PageView 滑动到下一个 tab 后，tabIndicator 更新的比较慢
+
+欢迎提 PR 或者 ISSUE

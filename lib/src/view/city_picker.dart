@@ -133,6 +133,10 @@ class CityPickerState extends State<CityPickerWidget>
   CityPickerListener _cityPickerListener;
 
   TabController _tabController;
+  PageController _pageController;
+
+  // 滑动监听回调
+  VoidCallback _pageListener;
 
   List<TabTitle> _myTabs = [
     TabTitle(index: 0, title: "请选择", name: "", code: ""),
@@ -154,6 +158,14 @@ class CityPickerState extends State<CityPickerWidget>
   void initState() {
     super.initState();
     _tabController = TabController(vsync: this, length: _myTabs.length);
+    _pageController = PageController();
+    _pageListener = () {
+      int pageIndex = _pageController.page.toInt();
+      if (pageIndex != _tabController.index) {
+        _tabController.animateTo(pageIndex);
+      }
+    };
+
     _cityPickerListener = widget.cityPickerListener;
   }
 
@@ -161,6 +173,7 @@ class CityPickerState extends State<CityPickerWidget>
   void dispose() {
     if (mounted) {
       _tabController?.dispose();
+      _pageController?.dispose();
     }
     super.dispose();
   }
@@ -184,15 +197,15 @@ class CityPickerState extends State<CityPickerWidget>
             _tabController = TabController(vsync: this, length: _myTabs.length);
           });
         }
+        _pageController.jumpToPage(1);
+        _pageController.addListener(_pageListener);
         _tabController.animateTo(1);
-        _tabController.index = 1;
         break;
       case 1:
         if (mounted) {
           setState(() {
             _cityName = name;
             _cityCode = code;
-
             _myTabs = [
               TabTitle(index: 0, title: _provinceName, name: "", code: ""),
               TabTitle(index: 1, title: _cityName, name: "", code: ""),
@@ -202,8 +215,10 @@ class CityPickerState extends State<CityPickerWidget>
             _tabController = TabController(vsync: this, length: _myTabs.length);
           });
         }
+        _pageController.removeListener(_pageListener);
+        _pageController.jumpToPage(2);
+        _pageController.addListener(_pageListener);
         _tabController.animateTo(2);
-        _tabController.index = 2;
         break;
       case 2:
         if (_cityPickerListener != null) {
@@ -290,6 +305,9 @@ class CityPickerState extends State<CityPickerWidget>
       color: Theme.of(context).dialogBackgroundColor,
       child: TabBar(
         controller: _tabController,
+        onTap: (index) {
+          _pageController.jumpToPage(index);
+        },
         isScrollable: true,
         indicatorSize: TabBarIndicatorSize.tab,
         labelPadding: EdgeInsets.only(left: widget.paddingLeft),
@@ -316,8 +334,8 @@ class CityPickerState extends State<CityPickerWidget>
 
   /// 底部城市列表组件
   Widget _bottomListWidget() {
-    return TabBarView(
-      controller: _tabController,
+    return PageView(
+      controller: _pageController,
       children: _myTabs.map((tab) {
         return ItemWidget(
           index: tab.index,
