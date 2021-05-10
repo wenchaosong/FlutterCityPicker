@@ -1,4 +1,4 @@
-import '../../src/model/city.dart';
+import '../model/city.dart';
 
 /// 事件监听
 abstract class CityPickerListener {

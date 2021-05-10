@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../src/listener/item_listener.dart';
-import '../../src/listener/picker_listener.dart';
-import '../../src/model/tab.dart';
-import '../../src/view/item_widget.dart';
+import '../listener/item_listener.dart';
+import '../listener/picker_listener.dart';
+import '../model/tab.dart';
+import '../view/item_widget.dart';
 import 'inherited_widget.dart';
 import 'layout_delegate.dart';
 

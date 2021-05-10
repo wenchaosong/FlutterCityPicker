@@ -1,4 +1,4 @@
-import '../../src/view/listview_section.dart';
+import '../view/listview_section.dart';
 
 import 'city.dart';
 

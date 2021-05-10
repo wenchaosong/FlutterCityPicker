@@ -53,16 +53,17 @@ class ExpandableSectionContainerInfo {
   final int sectionIndex;
   final bool sticky;
 
-  ExpandableSectionContainerInfo(
-      {this.header,
-      this.content,
-      this.children,
-      this.listIndex,
-      this.sectionRealIndexes,
-      this.separated,
-      this.controller,
-      this.sectionIndex,
-      this.sticky});
+  ExpandableSectionContainerInfo({
+    this.header,
+    this.content,
+    this.children,
+    this.listIndex,
+    this.sectionRealIndexes,
+    this.separated,
+    this.controller,
+    this.sectionIndex,
+    this.sticky,
+  });
 
   @override
   bool operator ==(Object other) =>
