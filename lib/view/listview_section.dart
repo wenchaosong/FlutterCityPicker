@@ -9,17 +9,16 @@ class ExpandableListView extends BoxScrollView {
   final SliverExpandableChildDelegate builder;
 
   ExpandableListView({
-    @required this.builder,
+    required this.builder,
     bool reverse = false,
-    ScrollController controller,
-    bool primary,
-    ScrollPhysics physics,
+    ScrollController? controller,
+    bool? primary,
+    ScrollPhysics? physics,
     bool shrinkWrap = false,
-    EdgeInsetsGeometry padding,
-    double cacheExtent,
+    EdgeInsetsGeometry? padding,
+    double? cacheExtent,
     DragStartBehavior dragStartBehavior = DragStartBehavior.start,
-  })  : assert(builder != null),
-        super(
+  }) : super(
           scrollDirection: Axis.vertical,
           reverse: reverse,
           controller: controller,
@@ -28,7 +27,7 @@ class ExpandableListView extends BoxScrollView {
           shrinkWrap: shrinkWrap,
           padding: padding,
           cacheExtent: cacheExtent,
-          semanticChildCount: builder.sectionList?.length ?? 0,
+          semanticChildCount: builder.sectionList.length,
           dragStartBehavior: dragStartBehavior,
         );
 
@@ -42,16 +41,16 @@ class ExpandableListView extends BoxScrollView {
 
 ///Section widget information.
 class ExpandableSectionContainerInfo {
-  Widget header;
-  Widget content;
-  final List<Widget> children;
-  final int listIndex;
-  final List<int> sectionRealIndexes;
-  final bool separated;
+  Widget? header;
+  Widget? content;
+  final List<Widget>? children;
+  final int? listIndex;
+  final List<int>? sectionRealIndexes;
+  final bool? separated;
 
-  final ExpandableListController controller;
-  final int sectionIndex;
-  final bool sticky;
+  final ExpandableListController? controller;
+  final int? sectionIndex;
+  final bool? sticky;
 
   ExpandableSectionContainerInfo({
     this.header,
@@ -102,8 +101,8 @@ class ExpandableSectionContainer extends MultiChildRenderObjectWidget {
   final ExpandableSectionContainerInfo info;
 
   ExpandableSectionContainer({
-    @required this.info,
-  }) : super(children: [info.content, info.header]);
+    required this.info,
+  }) : super(children: [info.content!, info.header!]);
 
   @override
   RenderExpandableSectionContainer createRenderObject(BuildContext context) {
@@ -124,7 +123,7 @@ class ExpandableSectionContainer extends MultiChildRenderObjectWidget {
   void updateRenderObject(
       BuildContext context, RenderExpandableSectionContainer renderObject) {
     renderObject
-      ..scrollable = Scrollable.of(context)
+      ..scrollable = Scrollable.of(context)!
       ..controller = this.info.controller
       ..sticky = this.info.sticky
       ..listIndex = this.info.listIndex
@@ -138,29 +137,29 @@ class RenderExpandableSectionContainer extends RenderBox
     with
         ContainerRenderObjectMixin<RenderBox, MultiChildLayoutParentData>,
         RenderBoxContainerDefaultsMixin<RenderBox, MultiChildLayoutParentData> {
-  bool _sticky;
-  ScrollableState _scrollable;
-  ExpandableListController _controller;
-  RenderSliverList _renderSliver;
-  int _listIndex;
-  int _stickyIndex = -1;
+  bool? _sticky;
+  ScrollableState? _scrollable;
+  ExpandableListController? _controller;
+  RenderSliverList? _renderSliver;
+  int? _listIndex;
+  int? _stickyIndex = -1;
 
   ///[sectionIndex, section in SliverList index].
-  List<int> _sectionRealIndexes;
+  List<int>? _sectionRealIndexes;
 
   /// is SliverList has separator
-  bool _separated;
+  bool? _separated;
 
   RenderExpandableSectionContainer({
-    @required ScrollableState scrollable,
-    ExpandableListController controller,
+    @required ScrollableState? scrollable,
+    ExpandableListController? controller,
     sticky = true,
-    int listIndex = -1,
-    List<int> sectionRealIndexes = const [],
-    bool separated = false,
-    RenderBox header,
-    RenderBox content,
-    RenderSliverList renderSliver,
+    int? listIndex = -1,
+    List<int>? sectionRealIndexes = const [],
+    bool? separated = false,
+    RenderBox? header,
+    RenderBox? content,
+    RenderSliverList? renderSliver,
   })  : _scrollable = scrollable,
         _controller = controller,
         _sticky = sticky,
@@ -176,9 +175,11 @@ class RenderExpandableSectionContainer extends RenderBox
     }
   }
 
-  get sectionRealIndexes => _sectionRealIndexes;
+  List<int> getSectionRealIndexes() {
+    return _sectionRealIndexes!;
+  }
 
-  set sectionRealIndexes(List<int> value) {
+  set sectionRealIndexes(List<int>? value) {
     if (_sectionRealIndexes == value) {
       return;
     }
@@ -186,9 +187,11 @@ class RenderExpandableSectionContainer extends RenderBox
     markNeedsLayout();
   }
 
-  get separated => _separated;
+  bool getSeparated() {
+    return _separated!;
+  }
 
-  set separated(bool value) {
+  set separated(bool? value) {
     if (_separated == value) {
       return;
     }
@@ -196,27 +199,28 @@ class RenderExpandableSectionContainer extends RenderBox
     markNeedsLayout();
   }
 
-  get scrollable => _scrollable;
+  ScrollableState getScrollable() {
+    return _scrollable!;
+  }
 
   set scrollable(ScrollableState value) {
-    assert(value != null);
     if (_scrollable == value) {
       return;
     }
-    final ScrollableState oldValue = _scrollable;
+    final ScrollableState? oldValue = _scrollable;
     _scrollable = value;
     markNeedsLayout();
     if (attached) {
-      oldValue.position?.removeListener(markNeedsLayout);
-      if (_sticky) {
-        _scrollable.position?.addListener(markNeedsLayout);
+      oldValue!.position.removeListener(markNeedsLayout);
+      if (_sticky!) {
+        _scrollable!.position.addListener(markNeedsLayout);
       }
     }
   }
 
-  ExpandableListController get controller => _controller;
+  ExpandableListController? get controller => _controller;
 
-  set controller(ExpandableListController value) {
+  set controller(ExpandableListController? value) {
     if (_controller == value) {
       return;
     }
@@ -224,22 +228,26 @@ class RenderExpandableSectionContainer extends RenderBox
     markNeedsLayout();
   }
 
-  get sticky => _sticky;
+  bool getSticky() {
+    return _sticky!;
+  }
 
-  set sticky(bool value) {
+  set sticky(bool? value) {
     if (_sticky == value) {
       return;
     }
     _sticky = value;
     markNeedsLayout();
-    if (attached && !_sticky) {
-      _scrollable.position?.removeListener(markNeedsLayout);
+    if (attached && !_sticky!) {
+      _scrollable!.position.removeListener(markNeedsLayout);
     }
   }
 
-  get listIndex => _listIndex;
+  int getListIndex() {
+    return _listIndex!;
+  }
 
-  set listIndex(int value) {
+  set listIndex(int? value) {
     if (_listIndex == value) {
       return;
     }
@@ -256,43 +264,43 @@ class RenderExpandableSectionContainer extends RenderBox
   @override
   void attach(PipelineOwner owner) {
     super.attach(owner);
-    if (sticky) {
-      _scrollable.position?.addListener(markNeedsLayout);
+    if (getSticky()) {
+      _scrollable!.position.addListener(markNeedsLayout);
     }
   }
 
   @override
   void detach() {
-    _scrollable.position?.removeListener(markNeedsLayout);
+    _scrollable!.position.removeListener(markNeedsLayout);
     super.detach();
   }
 
-  RenderBox get content => firstChild;
+  RenderBox? get content => firstChild;
 
-  RenderBox get header => lastChild;
+  RenderBox? get header => lastChild;
 
   @override
   double computeMinIntrinsicWidth(double height) {
-    return max(header.getMinIntrinsicWidth(height),
-        content.getMinIntrinsicWidth(height));
+    return max(header!.getMinIntrinsicWidth(height),
+        content!.getMinIntrinsicWidth(height));
   }
 
   @override
   double computeMaxIntrinsicWidth(double height) {
-    return max(header.getMaxIntrinsicWidth(height),
-        content.getMaxIntrinsicWidth(height));
+    return max(header!.getMaxIntrinsicWidth(height),
+        content!.getMaxIntrinsicWidth(height));
   }
 
   @override
   double computeMinIntrinsicHeight(double width) {
-    return header.getMinIntrinsicHeight(width) +
-        content.getMinIntrinsicHeight(width);
+    return header!.getMinIntrinsicHeight(width) +
+        content!.getMinIntrinsicHeight(width);
   }
 
   @override
   double computeMaxIntrinsicHeight(double width) {
-    return header.getMaxIntrinsicHeight(width) +
-        content.getMaxIntrinsicHeight(width);
+    return header!.getMaxIntrinsicHeight(width) +
+        content!.getMaxIntrinsicHeight(width);
   }
 
   @override
@@ -301,51 +309,51 @@ class RenderExpandableSectionContainer extends RenderBox
 
     //layout two child
     BoxConstraints exactlyConstraints = constraints.loosen();
-    header.layout(exactlyConstraints, parentUsesSize: true);
-    content.layout(exactlyConstraints, parentUsesSize: true);
+    header!.layout(exactlyConstraints, parentUsesSize: true);
+    content!.layout(exactlyConstraints, parentUsesSize: true);
 
     double width =
-        max(constraints.minWidth, max(header.size.width, content.size.width));
+        max(constraints.minWidth, max(header!.size.width, content!.size.width));
     double height =
-        max(constraints.minHeight, header.size.height + content.size.height);
+        max(constraints.minHeight, header!.size.height + content!.size.height);
     size = Size(width, height);
     assert(size.width == constraints.constrainWidth(width));
     assert(size.height == constraints.constrainHeight(height));
 
     //calc content offset
-    positionChild(content, Offset(0, header.size.height));
+    positionChild(content!, Offset(0, header!.size.height));
 
     double sliverListOffset = _getSliverListVisibleScrollOffset();
-    if (_controller.containerOffsets.length <= _listIndex ||
-        (_listIndex > 0 && _controller.containerOffsets[_listIndex] <= 0)) {
+    if (_controller!.containerOffsets.length <= _listIndex! ||
+        (_listIndex! > 0 && _controller!.containerOffsets[_listIndex!]! <= 0)) {
       _refreshContainerLayoutOffsets();
     }
 
-    double currContainerOffset = -1;
-    if (_listIndex < _controller.containerOffsets.length) {
-      currContainerOffset = _controller.containerOffsets[_listIndex];
+    double? currContainerOffset = -1;
+    if (_listIndex! < _controller!.containerOffsets.length) {
+      currContainerOffset = _controller!.containerOffsets[_listIndex!];
     }
     bool containerPainted = (_listIndex == 0 && currContainerOffset == 0) ||
-        currContainerOffset > 0;
+        currContainerOffset! > 0;
     if (!containerPainted) {
-      positionChild(header, Offset.zero);
+      positionChild(header!, Offset.zero);
       return;
     }
-    double minScrollOffset = _listIndex >= _controller.containerOffsets.length
+    double minScrollOffset = _listIndex! >= _controller!.containerOffsets.length
         ? 0
-        : _controller.containerOffsets[_listIndex];
+        : _controller!.containerOffsets[_listIndex!]!;
     double maxScrollOffset = minScrollOffset + size.height;
 
     //when [ExpandableSectionContainer] size changed, SliverList may give a wrong
     // layoutOffset at first time, so check offsets for store right layoutOffset
     // in [containerOffsets].
-    if (_listIndex < _controller.containerOffsets.length) {
-      currContainerOffset = _controller.containerOffsets[_listIndex];
-      int nextListIndex = _listIndex + 1;
-      if (nextListIndex < _controller.containerOffsets.length &&
-          _controller.containerOffsets[nextListIndex] < maxScrollOffset) {
-        _controller.containerOffsets =
-            _controller.containerOffsets.sublist(0, nextListIndex);
+    if (_listIndex! < _controller!.containerOffsets.length) {
+      currContainerOffset = _controller!.containerOffsets[_listIndex!];
+      int nextListIndex = _listIndex! + 1;
+      if (nextListIndex < _controller!.containerOffsets.length &&
+          _controller!.containerOffsets[nextListIndex]! < maxScrollOffset) {
+        _controller!.containerOffsets =
+            _controller!.containerOffsets.sublist(0, nextListIndex);
       }
     }
 
@@ -355,14 +363,14 @@ class RenderExpandableSectionContainer extends RenderBox
         _stickyIndex = _listIndex;
         if (_controller != null) {
           //ensure callback 100% percent.
-          _controller.updatePercent(_controller.switchingSectionIndex, 1);
+          _controller!.updatePercent(_controller!.switchingSectionIndex, 1);
           //update sticky index
-          _controller.stickySectionIndex = sectionIndex;
+          _controller!.stickySectionIndex = sectionIndex;
         }
       }
     } else if (sliverListOffset <= 0) {
       if (_controller != null) {
-        _controller.stickySectionIndex = -1;
+        _controller!.stickySectionIndex = -1;
         _stickyIndex = -1;
       }
     } else {
@@ -371,59 +379,62 @@ class RenderExpandableSectionContainer extends RenderBox
 
     //calc header offset
     double currHeaderOffset = 0;
-    double headerMaxOffset = content.size.height;
-    if (_sticky && isStickyChild && sliverListOffset > minScrollOffset) {
+    double headerMaxOffset = content!.size.height;
+    if (_sticky! && isStickyChild && sliverListOffset > minScrollOffset) {
       currHeaderOffset = sliverListOffset - minScrollOffset;
     }
-    positionChild(header, Offset(0, min(currHeaderOffset, headerMaxOffset)));
+    positionChild(header!, Offset(0, min(currHeaderOffset, headerMaxOffset)));
 
     //callback header hide percent
     if (_controller != null) {
       if (currHeaderOffset >= headerMaxOffset && currHeaderOffset <= height) {
         double switchingPercent =
-            (currHeaderOffset - headerMaxOffset) / header.size.height;
-        _controller.updatePercent(sectionIndex, switchingPercent);
-      } else if (sliverListOffset < minScrollOffset + content.size.height &&
-          _controller.switchingSectionIndex == sectionIndex) {
+            (currHeaderOffset - headerMaxOffset) / header!.size.height;
+        _controller!.updatePercent(sectionIndex, switchingPercent);
+      } else if (sliverListOffset < minScrollOffset + content!.size.height &&
+          _controller!.switchingSectionIndex == sectionIndex) {
         //ensure callback 0% percent.
-        _controller.updatePercent(sectionIndex, 0);
+        _controller!.updatePercent(sectionIndex, 0);
         //reset switchingSectionIndex
-        _controller.updatePercent(-1, 1);
+        _controller!.updatePercent(-1, 1);
       }
     }
   }
 
   bool get isStickyChild => _listIndex == _stickyIndex;
 
-  int get sectionIndex => separated ? _listIndex ~/ 2 : _listIndex;
+  int? get sectionIndex => getSeparated() ? _listIndex! ~/ 2 : _listIndex;
 
   double _getSliverListVisibleScrollOffset() {
-    return _renderSliver.constraints.overlap +
-        _renderSliver.constraints.scrollOffset;
+    return _renderSliver!.constraints.overlap +
+        _renderSliver!.constraints.scrollOffset;
   }
 
   void _refreshContainerLayoutOffsets() {
-    _renderSliver.visitChildren((renderObject) {
+    _renderSliver!.visitChildren((renderObject) {
       var containerParentData =
           renderObject.parentData as SliverMultiBoxAdaptorParentData;
 
-      while (_controller.containerOffsets.length <= containerParentData.index) {
-        _controller.containerOffsets.add(0);
+      while (
+          _controller!.containerOffsets.length <= containerParentData.index!) {
+        _controller!.containerOffsets.add(0);
       }
       if (containerParentData.layoutOffset != null) {
-        _controller.containerOffsets[containerParentData.index] =
+        _controller!.containerOffsets[containerParentData.index!] =
             containerParentData.layoutOffset;
       }
     });
   }
 
   void positionChild(RenderBox child, Offset offset) {
-    final MultiChildLayoutParentData childParentData = child.parentData;
+    final MultiChildLayoutParentData childParentData =
+        child.parentData as MultiChildLayoutParentData;
     childParentData.offset = offset;
   }
 
   Offset childOffset(RenderBox child) {
-    final MultiChildLayoutParentData childParentData = child.parentData;
+    final MultiChildLayoutParentData childParentData =
+        child.parentData as MultiChildLayoutParentData;
     return childParentData.offset;
   }
 
@@ -436,7 +447,7 @@ class RenderExpandableSectionContainer extends RenderBox
   }
 
   @override
-  bool hitTestChildren(BoxHitTestResult result, {Offset position}) {
+  bool hitTestChildren(BoxHitTestResult result, {required Offset position}) {
     return defaultHitTestChildren(result, position: position);
   }
 }
@@ -458,9 +469,8 @@ class SliverExpandableList extends SliverList {
   final SliverExpandableChildDelegate builder;
 
   SliverExpandableList({
-    @required this.builder,
-  })  : assert(builder != null),
-        super(delegate: builder.delegate);
+    required this.builder,
+  }) : super(delegate: builder.delegate);
 }
 
 /// A delegate that supplies children for [SliverExpandableList] using
@@ -470,14 +480,14 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
   final List sectionList;
 
   ///build section header
-  final ExpandableHeaderBuilder headerBuilder;
+  final ExpandableHeaderBuilder? headerBuilder;
 
   ///build section item
   final ExpandableItemBuilder itemBuilder;
 
   ///build header and item separator, if pass null, SliverList has no separators.
   ///default null.
-  final ExpandableSeparatorBuilder separatorBuilder;
+  final ExpandableSeparatorBuilder? separatorBuilder;
 
   ///whether to sticky the header.
   final bool sticky;
@@ -487,20 +497,20 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
 
   ///use this return a custom content widget, when use this builder, headerBuilder
   ///is invalid.
-  ExpandableSectionBuilder sectionBuilder;
+  ExpandableSectionBuilder? sectionBuilder;
 
   ///expandable list controller, listen sticky header index scroll offset etc.
-  ExpandableListController controller;
+  ExpandableListController? controller;
 
   ///sliver list builder
-  SliverChildBuilderDelegate delegate;
+  late SliverChildBuilderDelegate delegate;
 
   ///if value is true, when section is collapsed, all child widget in section widget will be removed.
   bool removeItemsOnCollapsed = true;
 
   SliverExpandableChildDelegate(
-      {@required this.sectionList,
-      @required this.itemBuilder,
+      {required this.sectionList,
+      required this.itemBuilder,
       this.controller,
       this.separatorBuilder,
       this.headerBuilder,
@@ -510,9 +520,7 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
       bool addAutomaticKeepAlives = true,
       bool addRepaintBoundaries = true,
       bool addSemanticIndexes = true})
-      : assert(sectionList != null),
-        //only use one builder
-        assert(headerBuilder == null || sectionBuilder == null),
+      : assert(headerBuilder == null || sectionBuilder == null),
         sectionRealIndexes = _buildSectionRealIndexes(sectionList) {
     if (controller == null) {
       controller = ExpandableListController();
@@ -531,7 +539,7 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
           var children = hasChildren
               ? <Widget>[]
               : List.generate(
-                  section.getItems().length,
+                  section.getItems()!.length,
                   (i) =>
                       itemBuilder(context, sectionIndex, i, ++itemRealIndex));
           var containerInfo = ExpandableSectionContainerInfo(
@@ -547,12 +555,13 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
             ),
             children: children,
           );
-          Widget container = sectionBuilder != null
-              ? sectionBuilder(context, containerInfo)
+          Widget? container = sectionBuilder != null
+              ? sectionBuilder!(context, containerInfo)
               : null;
           if (container == null) {
             containerInfo
-              ..header = headerBuilder(context, sectionIndex, sectionRealIndex);
+              ..header =
+                  headerBuilder!(context, sectionIndex, sectionRealIndex);
             container = ExpandableSectionContainer(
               info: containerInfo,
             );
@@ -586,7 +595,7 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
                     (i) => i.isEven
                         ? itemBuilder(
                             context, sectionIndex, i ~/ 2, ++itemRealIndex)
-                        : separatorBuilder(context, false, itemRealIndex - 1));
+                        : separatorBuilder!(context, false, itemRealIndex - 1));
 
             var containerInfo = ExpandableSectionContainerInfo(
               separated: true,
@@ -601,20 +610,20 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
                 children: children,
               ),
             );
-            Widget container = sectionBuilder != null
-                ? sectionBuilder(context, containerInfo)
+            Widget? container = sectionBuilder != null
+                ? sectionBuilder!(context, containerInfo)
                 : null;
             if (container == null) {
               containerInfo
                 ..header =
-                    headerBuilder(context, sectionIndex, sectionRealIndex);
+                    headerBuilder!(context, sectionIndex, sectionRealIndex);
               container = ExpandableSectionContainer(
                 info: containerInfo,
               );
             }
             return container;
           } else {
-            itemView = separatorBuilder(context, true,
+            itemView = separatorBuilder!(context, true,
                 sectionIndex + (section.getItems()?.length ?? 0));
           }
           return itemView;
@@ -637,7 +646,7 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
   static List<int>
       _buildSectionRealIndexes<T, S extends ExpandableListSection<T>>(
           List sectionList) {
-    int calcLength = sectionList?.length ?? 0 - 1;
+    int calcLength = sectionList.length - 1;
     List<int> sectionRealIndexes = [];
     if (calcLength < 0) {
       return sectionRealIndexes;
@@ -647,7 +656,6 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
     for (int i = 0; i < calcLength; i++) {
       S section = sectionList[i];
       //each section model should not null.
-      assert(section != null);
       realIndex += 1 + (section.getItems()?.length ?? 0);
       sectionRealIndexes.add(realIndex);
     }
@@ -662,7 +670,7 @@ abstract class ExpandableListSection<T> {
 
   void setSectionExpanded(bool expanded);
 
-  List<T> getItems();
+  List<T>? getItems();
 }
 
 ///Controller for listen sticky header offset and current sticky header index.
@@ -670,23 +678,23 @@ class ExpandableListController extends ChangeNotifier {
   ///switchingSection scroll percent, [0.1-1.0], 1.0 mean that the last sticky section
   ///is completely hidden.
   double _percent = 1;
-  int _switchingSectionIndex = -1;
-  int _stickySectionIndex = -1;
+  int? _switchingSectionIndex = -1;
+  int? _stickySectionIndex = -1;
 
   ExpandableListController();
 
   ///store [ExpandableSectionContainer] information. [SliverList index, layoutOffset].
   ///don't modify it.
-  List<double> containerOffsets = [];
+  List<double?> containerOffsets = [];
 
   double get percent => _percent;
 
-  int get switchingSectionIndex => _switchingSectionIndex;
+  int? get switchingSectionIndex => _switchingSectionIndex;
 
   ///get pinned header index
-  int get stickySectionIndex => _stickySectionIndex;
+  int? get stickySectionIndex => _stickySectionIndex;
 
-  updatePercent(int sectionIndex, double percent) {
+  updatePercent(int? sectionIndex, double percent) {
     if (_percent == percent && _switchingSectionIndex == sectionIndex) {
       return;
     }
@@ -695,7 +703,7 @@ class ExpandableListController extends ChangeNotifier {
     notifyListeners();
   }
 
-  set stickySectionIndex(int value) {
+  set stickySectionIndex(int? value) {
     if (_stickySectionIndex == value) {
       return;
     }
@@ -727,7 +735,7 @@ class ExpandableDefaultAutoLayoutTrigger
   final ExpandableListController _controller;
 
   double _percent = 0;
-  int _stickyIndex = 0;
+  int? _stickyIndex = 0;
 
   ExpandableDefaultAutoLayoutTrigger(this._controller) : super();
 
@@ -750,10 +758,10 @@ class ExpandableDefaultAutoLayoutTrigger
 ///when [trigger] condition matched.
 class ExpandableAutoLayoutWidget extends StatefulWidget {
   ///listen sticky header hide percent, [0.0-0.1].
-  final ExpandableAutoLayoutTrigger trigger;
+  final ExpandableAutoLayoutTrigger? trigger;
 
   ///build section header
-  final WidgetBuilder builder;
+  final WidgetBuilder? builder;
 
   ExpandableAutoLayoutWidget({this.builder, this.trigger});
 
@@ -767,14 +775,14 @@ class _ExpandableAutoLayoutWidgetState
   @override
   void initState() {
     super.initState();
-    if (widget.trigger != null && widget.trigger.controller != null) {
-      widget.trigger.controller.addListener(_onChange);
+    if (widget.trigger != null) {
+      widget.trigger!.controller.addListener(_onChange);
     }
   }
 
   void _onChange() {
-    if (widget.trigger.needBuild()) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+    if (widget.trigger!.needBuild()) {
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
         if (mounted) {
           setState(() {});
         }
@@ -784,8 +792,8 @@ class _ExpandableAutoLayoutWidgetState
 
   @override
   void dispose() {
-    if (widget.trigger != null && widget.trigger.controller != null) {
-      widget.trigger.controller.removeListener(_onChange);
+    if (widget.trigger != null) {
+      widget.trigger!.controller.removeListener(_onChange);
     }
     super.dispose();
   }
@@ -793,7 +801,7 @@ class _ExpandableAutoLayoutWidgetState
   @override
   Widget build(BuildContext context) {
     return RepaintBoundary(
-      child: widget.builder(context),
+      child: widget.builder!(context),
     );
   }
 }

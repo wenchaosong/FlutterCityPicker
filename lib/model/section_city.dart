@@ -5,10 +5,10 @@ import 'city.dart';
 /// 城市列表数据模型
 class SectionCity implements ExpandableListSection<City> {
   /// 字母
-  String letter;
+  String? letter;
 
   /// 当前字母的列表
-  List<City> data;
+  List<City>? data;
 
   SectionCity({
     this.letter,
@@ -20,12 +20,12 @@ class SectionCity implements ExpandableListSection<City> {
       letter: json["letter"].toString(),
       data: json["data"] == null
           ? []
-          : (json["data"] as List ?? []).map((o) => City.fromJson(o)).toList(),
+          : json["data"].map((o) => City.fromJson(o)).toList(),
     );
   }
 
   @override
-  List<City> getItems() {
+  List<City>? getItems() {
     return data;
   }
 

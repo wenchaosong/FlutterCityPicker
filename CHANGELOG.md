@@ -1,3 +1,7 @@
+## 1.0.0
+
+- add null safety
+
 ## 0.0.7
 
 - fix bug

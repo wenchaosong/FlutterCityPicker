@@ -13,85 +13,85 @@ import 'layout_delegate.dart';
 ///
 class CityPickerWidget extends StatefulWidget {
   /// 组件高度
-  final double height;
+  final double? height;
 
   /// 标题高度
-  final double titleHeight;
+  final double? titleHeight;
 
   /// 顶部圆角
-  final double corner;
+  final double? corner;
 
   /// 左边间距
-  final double paddingLeft;
+  final double? paddingLeft;
 
   /// 标题样式
-  final Widget titleWidget;
+  final Widget? titleWidget;
 
   /// 关闭图标组件
-  final Widget closeWidget;
+  final Widget? closeWidget;
 
   /// tab 高度
-  final double tabHeight;
+  final double? tabHeight;
 
   /// 是否显示 indicator
-  final bool showTabIndicator;
+  final bool? showTabIndicator;
 
   /// indicator 颜色
-  final Color tabIndicatorColor;
+  final Color? tabIndicatorColor;
 
   /// indicator 高度
-  final double tabIndicatorHeight;
+  final double? tabIndicatorHeight;
 
   /// label 文字大小
-  final double labelTextSize;
+  final double? labelTextSize;
 
   /// 选中 label 颜色
-  final Color selectedLabelColor;
+  final Color? selectedLabelColor;
 
   /// 未选中 label 颜色
-  final Color unselectedLabelColor;
+  final Color? unselectedLabelColor;
 
   /// item 头部高度
-  final double itemHeadHeight;
+  final double? itemHeadHeight;
 
   /// item 头部背景颜色
-  final Color itemHeadBackgroundColor;
+  final Color? itemHeadBackgroundColor;
 
   /// item 头部分割线颜色
-  final Color itemHeadLineColor;
+  final Color? itemHeadLineColor;
 
   /// item 头部分割线高度
-  final double itemHeadLineHeight;
+  final double? itemHeadLineHeight;
 
   /// item 头部文字样式
-  final TextStyle itemHeadTextStyle;
+  final TextStyle? itemHeadTextStyle;
 
   /// item 高度
-  final double itemHeight;
+  final double? itemHeight;
 
   /// 索引组件宽度
-  final double indexBarWidth;
+  final double? indexBarWidth;
 
   /// 索引组件 item 高度
-  final double indexBarItemHeight;
+  final double? indexBarItemHeight;
 
   /// 索引组件背景颜色
-  final Color indexBarBackgroundColor;
+  final Color? indexBarBackgroundColor;
 
   /// 索引组件文字样式
-  final TextStyle indexBarTextStyle;
+  final TextStyle? indexBarTextStyle;
 
   /// 选中城市的图标组件
-  final Widget itemSelectedIconWidget;
+  final Widget? itemSelectedIconWidget;
 
   /// 选中城市文字样式
-  final TextStyle itemSelectedTextStyle;
+  final TextStyle? itemSelectedTextStyle;
 
   /// 未选中城市文字样式
-  final TextStyle itemUnSelectedTextStyle;
+  final TextStyle? itemUnSelectedTextStyle;
 
   /// 监听事件
-  final CityPickerListener cityPickerListener;
+  final CityPickerListener? cityPickerListener;
 
   CityPickerWidget({
     this.height,
@@ -120,7 +120,7 @@ class CityPickerWidget extends StatefulWidget {
     this.itemSelectedIconWidget,
     this.itemSelectedTextStyle,
     this.itemUnSelectedTextStyle,
-    @required this.cityPickerListener,
+    required this.cityPickerListener,
   });
 
   @override
@@ -130,29 +130,29 @@ class CityPickerWidget extends StatefulWidget {
 class CityPickerState extends State<CityPickerWidget>
     with TickerProviderStateMixin
     implements ItemClickListener {
-  CityPickerListener _cityPickerListener;
+  CityPickerListener? _cityPickerListener;
 
-  TabController _tabController;
-  PageController _pageController;
+  TabController? _tabController;
+  PageController? _pageController;
 
   // 滑动监听回调
-  VoidCallback _pageListener;
+  late VoidCallback _pageListener;
 
   List<TabTitle> _myTabs = [
     TabTitle(index: 0, title: "请选择", name: "", code: ""),
   ];
 
   // 省级名称
-  String _provinceName = "";
+  String? _provinceName = "";
 
   // 省级代码
-  String _provinceCode = "";
+  String? _provinceCode = "";
 
   // 市级名称
-  String _cityName = "";
+  String? _cityName = "";
 
   // 市级代码
-  String _cityCode = "";
+  String? _cityCode = "";
 
   @override
   void initState() {
@@ -160,9 +160,9 @@ class CityPickerState extends State<CityPickerWidget>
     _tabController = TabController(vsync: this, length: _myTabs.length);
     _pageController = PageController();
     _pageListener = () {
-      int pageIndex = _pageController.page.toInt();
-      if (pageIndex != _tabController.index) {
-        _tabController.animateTo(pageIndex);
+      int pageIndex = _pageController!.page!.toInt();
+      if (pageIndex != _tabController!.index) {
+        _tabController!.animateTo(pageIndex);
       }
     };
 
@@ -179,7 +179,7 @@ class CityPickerState extends State<CityPickerWidget>
   }
 
   @override
-  void onItemClick(int tabIndex, String name, String code) {
+  void onItemClick(int? tabIndex, String? name, String? code) {
     switch (tabIndex) {
       case 0:
         if (mounted) {
@@ -197,9 +197,9 @@ class CityPickerState extends State<CityPickerWidget>
             _tabController = TabController(vsync: this, length: _myTabs.length);
           });
         }
-        _pageController.jumpToPage(1);
-        _pageController.addListener(_pageListener);
-        _tabController.animateTo(1);
+        _pageController!.jumpToPage(1);
+        _pageController!.addListener(_pageListener);
+        _tabController!.animateTo(1);
         break;
       case 1:
         if (mounted) {
@@ -215,14 +215,14 @@ class CityPickerState extends State<CityPickerWidget>
             _tabController = TabController(vsync: this, length: _myTabs.length);
           });
         }
-        _pageController.removeListener(_pageListener);
-        _pageController.jumpToPage(2);
-        _pageController.addListener(_pageListener);
-        _tabController.animateTo(2);
+        _pageController!.removeListener(_pageListener);
+        _pageController!.jumpToPage(2);
+        _pageController!.addListener(_pageListener);
+        _tabController!.animateTo(2);
         break;
       case 2:
         if (_cityPickerListener != null) {
-          _cityPickerListener.onFinish(
+          _cityPickerListener!.onFinish(
             _provinceCode,
             _provinceName,
             _cityCode,
@@ -238,12 +238,12 @@ class CityPickerState extends State<CityPickerWidget>
 
   @override
   Widget build(BuildContext context) {
-    final route = CustomInheritedWidget.of(context).router;
+    final route = CustomInheritedWidget.of(context)!.router;
     return AnimatedBuilder(
-      animation: route.animation,
-      builder: (BuildContext context, Widget child) => CustomSingleChildLayout(
+      animation: route.animation!,
+      builder: (BuildContext context, Widget? child) => CustomSingleChildLayout(
           delegate: CustomLayoutDelegate(
-              progress: route.animation.value, height: widget.height),
+              progress: route.animation!.value, height: widget.height),
           child: GestureDetector(
             child: Material(
                 color: Colors.transparent,
@@ -269,14 +269,14 @@ class CityPickerState extends State<CityPickerWidget>
       decoration: BoxDecoration(
           color: Theme.of(context).dialogBackgroundColor,
           borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(widget.corner),
-              topRight: Radius.circular(widget.corner))),
+              topLeft: Radius.circular(widget.corner!),
+              topRight: Radius.circular(widget.corner!))),
       child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             widget.titleWidget ??
                 Container(
-                  padding: EdgeInsets.only(left: widget.paddingLeft),
+                  padding: EdgeInsets.only(left: widget.paddingLeft!),
                   child: Text(
                     '请选择所在地区',
                     style: TextStyle(
@@ -306,16 +306,16 @@ class CityPickerState extends State<CityPickerWidget>
       child: TabBar(
         controller: _tabController,
         onTap: (index) {
-          _pageController.jumpToPage(index);
+          _pageController!.jumpToPage(index);
         },
         isScrollable: true,
         indicatorSize: TabBarIndicatorSize.tab,
-        labelPadding: EdgeInsets.only(left: widget.paddingLeft),
-        indicator: widget.showTabIndicator
+        labelPadding: EdgeInsets.only(left: widget.paddingLeft!),
+        indicator: widget.showTabIndicator!
             ? UnderlineTabIndicator(
-                insets: EdgeInsets.only(left: widget.paddingLeft),
+                insets: EdgeInsets.only(left: widget.paddingLeft!),
                 borderSide: BorderSide(
-                    width: widget.tabIndicatorHeight,
+                    width: widget.tabIndicatorHeight!,
                     color: widget.tabIndicatorColor ??
                         Theme.of(context).primaryColor),
               )
@@ -325,7 +325,7 @@ class CityPickerState extends State<CityPickerWidget>
         unselectedLabelColor: widget.unselectedLabelColor ?? Colors.black54,
         labelColor: widget.selectedLabelColor ?? Theme.of(context).primaryColor,
         tabs: _myTabs.map((data) {
-          return Text(data.title,
+          return Text(data.title!,
               style: TextStyle(fontSize: widget.labelTextSize));
         }).toList(),
       ),

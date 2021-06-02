@@ -9,80 +9,80 @@ import 'listview_section.dart';
 /// 城市列表组件
 class ItemWidget extends StatefulWidget {
   /// 当前列表的索引
-  final int index;
+  final int? index;
 
   /// 上一级城市代码
-  final String code;
+  final String? code;
 
   /// 上一级城市名称
-  final String name;
+  final String? name;
 
   /// 左边间距
-  final double paddingLeft;
+  final double? paddingLeft;
 
   /// item 头部高度
-  final double itemHeadHeight;
+  final double? itemHeadHeight;
 
   /// item 头部背景颜色
-  final Color itemHeadBackgroundColor;
+  final Color? itemHeadBackgroundColor;
 
   /// item 头部分割线颜色
-  final Color itemHeadLineColor;
+  final Color? itemHeadLineColor;
 
   /// item 头部分割线高度
-  final double itemHeadLineHeight;
+  final double? itemHeadLineHeight;
 
   /// item 头部文字样式
-  final TextStyle itemHeadTextStyle;
+  final TextStyle? itemHeadTextStyle;
 
   /// item 高度
-  final double itemHeight;
+  final double? itemHeight;
 
   /// 索引组件宽度
-  final double indexBarWidth;
+  final double? indexBarWidth;
 
   /// 索引组件 item 高度
-  final double indexBarItemHeight;
+  final double? indexBarItemHeight;
 
   /// 索引组件背景颜色
-  final Color indexBarBackgroundColor;
+  final Color? indexBarBackgroundColor;
 
   /// 索引组件文字样式
-  final TextStyle indexBarTextStyle;
+  final TextStyle? indexBarTextStyle;
 
   /// 选中城市的图标组件
-  final Widget itemSelectedIconWidget;
+  final Widget? itemSelectedIconWidget;
 
   /// 选中城市文字样式
-  final TextStyle itemSelectedTextStyle;
+  final TextStyle? itemSelectedTextStyle;
 
   /// 未选中城市文字样式
-  final TextStyle itemUnSelectedTextStyle;
+  final TextStyle? itemUnSelectedTextStyle;
 
-  final CityPickerListener cityPickerListener;
+  final CityPickerListener? cityPickerListener;
 
-  final ItemClickListener itemClickListener;
+  final ItemClickListener? itemClickListener;
 
   ItemWidget({
-    @required this.index,
-    @required this.code,
-    @required this.name,
-    @required this.paddingLeft,
-    @required this.itemHeadHeight,
-    @required this.itemHeadBackgroundColor,
-    @required this.itemHeadLineColor,
-    @required this.itemHeadLineHeight,
-    @required this.itemHeadTextStyle,
-    @required this.itemHeight,
-    @required this.indexBarWidth,
-    @required this.indexBarItemHeight,
-    @required this.indexBarBackgroundColor,
-    @required this.indexBarTextStyle,
-    @required this.itemSelectedIconWidget,
-    @required this.itemSelectedTextStyle,
-    @required this.itemUnSelectedTextStyle,
-    @required this.cityPickerListener,
-    @required this.itemClickListener,
+    required this.index,
+    required this.code,
+    required this.name,
+    required this.paddingLeft,
+    required this.itemHeadHeight,
+    required this.itemHeadBackgroundColor,
+    required this.itemHeadLineColor,
+    required this.itemHeadLineHeight,
+    required this.itemHeadTextStyle,
+    required this.itemHeight,
+    required this.indexBarWidth,
+    required this.indexBarItemHeight,
+    required this.indexBarBackgroundColor,
+    required this.indexBarTextStyle,
+    required this.itemSelectedIconWidget,
+    required this.itemSelectedTextStyle,
+    required this.itemUnSelectedTextStyle,
+    required this.cityPickerListener,
+    required this.itemClickListener,
   });
 
   @override
@@ -91,16 +91,16 @@ class ItemWidget extends StatefulWidget {
 
 class ItemWidgetState extends State<ItemWidget>
     with AutomaticKeepAliveClientMixin {
-  ScrollController _scrollController;
+  ScrollController? _scrollController;
 
-  CityPickerListener _cityPickerListener;
-  ItemClickListener _itemClickListener;
+  CityPickerListener? _cityPickerListener;
+  ItemClickListener? _itemClickListener;
 
   // 选中的名称
-  String _title = "请选择";
+  String? _title = "请选择";
 
   // 上次保存的名称
-  String _preName = "";
+  String? _preName = "";
 
   // 列表数据
   List<SectionCity> _mList = [];
@@ -117,7 +117,7 @@ class ItemWidgetState extends State<ItemWidget>
     if (_cityPickerListener != null) {
       switch (widget.index) {
         case 0:
-          _cityPickerListener.loadProvinceData().then((value) {
+          _cityPickerListener!.loadProvinceData().then((value) {
             if (mounted) {
               setState(() {
                 _mList = sortCity(value);
@@ -126,7 +126,7 @@ class ItemWidgetState extends State<ItemWidget>
           });
           break;
         case 1:
-          _cityPickerListener
+          _cityPickerListener!
               .onProvinceSelected(widget.code, widget.name)
               .then((value) {
             if (mounted) {
@@ -138,7 +138,7 @@ class ItemWidgetState extends State<ItemWidget>
           });
           break;
         case 2:
-          _cityPickerListener
+          _cityPickerListener!
               .onCitySelected(widget.code, widget.name)
               .then((value) {
             if (mounted) {
@@ -160,11 +160,11 @@ class ItemWidgetState extends State<ItemWidget>
     if (_cityPickerListener != null) {
       switch (widget.index) {
         case 1:
-          if (_preName.isNotEmpty &&
-              widget.name.isNotEmpty &&
+          if (_preName!.isNotEmpty &&
+              widget.name!.isNotEmpty &&
               _preName != widget.name) {
             _title = "";
-            _cityPickerListener
+            _cityPickerListener!
                 .onProvinceSelected(widget.code, widget.name)
                 .then((value) {
               if (mounted) {
@@ -177,11 +177,11 @@ class ItemWidgetState extends State<ItemWidget>
           }
           break;
         case 2:
-          if (_preName.isNotEmpty &&
-              widget.name.isNotEmpty &&
+          if (_preName!.isNotEmpty &&
+              widget.name!.isNotEmpty &&
               _preName != widget.name) {
             _title = "";
-            _cityPickerListener
+            _cityPickerListener!
                 .onCitySelected(widget.code, widget.name)
                 .then((value) {
               if (mounted) {
@@ -202,15 +202,15 @@ class ItemWidgetState extends State<ItemWidget>
     // 先排序
     List<City> _cityList = [];
     value.forEach((city) {
-      String letter = PinyinHelper.getFirstWordPinyin(city.name)
+      String letter = PinyinHelper.getFirstWordPinyin(city.name!)
           .substring(0, 1)
           .toUpperCase();
       _cityList.add(City(code: city.code, letter: letter, name: city.name));
     });
-    _cityList.sort((a, b) => a.letter.compareTo(b.letter));
+    _cityList.sort((a, b) => a.letter!.compareTo(b.letter!));
     // 组装数据
     List<SectionCity> _sectionList = [];
-    String _letter = "A";
+    String? _letter = "A";
     List<City> _cityList2 = [];
     for (int i = 0; i < _cityList.length; i++) {
       if (_letter == _cityList[i].letter) {
@@ -242,12 +242,12 @@ class ItemWidgetState extends State<ItemWidget>
         if (i == 0) {
           position = 0;
         } else {
-          position = i * widget.itemHeadHeight + length * widget.itemHeight;
+          position = i * widget.itemHeadHeight! + length * widget.itemHeight!;
         }
       }
-      length += _mList[i].data.length;
+      length += _mList[i].data!.length;
     }
-    _scrollController.animateTo(position,
+    _scrollController!.animateTo(position,
         duration: Duration(milliseconds: 10), curve: Curves.linear);
   }
 
@@ -279,21 +279,21 @@ class ItemWidgetState extends State<ItemWidget>
                     decoration: BoxDecoration(
                       border: Border(
                           bottom: BorderSide(
-                        width: widget.itemHeadLineHeight,
+                        width: widget.itemHeadLineHeight!,
                         color: widget.itemHeadLineColor ?? Colors.black38,
                       )),
                       color: widget.itemHeadBackgroundColor ??
                           Theme.of(context).dialogBackgroundColor,
                     ),
                     alignment: Alignment.centerLeft,
-                    padding: EdgeInsets.only(left: widget.paddingLeft),
-                    child: Text(_mList[sectionIndex].letter,
+                    padding: EdgeInsets.only(left: widget.paddingLeft!),
+                    child: Text(_mList[sectionIndex].letter!,
                         style: widget.itemHeadTextStyle ??
                             TextStyle(fontSize: 15, color: Colors.black)),
                   );
                 },
                 itemBuilder: (context, sectionIndex, itemIndex, index) {
-                  City city = _mList[sectionIndex].data[itemIndex];
+                  City city = _mList[sectionIndex].data![itemIndex];
                   bool isSelect = city.name == _title;
                   return InkWell(
                     onTap: () {
@@ -303,14 +303,14 @@ class ItemWidgetState extends State<ItemWidget>
                         });
                       }
                       if (_itemClickListener != null) {
-                        _itemClickListener.onItemClick(
-                            widget.index, city.name, city.code);
+                        _itemClickListener!
+                            .onItemClick(widget.index, city.name, city.code);
                       }
                     },
                     child: Container(
                       width: double.infinity,
                       height: widget.itemHeight,
-                      padding: EdgeInsets.only(left: widget.paddingLeft),
+                      padding: EdgeInsets.only(left: widget.paddingLeft!),
                       alignment: Alignment.centerLeft,
                       child: Row(children: <Widget>[
                         Offstage(
@@ -321,7 +321,7 @@ class ItemWidgetState extends State<ItemWidget>
                                   size: 16),
                         ),
                         SizedBox(width: isSelect ? 3 : 0),
-                        Text(city.name,
+                        Text(city.name!,
                             style: isSelect
                                 ? widget.itemSelectedTextStyle ??
                                     TextStyle(
@@ -375,7 +375,7 @@ class ItemWidgetState extends State<ItemWidget>
         width: widget.indexBarWidth,
         height: type == 4
             ? widget.indexBarItemHeight
-            : widget.indexBarItemHeight + 4,
+            : widget.indexBarItemHeight! + 4,
         alignment: type == 2
             ? Alignment.bottomCenter
             : type == 3
@@ -402,7 +402,7 @@ class ItemWidgetState extends State<ItemWidget>
                   ? Radius.circular(50)
                   : Radius.circular(0),
             )),
-        child: Text(_mList[index].letter,
+        child: Text(_mList[index].letter!,
             style: widget.indexBarTextStyle ??
                 TextStyle(fontSize: 14, color: Colors.black54)),
       ),

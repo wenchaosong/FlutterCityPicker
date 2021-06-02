@@ -1,13 +1,13 @@
 /// 城市的数据模型
 class City {
   /// 名称
-  String name;
+  String? name;
 
   /// 代码
-  String code;
+  String? code;
 
   /// 首字母
-  String letter;
+  String? letter;
 
   City({
     this.name,

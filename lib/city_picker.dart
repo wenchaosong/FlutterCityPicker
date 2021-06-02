@@ -13,9 +13,9 @@ import 'view/popup_route.dart';
 class CityPicker {
   /// 展示
   static void show({
-    @required BuildContext context,
+    required BuildContext context,
     // 主题颜色
-    ThemeData theme,
+    ThemeData? theme,
     // 底部弹出框动画时间
     int duration = 200,
     // 背景透明度
@@ -31,33 +31,33 @@ class CityPicker {
     // 距离左边的间距
     double paddingLeft = 15.0,
     // 标题组件
-    Widget titleWidget,
+    Widget? titleWidget,
     // 关闭图标组件
-    Widget closeWidget,
+    Widget? closeWidget,
     // tab 高度
     double tabHeight = 40.0,
     // 是否显示指示器
     bool showTabIndicator = true,
     // 指示器颜色
-    Color tabIndicatorColor,
+    Color? tabIndicatorColor,
     // 指示器高度
     double tabIndicatorHeight = 3.0,
     // tab 字体大小
     double labelTextSize = 15.0,
     // tab 选中的字体颜色
-    Color selectedLabelColor,
+    Color? selectedLabelColor,
     // tab 未选中的字体颜色
-    Color unselectedLabelColor,
+    Color? unselectedLabelColor,
     // item 头部高度
     double itemHeadHeight = 30.0,
     // item 头部背景颜色
-    Color itemHeadBackgroundColor,
+    Color? itemHeadBackgroundColor,
     // item 头部分割线颜色
-    Color itemHeadLineColor,
+    Color? itemHeadLineColor,
     // item 头部分割线高度
     double itemHeadLineHeight = 0.1,
     // item 头部文字样式
-    TextStyle itemHeadTextStyle,
+    TextStyle? itemHeadTextStyle,
     // item 高度
     double itemHeight = 40.0,
     // 索引组件宽度
@@ -67,15 +67,15 @@ class CityPicker {
     // 索引组件背景颜色
     Color indexBarBackgroundColor = Colors.black12,
     // 索引组件文字样式
-    TextStyle indexBarTextStyle,
+    TextStyle? indexBarTextStyle,
     // 列表选中的图标组件
-    Widget itemSelectedIconWidget,
+    Widget? itemSelectedIconWidget,
     // 列表选中的文字样式
-    TextStyle itemSelectedTextStyle,
+    TextStyle? itemSelectedTextStyle,
     // 列表未选中的文字样式
-    TextStyle itemUnSelectedTextStyle,
+    TextStyle? itemUnSelectedTextStyle,
     // 地址选择器监听事件
-    @required CityPickerListener cityPickerListener,
+    required CityPickerListener cityPickerListener,
   }) {
     Navigator.of(context, rootNavigator: true).push(
       CustomPopupRoute(

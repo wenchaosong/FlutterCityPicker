@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class ItemTextWidget extends StatefulWidget {
-  final String title;
-  final Widget subWidget;
+  final String? title;
+  final Widget? subWidget;
 
   ItemTextWidget({this.title, this.subWidget});
 

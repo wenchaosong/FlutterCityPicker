@@ -33,7 +33,6 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.example.citypickersexample"
         minSdkVersion 16
         targetSdkVersion 28
@@ -42,11 +41,45 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        debugConfig {
+            storeFile file('../demo.jks')
+            storePassword "123456"
+            keyAlias "key0"
+            keyPassword "123456"
+            v2SigningEnabled true
+        }
+
+        releaseConfig {
+            storeFile file('../demo.jks')
+            storePassword "123456"
+            keyAlias "key0"
+            keyPassword "123456"
+            v2SigningEnabled true
+        }
+    }
+
     buildTypes {
+        debug {
+            debuggable true
+            // 混淆
+            minifyEnabled false
+            // Zipalign优化
+            zipAlignEnabled true
+            // 签名配置
+            signingConfig signingConfigs.debugConfig
+        }
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig signingConfigs.debug
+            debuggable false
+            // 混淆
+            minifyEnabled true
+            // Zipalign优化
+            zipAlignEnabled true
+            // 移除无用的resource文件
+            shrinkResources true
+            // 签名配置
+            signingConfig signingConfigs.releaseConfig
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 }
