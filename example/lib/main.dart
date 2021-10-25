@@ -276,6 +276,7 @@ class HomeWidgetState extends State<HomeWidget> implements CityPickerListener {
     return Scaffold(
       appBar: AppBar(
         title: Text('城市选择器'),
+        backgroundColor: Theme.of(context).primaryColor,
       ),
       body: SingleChildScrollView(
         child: Column(

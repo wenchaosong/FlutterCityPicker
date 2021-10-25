@@ -12,7 +12,6 @@
 
 ```
 dependencies:
-    flutter_city_picker: ^0.0.7
     flutter_city_picker: ^1.0.0 // null safety
 ```
 
