@@ -1,3 +1,7 @@
+## 1.0.2
+
+- change guide image link
+
 ## 1.0.1
 
 - resolve TabBar indicator move to next slowly
