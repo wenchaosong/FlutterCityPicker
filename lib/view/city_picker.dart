@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../city_picker.dart';
 import '../listener/item_listener.dart';
 import '../listener/picker_listener.dart';
 import '../model/tab.dart';
@@ -135,9 +136,6 @@ class CityPickerState extends State<CityPickerWidget>
   TabController? _tabController;
   PageController? _pageController;
 
-  // 滑动监听回调
-  late VoidCallback _pageListener;
-
   List<TabTitle> _myTabs = [
     TabTitle(index: 0, title: "请选择", name: "", code: ""),
   ];
@@ -159,12 +157,6 @@ class CityPickerState extends State<CityPickerWidget>
     super.initState();
     _tabController = TabController(vsync: this, length: _myTabs.length);
     _pageController = PageController();
-    _pageListener = () {
-      int pageIndex = _pageController!.page!.toInt();
-      if (pageIndex != _tabController!.index) {
-        _tabController!.animateTo(pageIndex);
-      }
-    };
 
     _cityPickerListener = widget.cityPickerListener;
   }
@@ -182,43 +174,35 @@ class CityPickerState extends State<CityPickerWidget>
   void onItemClick(int? tabIndex, String? name, String? code) {
     switch (tabIndex) {
       case 0:
-        if (mounted) {
-          setState(() {
-            _provinceName = name;
-            _provinceCode = code;
-            _myTabs = [
-              TabTitle(index: 0, title: _provinceName, name: "", code: ""),
-              TabTitle(
-                  index: 1,
-                  title: "请选择",
-                  name: _provinceName,
-                  code: _provinceCode),
-            ];
-            _tabController = TabController(vsync: this, length: _myTabs.length);
-          });
-        }
+        _provinceName = name;
+        _provinceCode = code;
+        _myTabs = [
+          TabTitle(index: 0, title: _provinceName, name: "", code: ""),
+          TabTitle(
+              index: 1, title: "请选择", name: _provinceName, code: _provinceCode),
+        ];
+        _tabController = TabController(vsync: this, length: _myTabs.length);
         _pageController!.jumpToPage(1);
-        _pageController!.addListener(_pageListener);
         _tabController!.animateTo(1);
+        if (mounted) {
+          setState(() {});
+        }
         break;
       case 1:
-        if (mounted) {
-          setState(() {
-            _cityName = name;
-            _cityCode = code;
-            _myTabs = [
-              TabTitle(index: 0, title: _provinceName, name: "", code: ""),
-              TabTitle(index: 1, title: _cityName, name: "", code: ""),
-              TabTitle(
-                  index: 2, title: "请选择", name: _cityName, code: _cityCode),
-            ];
-            _tabController = TabController(vsync: this, length: _myTabs.length);
-          });
-        }
-        _pageController!.removeListener(_pageListener);
+        _cityName = name;
+        _cityCode = code;
+        _myTabs = [
+          TabTitle(index: 0, title: _provinceName, name: "", code: ""),
+          TabTitle(index: 1, title: _cityName, name: "", code: ""),
+          TabTitle(index: 2, title: "请选择", name: _cityName, code: _cityCode),
+        ];
+        _tabController =
+            TabController(vsync: this, length: _myTabs.length, initialIndex: 1);
         _pageController!.jumpToPage(2);
-        _pageController!.addListener(_pageListener);
         _tabController!.animateTo(2);
+        if (mounted) {
+          setState(() {});
+        }
         break;
       case 2:
         if (_cityPickerListener != null) {
@@ -336,6 +320,9 @@ class CityPickerState extends State<CityPickerWidget>
   Widget _bottomListWidget() {
     return PageView(
       controller: _pageController,
+      onPageChanged: (index) {
+        _tabController!.animateTo(index);
+      },
       children: _myTabs.map((tab) {
         return ItemWidget(
           index: tab.index,

@@ -1,3 +1,7 @@
+## 1.0.1
+
+- resolve TabBar indicator move to next slowly
+
 ## 1.0.0
 
 - add null safety

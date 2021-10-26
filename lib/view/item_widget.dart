@@ -118,10 +118,9 @@ class ItemWidgetState extends State<ItemWidget>
       switch (widget.index) {
         case 0:
           _cityPickerListener!.loadProvinceData().then((value) {
+            _mList = sortCity(value);
             if (mounted) {
-              setState(() {
-                _mList = sortCity(value);
-              });
+              setState(() {});
             }
           });
           break;
@@ -129,11 +128,10 @@ class ItemWidgetState extends State<ItemWidget>
           _cityPickerListener!
               .onProvinceSelected(widget.code, widget.name)
               .then((value) {
+            _mList = sortCity(value);
+            _preName = widget.name;
             if (mounted) {
-              setState(() {
-                _mList = sortCity(value);
-                _preName = widget.name;
-              });
+              setState(() {});
             }
           });
           break;
@@ -141,11 +139,10 @@ class ItemWidgetState extends State<ItemWidget>
           _cityPickerListener!
               .onCitySelected(widget.code, widget.name)
               .then((value) {
+            _mList = sortCity(value);
+            _preName = widget.name;
             if (mounted) {
-              setState(() {
-                _mList = sortCity(value);
-                _preName = widget.name;
-              });
+              setState(() {});
             }
           });
           break;
@@ -167,28 +164,10 @@ class ItemWidgetState extends State<ItemWidget>
             _cityPickerListener!
                 .onProvinceSelected(widget.code, widget.name)
                 .then((value) {
+              _mList = sortCity(value);
+              _preName = widget.name;
               if (mounted) {
-                setState(() {
-                  _mList = sortCity(value);
-                  _preName = widget.name;
-                });
-              }
-            });
-          }
-          break;
-        case 2:
-          if (_preName!.isNotEmpty &&
-              widget.name!.isNotEmpty &&
-              _preName != widget.name) {
-            _title = "";
-            _cityPickerListener!
-                .onCitySelected(widget.code, widget.name)
-                .then((value) {
-              if (mounted) {
-                setState(() {
-                  _mList = sortCity(value);
-                  _preName = widget.name;
-                });
+                setState(() {});
               }
             });
           }
@@ -297,10 +276,9 @@ class ItemWidgetState extends State<ItemWidget>
                   bool isSelect = city.name == _title;
                   return InkWell(
                     onTap: () {
+                      _title = city.name!;
                       if (mounted) {
-                        setState(() {
-                          _title = city.name;
-                        });
+                        setState(() {});
                       }
                       if (_itemClickListener != null) {
                         _itemClickListener!
