@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:city_picker_example/http/http_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_city_picker/city_picker.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
@@ -307,84 +308,20 @@ class HomeWidgetState extends State<HomeWidget> implements CityPickerListener {
   @override
   Future<List<City>> loadProvinceData() async {
     print("loadProvinceData");
-    await Future.delayed(Duration(milliseconds: 200));
-
-    List<City> provinces = [
-      City(name: "北京", code: "1"),
-      City(name: "天津", code: "2"),
-      City(name: "河北", code: "3"),
-      City(name: "山西", code: "4"),
-      City(name: "内蒙古", code: "5"),
-      City(name: "辽宁", code: "6"),
-      City(name: "吉林", code: "7"),
-      City(name: "黑龙江", code: "8"),
-      City(name: "上海", code: "9"),
-      City(name: "江苏", code: "10"),
-      City(name: "浙江", code: "11"),
-      City(name: "安徽", code: "12"),
-      City(name: "福建", code: "13"),
-      City(name: "江西", code: "14"),
-      City(name: "山东", code: "15"),
-      City(name: "河南", code: "16"),
-      City(name: "湖北", code: "17"),
-      City(name: "湖南", code: "18"),
-      City(name: "广东", code: "19"),
-      City(name: "广西", code: "20"),
-      City(name: "海南", code: "21"),
-      City(name: "重庆", code: "22"),
-      City(name: "四川", code: "23"),
-      City(name: "贵州", code: "24"),
-      City(name: "云南", code: "25"),
-      City(name: "西藏", code: "26"),
-      City(name: "陕西", code: "27"),
-      City(name: "甘肃", code: "28"),
-      City(name: "青海", code: "29"),
-      City(name: "宁夏", code: "30"),
-      City(name: "新疆", code: "31"),
-    ];
-
-    return Future.value(provinces);
+    return HttpUtils.getCityData("");
   }
 
   @override
   Future<List<City>> onProvinceSelected(
       String? provinceCode, String? provinceName) async {
     print("onProvinceSelected --- provinceName: $provinceName");
-    await Future.delayed(Duration(milliseconds: 200));
-
-    List<City> provinces = [
-      City(name: "石家庄市", code: "1"),
-      City(name: "唐山市", code: "2"),
-      City(name: "秦皇岛市", code: "3"),
-      City(name: "邯郸市", code: "4"),
-      City(name: "邢台市", code: "5"),
-      City(name: "保定市", code: "6"),
-      City(name: "张家口市", code: "7"),
-      City(name: "承德市", code: "8"),
-      City(name: "沧州市", code: "9"),
-      City(name: "廊坊市", code: "10"),
-      City(name: "衡水市", code: "11"),
-    ];
-
-    return Future.value(provinces);
+    return HttpUtils.getCityData(provinceName!);
   }
 
   @override
   Future<List<City>> onCitySelected(String? cityCode, String? cityName) async {
     print("onCitySelected --- cityName: $cityName");
-    await Future.delayed(Duration(milliseconds: 200));
-
-    List<City> provinces = [
-      City(name: "海港区", code: "1"),
-      City(name: "山海关区", code: "2"),
-      City(name: "北戴河区", code: "3"),
-      City(name: "抚宁区", code: "4"),
-      City(name: "青龙县", code: "5"),
-      City(name: "昌黎县", code: "6"),
-      City(name: "卢龙县", code: "7"),
-    ];
-
-    return Future.value(provinces);
+    return HttpUtils.getCityData(cityName!);
   }
 
   @override
