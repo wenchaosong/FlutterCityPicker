@@ -36,6 +36,8 @@ class CityPicker {
     Widget? closeWidget,
     // tab 高度
     double tabHeight = 40.0,
+    // 是否启用街道
+    bool enableStreet = false,
     // 是否显示指示器
     bool showTabIndicator = true,
     // 指示器颜色
@@ -91,6 +93,7 @@ class CityPicker {
             titleWidget: titleWidget,
             closeWidget: closeWidget,
             tabHeight: tabHeight,
+            enableStreet: enableStreet,
             showTabIndicator: showTabIndicator,
             tabIndicatorColor: tabIndicatorColor,
             tabIndicatorHeight: tabIndicatorHeight,

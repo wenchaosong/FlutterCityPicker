@@ -146,6 +146,17 @@ class ItemWidgetState extends State<ItemWidget>
             }
           });
           break;
+        case 3:
+          _cityPickerListener!
+              .onDistrictSelected(widget.code, widget.name)
+              .then((value) {
+            _mList = sortCity(value);
+            _preName = widget.name;
+            if (mounted) {
+              setState(() {});
+            }
+          });
+          break;
       }
     }
   }
@@ -157,6 +168,7 @@ class ItemWidgetState extends State<ItemWidget>
     if (_cityPickerListener != null) {
       switch (widget.index) {
         case 1:
+        case 2:
           if (_preName!.isNotEmpty &&
               widget.name!.isNotEmpty &&
               _preName != widget.name) {

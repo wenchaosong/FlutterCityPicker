@@ -61,6 +61,8 @@ dependencies:
           closeWidget: Icon(Icons.close),
           // tab 高度
           tabHeight: 40,
+          // 是否启用街道
+          enableStreet: _showStreet,
           // 是否显示指示器
           showTabIndicator: _showTabIndicator,
           // tab 指示器颜色
@@ -130,11 +132,17 @@ dependencies:
     }
 
     @override
+    Future<List<City>> onDistrictSelected(String districtCode, String districtName) {
+      // 点击区后的回调，根据城市代码或名称去请求街道数据
+      return 返回街道数据;
+    }
+
+    @override
     void onFinish(String provinceCode, String provinceName, String cityCode,
-        String cityName, String districtCode, String districtName) {
+        String cityName, String districtCode, String districtName, String streetCode, String streetName) {
       // 最终回调，返回省市区的代码和名称
       setState(() {
-        _address = provinceName + " " + cityName + " " + districtName;
+        _address = provinceName + " " + cityName + " " + districtName + " " + streetName;
       });
     }
 ```

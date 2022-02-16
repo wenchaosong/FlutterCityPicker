@@ -34,6 +34,9 @@ class CityPickerWidget extends StatefulWidget {
   /// tab 高度
   final double? tabHeight;
 
+  /// 是否启用街道
+  final bool? enableStreet;
+
   /// 是否显示 indicator
   final bool? showTabIndicator;
 
@@ -102,6 +105,7 @@ class CityPickerWidget extends StatefulWidget {
     this.titleWidget,
     this.closeWidget,
     this.tabHeight,
+    this.enableStreet,
     this.showTabIndicator,
     this.tabIndicatorColor,
     this.tabIndicatorHeight,
@@ -151,6 +155,12 @@ class CityPickerState extends State<CityPickerWidget>
 
   // 市级代码
   String? _cityCode = "";
+
+  // 区级名称
+  String? _districtName = "";
+
+  // 区级代码
+  String? _districtCode = "";
 
   @override
   void initState() {
@@ -205,15 +215,38 @@ class CityPickerState extends State<CityPickerWidget>
         }
         break;
       case 2:
+        if (widget.enableStreet!) {
+          _districtName = name;
+          _districtCode = code;
+          _myTabs = [
+            TabTitle(index: 0, title: _provinceName, name: "", code: ""),
+            TabTitle(index: 1, title: _cityName, name: "", code: ""),
+            TabTitle(index: 2, title: _districtName, name: "", code: ""),
+            TabTitle(
+                index: 3,
+                title: "请选择",
+                name: _districtName,
+                code: _districtCode),
+          ];
+          _tabController = TabController(
+              vsync: this, length: _myTabs.length, initialIndex: 2);
+          _pageController!.jumpToPage(3);
+          _tabController!.animateTo(3);
+          if (mounted) {
+            setState(() {});
+          }
+        } else {
+          if (_cityPickerListener != null) {
+            _cityPickerListener!.onFinish(_provinceCode, _provinceName,
+                _cityCode, _cityName, code, name, "", "");
+          }
+          Navigator.pop(context);
+        }
+        break;
+      case 3:
         if (_cityPickerListener != null) {
-          _cityPickerListener!.onFinish(
-            _provinceCode,
-            _provinceName,
-            _cityCode,
-            _cityName,
-            code,
-            name,
-          );
+          _cityPickerListener!.onFinish(_provinceCode, _provinceName, _cityCode,
+              _cityName, _districtCode, _districtName, code, name);
         }
         Navigator.pop(context);
         break;

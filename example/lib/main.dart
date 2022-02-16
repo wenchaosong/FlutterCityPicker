@@ -50,6 +50,7 @@ class HomeWidgetState extends State<HomeWidget> implements CityPickerListener {
   double _corner = 20;
   bool _dismissible = true;
   bool _showTabIndicator = true;
+  bool _showStreet = false;
 
   @override
   void initState() {
@@ -82,6 +83,7 @@ class HomeWidgetState extends State<HomeWidget> implements CityPickerListener {
       ),
       closeWidget: Icon(Icons.close),
       tabHeight: 40,
+      enableStreet: _showStreet,
       showTabIndicator: _showTabIndicator,
       tabIndicatorColor: Theme.of(context).primaryColor,
       tabIndicatorHeight: 2,
@@ -272,6 +274,20 @@ class HomeWidgetState extends State<HomeWidget> implements CityPickerListener {
         ));
   }
 
+  Widget _buildStreet() {
+    return Container(
+        alignment: Alignment.centerRight,
+        child: Switch(
+          value: _showStreet,
+          activeColor: Theme.of(context).primaryColor,
+          onChanged: (bool val) {
+            setState(() {
+              _showStreet = !_showStreet;
+            });
+          },
+        ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -299,6 +315,7 @@ class HomeWidgetState extends State<HomeWidget> implements CityPickerListener {
             ItemTextWidget(title: '弹窗高度', subWidget: _buildHeight()),
             ItemTextWidget(title: '顶部圆角', subWidget: _buildCorner()),
             ItemTextWidget(title: '显示 Indicator', subWidget: _buildIndicator()),
+            ItemTextWidget(title: '开启第四级街道', subWidget: _buildStreet()),
           ],
         ),
       ),
@@ -325,11 +342,31 @@ class HomeWidgetState extends State<HomeWidget> implements CityPickerListener {
   }
 
   @override
-  void onFinish(String? provinceCode, String? provinceName, String? cityCode,
-      String? cityName, String? districtCode, String? districtName) {
+  Future<List<City>> onDistrictSelected(
+      String? districtCode, String? districtName) {
+    print("onDistrictSelected --- districtName: $districtName");
+    return HttpUtils.getCityData(districtName!);
+  }
+
+  @override
+  void onFinish(
+      String? provinceCode,
+      String? provinceName,
+      String? cityCode,
+      String? cityName,
+      String? districtCode,
+      String? districtName,
+      String? streetCode,
+      String? streetName) {
     print("onFinish");
     setState(() {
-      _address = provinceName! + " " + cityName! + " " + districtName!;
+      _address = provinceName! +
+          " " +
+          cityName! +
+          " " +
+          districtName! +
+          " " +
+          streetName!;
     });
   }
 }
