@@ -1,6 +1,6 @@
 name: flutter_city_picker
 description: Flutter plugin for city picker, Address picker, Popups widgets, call by function.
-version: 1.0.3
+version: 1.0.4
 homepage: https://github.com/wenchaosong/FlutterCityPicker
 
 environment:

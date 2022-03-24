@@ -1,3 +1,7 @@
+## 1.0.4
+
+- fix issue(#6)
+
 ## 1.0.3
 
 - add street

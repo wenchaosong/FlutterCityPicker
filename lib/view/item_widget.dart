@@ -166,12 +166,11 @@ class ItemWidgetState extends State<ItemWidget>
   void didUpdateWidget(covariant ItemWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (_cityPickerListener != null) {
-      switch (widget.index) {
-        case 1:
-        case 2:
-          if (_preName!.isNotEmpty &&
-              widget.name!.isNotEmpty &&
-              _preName != widget.name) {
+      if (_preName!.isNotEmpty &&
+          widget.name!.isNotEmpty &&
+          _preName != widget.name) {
+        switch (widget.index) {
+          case 1:
             _title = "";
             _cityPickerListener!
                 .onProvinceSelected(widget.code, widget.name)
@@ -182,8 +181,32 @@ class ItemWidgetState extends State<ItemWidget>
                 setState(() {});
               }
             });
-          }
-          break;
+            break;
+          case 2:
+            _title = "";
+            _cityPickerListener!
+                .onCitySelected(widget.code, widget.name)
+                .then((value) {
+              _mList = sortCity(value);
+              _preName = widget.name;
+              if (mounted) {
+                setState(() {});
+              }
+            });
+            break;
+          case 3:
+            _title = "";
+            _cityPickerListener!
+                .onDistrictSelected(widget.code, widget.name)
+                .then((value) {
+              _mList = sortCity(value);
+              _preName = widget.name;
+              if (mounted) {
+                setState(() {});
+              }
+            });
+            break;
+        }
       }
     }
   }
