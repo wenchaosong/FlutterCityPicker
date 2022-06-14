@@ -782,7 +782,7 @@ class _ExpandableAutoLayoutWidgetState
 
   void _onChange() {
     if (widget.trigger!.needBuild()) {
-      WidgetsBinding.instance!.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
           setState(() {});
         }
