@@ -1,9 +1,9 @@
 library citypicker;
 
 export 'listener/picker_listener.dart';
-export 'model/city.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_city_picker/model/address.dart';
 
 import 'listener/picker_listener.dart';
 import 'view/city_picker.dart';
@@ -78,6 +78,8 @@ class CityPicker {
     TextStyle? itemUnSelectedTextStyle,
     // 地址选择器监听事件
     required CityPickerListener cityPickerListener,
+    // 地址初始值
+    Address? initialAddress,
   }) {
     Navigator.of(context, rootNavigator: true).push(
       CustomPopupRoute(
@@ -114,6 +116,7 @@ class CityPicker {
             itemSelectedTextStyle: itemSelectedTextStyle,
             itemUnSelectedTextStyle: itemUnSelectedTextStyle,
             cityPickerListener: cityPickerListener,
+            initialAddress: initialAddress,
           )),
     );
   }
