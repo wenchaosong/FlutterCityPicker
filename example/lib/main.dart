@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:city_picker_example/http/http_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_city_picker/city_picker.dart';
+import 'package:flutter_city_picker/model/address.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:provider/provider.dart';
 
@@ -51,6 +52,7 @@ class HomeWidgetState extends State<HomeWidget> implements CityPickerListener {
   bool _dismissible = true;
   bool _showTabIndicator = true;
   bool _showStreet = false;
+  Address? _selectedAddress;
 
   @override
   void initState() {
@@ -99,14 +101,12 @@ class HomeWidgetState extends State<HomeWidget> implements CityPickerListener {
       indexBarItemHeight: 20,
       indexBarBackgroundColor: Colors.black12,
       indexBarTextStyle: TextStyle(fontSize: 14, color: Colors.black54),
-      itemSelectedIconWidget:
-          Icon(Icons.done, color: Theme.of(context).primaryColor, size: 16),
-      itemSelectedTextStyle: TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.bold,
-          color: Theme.of(context).primaryColor),
+      itemSelectedIconWidget: Icon(Icons.done, color: Theme.of(context).primaryColor, size: 16),
+      itemSelectedTextStyle:
+          TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor),
       itemUnSelectedTextStyle: TextStyle(fontSize: 14, color: Colors.black54),
       cityPickerListener: this,
+      initialAddress: _selectedAddress,
     );
   }
 
@@ -125,8 +125,7 @@ class HomeWidgetState extends State<HomeWidget> implements CityPickerListener {
                     setState(() {
                       _themeColor = color;
                     });
-                    Provider.of<ThemeProvider>(context, listen: false)
-                        .setTheme(color);
+                    Provider.of<ThemeProvider>(context, listen: false).setTheme(color);
                   },
                 ),
               ),
@@ -220,7 +219,7 @@ class HomeWidgetState extends State<HomeWidget> implements CityPickerListener {
           child: Slider(
             value: _height,
             min: 200,
-            max: 500,
+            max: 600,
             divisions: 100,
             activeColor: Theme.of(context).primaryColor,
             inactiveColor: Colors.grey,
@@ -323,50 +322,35 @@ class HomeWidgetState extends State<HomeWidget> implements CityPickerListener {
   }
 
   @override
-  Future<List<City>> loadProvinceData() async {
+  Future<List<AddressNode>> loadProvinceData() async {
     print("loadProvinceData");
     return HttpUtils.getCityData("");
   }
 
   @override
-  Future<List<City>> onProvinceSelected(
-      String? provinceCode, String? provinceName) async {
+  Future<List<AddressNode>> onProvinceSelected(String? provinceCode, String? provinceName) async {
     print("onProvinceSelected --- provinceName: $provinceName");
     return HttpUtils.getCityData(provinceName!);
   }
 
   @override
-  Future<List<City>> onCitySelected(String? cityCode, String? cityName) async {
+  Future<List<AddressNode>> onCitySelected(String? cityCode, String? cityName) async {
     print("onCitySelected --- cityName: $cityName");
     return HttpUtils.getCityData(cityName!);
   }
 
   @override
-  Future<List<City>> onDistrictSelected(
-      String? districtCode, String? districtName) {
+  Future<List<AddressNode>> onDistrictSelected(String? districtCode, String? districtName) {
     print("onDistrictSelected --- districtName: $districtName");
     return HttpUtils.getCityData(districtName!);
   }
 
   @override
-  void onFinish(
-      String? provinceCode,
-      String? provinceName,
-      String? cityCode,
-      String? cityName,
-      String? districtCode,
-      String? districtName,
-      String? streetCode,
-      String? streetName) {
+  void onFinish(Address address) {
     print("onFinish");
     setState(() {
-      _address = provinceName! +
-          " " +
-          cityName! +
-          " " +
-          districtName! +
-          " " +
-          streetName!;
+      _address = address.toString();
+      _selectedAddress = address;
     });
   }
 }
