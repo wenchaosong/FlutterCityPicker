@@ -76,10 +76,10 @@ class CityPicker {
     TextStyle? itemSelectedTextStyle,
     // 列表未选中的文字样式
     TextStyle? itemUnSelectedTextStyle,
-    // 地址选择器监听事件
-    required CityPickerListener cityPickerListener,
     // 地址初始值
     Address? initialAddress,
+    // 地址选择器监听事件
+    required CityPickerListener cityPickerListener,
   }) {
     Navigator.of(context, rootNavigator: true).push(
       CustomPopupRoute(
@@ -115,8 +115,8 @@ class CityPicker {
             itemSelectedIconWidget: itemSelectedIconWidget,
             itemSelectedTextStyle: itemSelectedTextStyle,
             itemUnSelectedTextStyle: itemUnSelectedTextStyle,
-            cityPickerListener: cityPickerListener,
             initialAddress: initialAddress,
+            cityPickerListener: cityPickerListener,
           )),
     );
   }

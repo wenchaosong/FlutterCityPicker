@@ -1,3 +1,7 @@
+## 1.0.6
+
+- add default address
+
 ## 1.0.5
 
 - upgrade

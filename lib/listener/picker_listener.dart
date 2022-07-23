@@ -1,4 +1,3 @@
-
 import 'package:flutter_city_picker/model/address.dart';
 
 /// 事件监听
@@ -31,13 +30,6 @@ abstract class CityPickerListener {
   );
 
   /// 选择完成
-  /// provinceCode：省份代码
-  /// provinceName：省份名称
-  /// cityCode：城市代码
-  /// cityName：城市名称
-  /// districtCode：区县代码
-  /// districtName：区县名称
-  /// streetCode：街道代码
-  /// streetName：街道名称
+  /// Address：城市数据
   void onFinish(Address address);
 }

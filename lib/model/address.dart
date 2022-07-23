@@ -1,16 +1,23 @@
-// 地址实体类
+/// 地址实体类
 class Address {
+  /// 省
+  AddressNode? province;
+
+  /// 市
+  AddressNode? city;
+
+  /// 区
+  AddressNode? district;
+
+  /// 街道
+  AddressNode? street;
+
   Address({
     this.province,
     this.city,
     this.district,
     this.street,
   });
-
-  AddressNode? province; // 省
-  AddressNode? city; // 市
-  AddressNode? district; // 区
-  AddressNode? street; // 街道
 
   @override
   String toString() {

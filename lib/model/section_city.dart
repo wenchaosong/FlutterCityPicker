@@ -2,7 +2,6 @@ import 'package:flutter_city_picker/model/address.dart';
 
 import '../view/listview_section.dart';
 
-
 /// 城市列表数据模型
 class SectionCity implements ExpandableListSection<AddressNode> {
   /// 字母

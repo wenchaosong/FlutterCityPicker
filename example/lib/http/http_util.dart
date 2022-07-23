@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-
 import 'package:flutter_city_picker/model/address.dart';
 
 import 'model.dart';

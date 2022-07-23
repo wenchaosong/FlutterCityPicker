@@ -12,7 +12,7 @@
 
 ```
 dependencies:
-    flutter_city_picker: ^1.0.5
+    flutter_city_picker: ^1.0.6
 ```
 
 #### 使用方法
@@ -105,6 +105,8 @@ dependencies:
               color: Theme.of(context).primaryColor),
           // 列表未选中的文字样式
           itemUnSelectedTextStyle: TextStyle(fontSize: 14, color: Colors.black54),
+          // 初始默认地址
+          initialAddress: _selectedAddress,
           cityPickerListener: this,
         );
 ```

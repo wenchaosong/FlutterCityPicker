@@ -94,11 +94,11 @@ class CityPickerWidget extends StatefulWidget {
   /// 未选中城市文字样式
   final TextStyle? itemUnSelectedTextStyle;
 
-  /// 监听事件
-  final CityPickerListener? cityPickerListener;
-
   /// 初始值
   final Address? initialAddress;
+
+  /// 监听事件
+  final CityPickerListener? cityPickerListener;
 
   CityPickerWidget({
     this.height,
@@ -128,15 +128,17 @@ class CityPickerWidget extends StatefulWidget {
     this.itemSelectedIconWidget,
     this.itemSelectedTextStyle,
     this.itemUnSelectedTextStyle,
-    required this.cityPickerListener,
     this.initialAddress,
+    required this.cityPickerListener,
   });
 
   @override
   State<StatefulWidget> createState() => CityPickerState();
 }
 
-class CityPickerState extends State<CityPickerWidget> with TickerProviderStateMixin implements ItemClickListener {
+class CityPickerState extends State<CityPickerWidget>
+    with TickerProviderStateMixin
+    implements ItemClickListener {
   CityPickerListener? _cityPickerListener;
 
   TabController? _tabController;
@@ -144,32 +146,7 @@ class CityPickerState extends State<CityPickerWidget> with TickerProviderStateMi
 
   late final bool _hasInitialValue = widget.initialAddress != null;
 
-  late List<TabTitle> _myTabs = _hasInitialValue
-      ? [
-          TabTitle(index: 0, title: widget.initialAddress!.province?.name, name: '', code: ''),
-          TabTitle(
-            index: 1,
-            title: widget.initialAddress!.city?.name,
-            name: widget.initialAddress!.province?.name,
-            code: widget.initialAddress!.province?.code,
-          ),
-          TabTitle(
-            index: 2,
-            title: widget.initialAddress!.district?.name,
-            name: widget.initialAddress!.city?.name,
-            code: widget.initialAddress!.city?.code,
-          ),
-          if (widget.enableStreet == true)
-            TabTitle(
-              index: 3,
-              title: widget.initialAddress!.street?.name,
-              name: widget.initialAddress!.district?.name,
-              code: widget.initialAddress!.district?.code,
-            ),
-        ]
-      : [
-          TabTitle(index: 0, title: '请选择', name: '', code: ''),
-        ];
+  late List<TabTitle> _myTabs = [];
 
   // 省级名称
   String? _provinceName = "";
@@ -198,6 +175,38 @@ class CityPickerState extends State<CityPickerWidget> with TickerProviderStateMi
   @override
   void initState() {
     super.initState();
+    _myTabs = _hasInitialValue
+        ? [
+            TabTitle(
+                index: 0,
+                title: widget.initialAddress!.province?.name,
+                name: '',
+                code: ''),
+            TabTitle(
+              index: 1,
+              title: widget.initialAddress!.city?.name,
+              name: widget.initialAddress!.province?.name,
+              code: widget.initialAddress!.province?.code,
+            ),
+            TabTitle(
+              index: 2,
+              title: widget.initialAddress!.district?.name,
+              name: widget.initialAddress!.city?.name,
+              code: widget.initialAddress!.city?.code,
+            ),
+            if (widget.enableStreet == true)
+              TabTitle(
+                index: 3,
+                title: widget.initialAddress!.street == null
+                    ? '请选择'
+                    : widget.initialAddress!.street!.name,
+                name: widget.initialAddress!.district?.name,
+                code: widget.initialAddress!.district?.code,
+              ),
+          ]
+        : [
+            TabTitle(index: 0, title: '请选择', name: '', code: ''),
+          ];
     _initValue();
     _cityPickerListener = widget.cityPickerListener;
   }
@@ -213,20 +222,22 @@ class CityPickerState extends State<CityPickerWidget> with TickerProviderStateMi
 
   void _initValue() {
     if (_hasInitialValue) {
-      final addr = widget.initialAddress!;
-      _provinceName = addr.province?.name;
-      _provinceCode = addr.province?.code;
-      _cityName = addr.city?.name;
-      _cityCode = addr.city?.code;
-      _districtName = addr.district?.name;
-      _districtCode = addr.district?.code;
+      final address = widget.initialAddress!;
+      _provinceName = address.province?.name;
+      _provinceCode = address.province?.code;
+      _cityName = address.city?.name;
+      _cityCode = address.city?.code;
+      _districtName = address.district?.name;
+      _districtCode = address.district?.code;
       if (widget.enableStreet == true) {
-        _streetName = addr.street?.name;
-        _streetCode = addr.street?.code;
-        _tabController = TabController(vsync: this, length: _myTabs.length, initialIndex: 3);
+        _streetName = address.street?.name;
+        _streetCode = address.street?.code;
+        _tabController =
+            TabController(vsync: this, length: _myTabs.length, initialIndex: 3);
         _pageController = PageController(initialPage: 3);
       } else {
-        _tabController = TabController(vsync: this, length: _myTabs.length, initialIndex: 2);
+        _tabController =
+            TabController(vsync: this, length: _myTabs.length, initialIndex: 2);
         _pageController = PageController(initialPage: 2);
       }
     } else {
@@ -243,7 +254,8 @@ class CityPickerState extends State<CityPickerWidget> with TickerProviderStateMi
         _provinceCode = code;
         _myTabs = [
           TabTitle(index: 0, title: _provinceName, name: "", code: ""),
-          TabTitle(index: 1, title: "请选择", name: _provinceName, code: _provinceCode),
+          TabTitle(
+              index: 1, title: "请选择", name: _provinceName, code: _provinceCode),
         ];
         _tabController = TabController(vsync: this, length: _myTabs.length);
         _pageController!.jumpToPage(1);
@@ -260,7 +272,8 @@ class CityPickerState extends State<CityPickerWidget> with TickerProviderStateMi
           TabTitle(index: 1, title: _cityName, name: "", code: ""),
           TabTitle(index: 2, title: "请选择", name: _cityName, code: _cityCode),
         ];
-        _tabController = TabController(vsync: this, length: _myTabs.length, initialIndex: 1);
+        _tabController =
+            TabController(vsync: this, length: _myTabs.length, initialIndex: 1);
         _pageController!.jumpToPage(2);
         _tabController!.animateTo(2);
         if (mounted) {
@@ -275,9 +288,14 @@ class CityPickerState extends State<CityPickerWidget> with TickerProviderStateMi
             TabTitle(index: 0, title: _provinceName, name: "", code: ""),
             TabTitle(index: 1, title: _cityName, name: "", code: ""),
             TabTitle(index: 2, title: _districtName, name: "", code: ""),
-            TabTitle(index: 3, title: "请选择", name: _districtName, code: _districtCode),
+            TabTitle(
+                index: 3,
+                title: "请选择",
+                name: _districtName,
+                code: _districtCode),
           ];
-          _tabController = TabController(vsync: this, length: _myTabs.length, initialIndex: 2);
+          _tabController = TabController(
+              vsync: this, length: _myTabs.length, initialIndex: 2);
           _pageController!.jumpToPage(3);
           _tabController!.animateTo(3);
           if (mounted) {
@@ -314,7 +332,8 @@ class CityPickerState extends State<CityPickerWidget> with TickerProviderStateMi
     return AnimatedBuilder(
       animation: route.animation!,
       builder: (BuildContext context, Widget? child) => CustomSingleChildLayout(
-          delegate: CustomLayoutDelegate(progress: route.animation!.value, height: widget.height),
+          delegate: CustomLayoutDelegate(
+              progress: route.animation!.value, height: widget.height),
           child: GestureDetector(
             child: Material(
                 color: Colors.transparent,
@@ -323,7 +342,10 @@ class CityPickerState extends State<CityPickerWidget> with TickerProviderStateMi
                     child: Column(children: <Widget>[
                       _topTextWidget(),
                       Expanded(
-                        child: Column(children: <Widget>[_middleTabWidget(), Expanded(child: _bottomListWidget())]),
+                        child: Column(children: <Widget>[
+                          _middleTabWidget(),
+                          Expanded(child: _bottomListWidget())
+                        ]),
                       )
                     ]))),
           )),
@@ -336,29 +358,32 @@ class CityPickerState extends State<CityPickerWidget> with TickerProviderStateMi
       height: widget.titleHeight,
       decoration: BoxDecoration(
           color: Theme.of(context).dialogBackgroundColor,
-          borderRadius:
-              BorderRadius.only(topLeft: Radius.circular(widget.corner!), topRight: Radius.circular(widget.corner!))),
-      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: <Widget>[
-        widget.titleWidget ??
-            Container(
-              padding: EdgeInsets.only(left: widget.paddingLeft!),
-              child: Text(
-                '请选择所在地区',
-                style: TextStyle(
-                  color: Colors.black54,
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold,
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(widget.corner!),
+              topRight: Radius.circular(widget.corner!))),
+      child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            widget.titleWidget ??
+                Container(
+                  padding: EdgeInsets.only(left: widget.paddingLeft!),
+                  child: Text(
+                    '请选择所在地区',
+                    style: TextStyle(
+                      color: Colors.black54,
+                      fontSize: 17,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
-              ),
-            ),
-        InkWell(
-            onTap: () => {Navigator.pop(context)},
-            child: Container(
-              width: widget.titleHeight,
-              height: double.infinity,
-              child: widget.closeWidget ?? Icon(Icons.close, size: 26),
-            )),
-      ]),
+            InkWell(
+                onTap: () => {Navigator.pop(context)},
+                child: Container(
+                  width: widget.titleHeight,
+                  height: double.infinity,
+                  child: widget.closeWidget ?? Icon(Icons.close, size: 26),
+                )),
+          ]),
     );
   }
 
@@ -381,14 +406,17 @@ class CityPickerState extends State<CityPickerWidget> with TickerProviderStateMi
                 insets: EdgeInsets.only(left: widget.paddingLeft!),
                 borderSide: BorderSide(
                     width: widget.tabIndicatorHeight!,
-                    color: widget.tabIndicatorColor ?? Theme.of(context).primaryColor),
+                    color: widget.tabIndicatorColor ??
+                        Theme.of(context).primaryColor),
               )
             : BoxDecoration(),
-        indicatorColor: widget.tabIndicatorColor ?? Theme.of(context).primaryColor,
+        indicatorColor:
+            widget.tabIndicatorColor ?? Theme.of(context).primaryColor,
         unselectedLabelColor: widget.unselectedLabelColor ?? Colors.black54,
         labelColor: widget.selectedLabelColor ?? Theme.of(context).primaryColor,
         tabs: _myTabs.map((data) {
-          return Text(data.title!, style: TextStyle(fontSize: widget.labelTextSize));
+          return Text("${data.title ?? ""}",
+              style: TextStyle(fontSize: widget.labelTextSize));
         }).toList(),
       ),
     );
@@ -406,6 +434,7 @@ class CityPickerState extends State<CityPickerWidget> with TickerProviderStateMi
           index: tab.index,
           code: tab.code,
           name: tab.name,
+          title: tab.title,
           paddingLeft: widget.paddingLeft,
           itemHeadHeight: widget.itemHeadHeight,
           itemHeadBackgroundColor: widget.itemHeadBackgroundColor,
@@ -422,7 +451,6 @@ class CityPickerState extends State<CityPickerWidget> with TickerProviderStateMi
           itemUnSelectedTextStyle: widget.itemUnSelectedTextStyle,
           cityPickerListener: widget.cityPickerListener,
           itemClickListener: this,
-          title: tab.title,
         );
       }).toList(),
     );

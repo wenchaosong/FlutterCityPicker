@@ -101,12 +101,15 @@ class HomeWidgetState extends State<HomeWidget> implements CityPickerListener {
       indexBarItemHeight: 20,
       indexBarBackgroundColor: Colors.black12,
       indexBarTextStyle: TextStyle(fontSize: 14, color: Colors.black54),
-      itemSelectedIconWidget: Icon(Icons.done, color: Theme.of(context).primaryColor, size: 16),
-      itemSelectedTextStyle:
-          TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor),
+      itemSelectedIconWidget:
+          Icon(Icons.done, color: Theme.of(context).primaryColor, size: 16),
+      itemSelectedTextStyle: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.bold,
+          color: Theme.of(context).primaryColor),
       itemUnSelectedTextStyle: TextStyle(fontSize: 14, color: Colors.black54),
-      cityPickerListener: this,
       initialAddress: _selectedAddress,
+      cityPickerListener: this,
     );
   }
 
@@ -125,7 +128,8 @@ class HomeWidgetState extends State<HomeWidget> implements CityPickerListener {
                     setState(() {
                       _themeColor = color;
                     });
-                    Provider.of<ThemeProvider>(context, listen: false).setTheme(color);
+                    Provider.of<ThemeProvider>(context, listen: false)
+                        .setTheme(color);
                   },
                 ),
               ),
@@ -328,19 +332,22 @@ class HomeWidgetState extends State<HomeWidget> implements CityPickerListener {
   }
 
   @override
-  Future<List<AddressNode>> onProvinceSelected(String? provinceCode, String? provinceName) async {
+  Future<List<AddressNode>> onProvinceSelected(
+      String? provinceCode, String? provinceName) async {
     print("onProvinceSelected --- provinceName: $provinceName");
     return HttpUtils.getCityData(provinceName!);
   }
 
   @override
-  Future<List<AddressNode>> onCitySelected(String? cityCode, String? cityName) async {
+  Future<List<AddressNode>> onCitySelected(
+      String? cityCode, String? cityName) async {
     print("onCitySelected --- cityName: $cityName");
     return HttpUtils.getCityData(cityName!);
   }
 
   @override
-  Future<List<AddressNode>> onDistrictSelected(String? districtCode, String? districtName) {
+  Future<List<AddressNode>> onDistrictSelected(
+      String? districtCode, String? districtName) {
     print("onDistrictSelected --- districtName: $districtName");
     return HttpUtils.getCityData(districtName!);
   }

@@ -17,6 +17,9 @@ class ItemWidget extends StatefulWidget {
   /// 上一级城市名称
   final String? name;
 
+  /// 选中 tab
+  final String? title;
+
   /// 左边间距
   final double? paddingLeft;
 
@@ -63,36 +66,35 @@ class ItemWidget extends StatefulWidget {
 
   final ItemClickListener? itemClickListener;
 
-  final String? title;
-
   ItemWidget({
-    required this.index,
-    required this.code,
-    required this.name,
-    required this.paddingLeft,
-    required this.itemHeadHeight,
-    required this.itemHeadBackgroundColor,
-    required this.itemHeadLineColor,
-    required this.itemHeadLineHeight,
-    required this.itemHeadTextStyle,
-    required this.itemHeight,
-    required this.indexBarWidth,
-    required this.indexBarItemHeight,
-    required this.indexBarBackgroundColor,
-    required this.indexBarTextStyle,
-    required this.itemSelectedIconWidget,
-    required this.itemSelectedTextStyle,
-    required this.itemUnSelectedTextStyle,
-    required this.cityPickerListener,
-    required this.itemClickListener,
+    this.index,
+    this.code,
+    this.name,
     this.title,
+    this.paddingLeft,
+    this.itemHeadHeight,
+    this.itemHeadBackgroundColor,
+    this.itemHeadLineColor,
+    this.itemHeadLineHeight,
+    this.itemHeadTextStyle,
+    this.itemHeight,
+    this.indexBarWidth,
+    this.indexBarItemHeight,
+    this.indexBarBackgroundColor,
+    this.indexBarTextStyle,
+    this.itemSelectedIconWidget,
+    this.itemSelectedTextStyle,
+    this.itemUnSelectedTextStyle,
+    this.cityPickerListener,
+    this.itemClickListener,
   });
 
   @override
   State<StatefulWidget> createState() => ItemWidgetState();
 }
 
-class ItemWidgetState extends State<ItemWidget> with AutomaticKeepAliveClientMixin {
+class ItemWidgetState extends State<ItemWidget>
+    with AutomaticKeepAliveClientMixin {
   ScrollController? _scrollController;
 
   CityPickerListener? _cityPickerListener;
@@ -127,7 +129,9 @@ class ItemWidgetState extends State<ItemWidget> with AutomaticKeepAliveClientMix
           });
           break;
         case 1:
-          _cityPickerListener!.onProvinceSelected(widget.code, widget.name).then((value) {
+          _cityPickerListener!
+              .onProvinceSelected(widget.code, widget.name)
+              .then((value) {
             _mList = sortCity(value);
             _preName = widget.name;
             if (mounted) {
@@ -136,7 +140,9 @@ class ItemWidgetState extends State<ItemWidget> with AutomaticKeepAliveClientMix
           });
           break;
         case 2:
-          _cityPickerListener!.onCitySelected(widget.code, widget.name).then((value) {
+          _cityPickerListener!
+              .onCitySelected(widget.code, widget.name)
+              .then((value) {
             _mList = sortCity(value);
             _preName = widget.name;
             if (mounted) {
@@ -145,7 +151,9 @@ class ItemWidgetState extends State<ItemWidget> with AutomaticKeepAliveClientMix
           });
           break;
         case 3:
-          _cityPickerListener!.onDistrictSelected(widget.code, widget.name).then((value) {
+          _cityPickerListener!
+              .onDistrictSelected(widget.code, widget.name)
+              .then((value) {
             _mList = sortCity(value);
             _preName = widget.name;
             if (mounted) {
@@ -162,11 +170,15 @@ class ItemWidgetState extends State<ItemWidget> with AutomaticKeepAliveClientMix
   void didUpdateWidget(covariant ItemWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (_cityPickerListener != null) {
-      if (_preName!.isNotEmpty && widget.name!.isNotEmpty && _preName != widget.name) {
+      if (_preName!.isNotEmpty &&
+          widget.name!.isNotEmpty &&
+          _preName != widget.name) {
         switch (widget.index) {
           case 1:
             _title = "";
-            _cityPickerListener!.onProvinceSelected(widget.code, widget.name).then((value) {
+            _cityPickerListener!
+                .onProvinceSelected(widget.code, widget.name)
+                .then((value) {
               _mList = sortCity(value);
               _preName = widget.name;
               if (mounted) {
@@ -176,7 +188,9 @@ class ItemWidgetState extends State<ItemWidget> with AutomaticKeepAliveClientMix
             break;
           case 2:
             _title = "";
-            _cityPickerListener!.onCitySelected(widget.code, widget.name).then((value) {
+            _cityPickerListener!
+                .onCitySelected(widget.code, widget.name)
+                .then((value) {
               _mList = sortCity(value);
               _preName = widget.name;
               if (mounted) {
@@ -186,7 +200,9 @@ class ItemWidgetState extends State<ItemWidget> with AutomaticKeepAliveClientMix
             break;
           case 3:
             _title = "";
-            _cityPickerListener!.onDistrictSelected(widget.code, widget.name).then((value) {
+            _cityPickerListener!
+                .onDistrictSelected(widget.code, widget.name)
+                .then((value) {
               _mList = sortCity(value);
               _preName = widget.name;
               if (mounted) {
@@ -204,8 +220,11 @@ class ItemWidgetState extends State<ItemWidget> with AutomaticKeepAliveClientMix
     // 先排序
     List<AddressNode> _cityList = [];
     value.forEach((city) {
-      String letter = PinyinHelper.getFirstWordPinyin(city.name!).substring(0, 1).toUpperCase();
-      _cityList.add(AddressNode(code: city.code, letter: letter, name: city.name));
+      String letter = PinyinHelper.getFirstWordPinyin(city.name!)
+          .substring(0, 1)
+          .toUpperCase();
+      _cityList
+          .add(AddressNode(code: city.code, letter: letter, name: city.name));
     });
     _cityList.sort((a, b) => a.letter!.compareTo(b.letter!));
     // 组装数据
@@ -247,7 +266,8 @@ class ItemWidgetState extends State<ItemWidget> with AutomaticKeepAliveClientMix
       }
       length += _mList[i].data!.length;
     }
-    _scrollController!.animateTo(position, duration: Duration(milliseconds: 10), curve: Curves.linear);
+    _scrollController!.animateTo(position,
+        duration: Duration(milliseconds: 10), curve: Curves.linear);
   }
 
   @override
@@ -281,12 +301,14 @@ class ItemWidgetState extends State<ItemWidget> with AutomaticKeepAliveClientMix
                         width: widget.itemHeadLineHeight!,
                         color: widget.itemHeadLineColor ?? Colors.black38,
                       )),
-                      color: widget.itemHeadBackgroundColor ?? Theme.of(context).dialogBackgroundColor,
+                      color: widget.itemHeadBackgroundColor ??
+                          Theme.of(context).dialogBackgroundColor,
                     ),
                     alignment: Alignment.centerLeft,
                     padding: EdgeInsets.only(left: widget.paddingLeft!),
                     child: Text(_mList[sectionIndex].letter!,
-                        style: widget.itemHeadTextStyle ?? TextStyle(fontSize: 15, color: Colors.black)),
+                        style: widget.itemHeadTextStyle ??
+                            TextStyle(fontSize: 15, color: Colors.black)),
                   );
                 },
                 itemBuilder: (context, sectionIndex, itemIndex, index) {
@@ -299,7 +321,8 @@ class ItemWidgetState extends State<ItemWidget> with AutomaticKeepAliveClientMix
                         setState(() {});
                       }
                       if (_itemClickListener != null) {
-                        _itemClickListener!.onItemClick(widget.index, city.name, city.code);
+                        _itemClickListener!
+                            .onItemClick(widget.index, city.name, city.code);
                       }
                     },
                     child: Container(
@@ -311,7 +334,9 @@ class ItemWidgetState extends State<ItemWidget> with AutomaticKeepAliveClientMix
                         Offstage(
                           offstage: !isSelect,
                           child: widget.itemSelectedIconWidget ??
-                              Icon(Icons.done, color: Theme.of(context).primaryColor, size: 16),
+                              Icon(Icons.done,
+                                  color: Theme.of(context).primaryColor,
+                                  size: 16),
                         ),
                         SizedBox(width: isSelect ? 3 : 0),
                         Text(city.name!,
@@ -321,7 +346,9 @@ class ItemWidgetState extends State<ItemWidget> with AutomaticKeepAliveClientMix
                                         fontSize: 14,
                                         fontWeight: FontWeight.bold,
                                         color: Theme.of(context).primaryColor)
-                                : widget.itemUnSelectedTextStyle ?? TextStyle(fontSize: 14, color: Colors.black54))
+                                : widget.itemUnSelectedTextStyle ??
+                                    TextStyle(
+                                        fontSize: 14, color: Colors.black54))
                       ]),
                     ),
                   );
@@ -364,7 +391,9 @@ class ItemWidgetState extends State<ItemWidget> with AutomaticKeepAliveClientMix
       },
       child: Container(
         width: widget.indexBarWidth,
-        height: type == 4 ? widget.indexBarItemHeight : widget.indexBarItemHeight! + 4,
+        height: type == 4
+            ? widget.indexBarItemHeight
+            : widget.indexBarItemHeight! + 4,
         alignment: type == 2
             ? Alignment.bottomCenter
             : type == 3
@@ -378,13 +407,22 @@ class ItemWidgetState extends State<ItemWidget> with AutomaticKeepAliveClientMix
         decoration: BoxDecoration(
             color: widget.indexBarBackgroundColor,
             borderRadius: BorderRadius.only(
-              topLeft: (type == 1 || type == 2) ? Radius.circular(50) : Radius.circular(0),
-              topRight: (type == 1 || type == 2) ? Radius.circular(50) : Radius.circular(0),
-              bottomLeft: (type == 1 || type == 3) ? Radius.circular(50) : Radius.circular(0),
-              bottomRight: (type == 1 || type == 3) ? Radius.circular(50) : Radius.circular(0),
+              topLeft: (type == 1 || type == 2)
+                  ? Radius.circular(50)
+                  : Radius.circular(0),
+              topRight: (type == 1 || type == 2)
+                  ? Radius.circular(50)
+                  : Radius.circular(0),
+              bottomLeft: (type == 1 || type == 3)
+                  ? Radius.circular(50)
+                  : Radius.circular(0),
+              bottomRight: (type == 1 || type == 3)
+                  ? Radius.circular(50)
+                  : Radius.circular(0),
             )),
         child: Text(_mList[index].letter!,
-            style: widget.indexBarTextStyle ?? TextStyle(fontSize: 14, color: Colors.black54)),
+            style: widget.indexBarTextStyle ??
+                TextStyle(fontSize: 14, color: Colors.black54)),
       ),
     );
   }
