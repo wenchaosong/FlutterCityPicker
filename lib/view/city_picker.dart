@@ -139,42 +139,41 @@ class CityPickerWidget extends StatefulWidget {
 class CityPickerState extends State<CityPickerWidget>
     with TickerProviderStateMixin
     implements ItemClickListener {
-  CityPickerListener? _cityPickerListener;
-
   TabController? _tabController;
   PageController? _pageController;
 
-  late final bool _hasInitialValue = widget.initialAddress != null;
+  bool _hasInitialValue = false;
 
-  late List<TabTitle> _myTabs = [];
+  List<TabTitle> _myTabs = [];
 
   // 省级名称
-  String? _provinceName = "";
+  String? _provinceName;
 
   // 省级代码
-  String? _provinceCode = "";
+  String? _provinceCode;
 
   // 市级名称
-  String? _cityName = "";
+  String? _cityName;
 
   // 市级代码
-  String? _cityCode = "";
+  String? _cityCode;
 
   // 区级名称
-  String? _districtName = "";
+  String? _districtName;
 
   // 区级代码
-  String? _districtCode = "";
+  String? _districtCode;
 
   // 街道名称
-  String? _streetName = "";
+  String? _streetName;
 
   // 街道代码
-  String? _streetCode = "";
+  String? _streetCode;
 
   @override
   void initState() {
     super.initState();
+    _hasInitialValue = widget.initialAddress != null;
     _myTabs = _hasInitialValue
         ? [
             TabTitle(
@@ -208,7 +207,6 @@ class CityPickerState extends State<CityPickerWidget>
             TabTitle(index: 0, title: '请选择', name: '', code: ''),
           ];
     _initValue();
-    _cityPickerListener = widget.cityPickerListener;
   }
 
   @override
@@ -223,12 +221,12 @@ class CityPickerState extends State<CityPickerWidget>
   void _initValue() {
     if (_hasInitialValue) {
       final address = widget.initialAddress!;
-      _provinceName = address.province?.name;
-      _provinceCode = address.province?.code;
-      _cityName = address.city?.name;
-      _cityCode = address.city?.code;
-      _districtName = address.district?.name;
-      _districtCode = address.district?.code;
+      _provinceName = address.province!.name!;
+      _provinceCode = address.province!.code!;
+      _cityName = address.city!.name!;
+      _cityCode = address.city!.code!;
+      _districtName = address.district!.name!;
+      _districtCode = address.district!.code!;
       if (widget.enableStreet == true) {
         _streetName = address.street?.name;
         _streetCode = address.street?.code;
@@ -247,7 +245,7 @@ class CityPickerState extends State<CityPickerWidget>
   }
 
   @override
-  void onItemClick(int? tabIndex, String? name, String? code) {
+  void onItemClick(int tabIndex, String name, String code) {
     switch (tabIndex) {
       case 0:
         _provinceName = name;
@@ -304,7 +302,7 @@ class CityPickerState extends State<CityPickerWidget>
         } else {
           _districtName = name;
           _districtCode = code;
-          _cityPickerListener?.onFinish(Address(
+          widget.cityPickerListener?.onFinish(Address(
             province: AddressNode(code: _provinceCode, name: _provinceName),
             city: AddressNode(code: _cityCode, name: _cityName),
             district: AddressNode(code: _districtCode, name: _districtName),
@@ -315,7 +313,7 @@ class CityPickerState extends State<CityPickerWidget>
       case 3:
         _streetName = name;
         _streetCode = code;
-        _cityPickerListener?.onFinish(Address(
+        widget.cityPickerListener?.onFinish(Address(
           province: AddressNode(code: _provinceCode, name: _provinceName),
           city: AddressNode(code: _cityCode, name: _cityName),
           district: AddressNode(code: _districtCode, name: _districtName),

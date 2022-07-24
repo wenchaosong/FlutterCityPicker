@@ -333,23 +333,23 @@ class HomeWidgetState extends State<HomeWidget> implements CityPickerListener {
 
   @override
   Future<List<AddressNode>> onProvinceSelected(
-      String? provinceCode, String? provinceName) async {
+      String provinceCode, String provinceName) async {
     print("onProvinceSelected --- provinceName: $provinceName");
-    return HttpUtils.getCityData(provinceName!);
+    return HttpUtils.getCityData(provinceName);
   }
 
   @override
   Future<List<AddressNode>> onCitySelected(
-      String? cityCode, String? cityName) async {
+      String cityCode, String cityName) async {
     print("onCitySelected --- cityName: $cityName");
-    return HttpUtils.getCityData(cityName!);
+    return HttpUtils.getCityData(cityName);
   }
 
   @override
   Future<List<AddressNode>> onDistrictSelected(
-      String? districtCode, String? districtName) {
+      String districtCode, String districtName) {
     print("onDistrictSelected --- districtName: $districtName");
-    return HttpUtils.getCityData(districtName!);
+    return HttpUtils.getCityData(districtName);
   }
 
   @override
