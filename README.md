@@ -12,7 +12,7 @@
 
 ```
 dependencies:
-    flutter_city_picker: ^1.0.6
+    flutter_city_picker: ^1.0.7
 ```
 
 #### 使用方法
@@ -57,6 +57,8 @@ dependencies:
               ),
             ),
           ),
+          // 选择文字
+          selectText: "请选择",
           // 关闭图标组件
           closeWidget: Icon(Icons.close),
           // tab 高度
@@ -107,6 +109,8 @@ dependencies:
           itemUnSelectedTextStyle: TextStyle(fontSize: 14, color: Colors.black54),
           // 初始默认地址
           initialAddress: _selectedAddress,
+          // 数据为空时确认组件
+          confirmWidget: confirmWidget,
           cityPickerListener: this,
         );
 ```
@@ -116,35 +120,34 @@ dependencies:
     <你的组件> implements CityPickerListener
 
     @override
-    Future<List<City>> loadProvinceData() async {
+    Future<List<AddressNode>> loadProvinceData() async {
       // 发起网络请求，获取省级数据
       return 返回省级数据;
     }
 
     @override
-    Future<List<City>> onProvinceSelected(String provinceCode, String provinceName) async {
+    Future<List<AddressNode>> onProvinceSelected(String provinceCode, String provinceName) async {
       // 点击省份后的回调，根据城市代码或名称去请求市级数据
       return 返回市级数据;
     }
 
     @override
-    Future<List<City>> onCitySelected(String cityCode, String cityName) async {
+    Future<List<AddressNode>> onCitySelected(String cityCode, String cityName) async {
       // 点击城市后的回调，根据城市代码或名称去请求区级数据
       return 返回区级数据;
     }
 
     @override
-    Future<List<City>> onDistrictSelected(String districtCode, String districtName) {
+    Future<List<AddressNode>> onDistrictSelected(String districtCode, String districtName) {
       // 点击区后的回调，根据城市代码或名称去请求街道数据
       return 返回街道数据;
     }
 
     @override
-    void onFinish(String provinceCode, String provinceName, String cityCode,
-        String cityName, String districtCode, String districtName, String streetCode, String streetName) {
+    void onFinish(Address address) {
       // 最终回调，返回省市区的代码和名称
       setState(() {
-        _address = provinceName + " " + cityName + " " + districtName + " " + streetName;
+        _address = address.toString();
       });
     }
 ```

@@ -1,3 +1,7 @@
+## 1.0.7
+
+- resolve empty data
+
 ## 1.0.6
 
 - add default address

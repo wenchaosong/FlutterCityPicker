@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_city_picker/model/address.dart';
 
 import '../city_picker.dart';
 import '../listener/item_listener.dart';
+import '../model/address.dart';
 import '../model/tab.dart';
 import '../view/item_widget.dart';
 import 'inherited_widget.dart';
@@ -27,6 +27,9 @@ class CityPickerWidget extends StatefulWidget {
 
   /// 标题样式
   final Widget? titleWidget;
+
+  /// 选择文字
+  final String? selectText;
 
   /// 关闭图标组件
   final Widget? closeWidget;
@@ -97,6 +100,9 @@ class CityPickerWidget extends StatefulWidget {
   /// 初始值
   final Address? initialAddress;
 
+  /// 数据为空时确认按钮组件
+  final Widget? confirmWidget;
+
   /// 监听事件
   final CityPickerListener? cityPickerListener;
 
@@ -106,6 +112,7 @@ class CityPickerWidget extends StatefulWidget {
     this.corner,
     this.paddingLeft,
     this.titleWidget,
+    this.selectText,
     this.closeWidget,
     this.tabHeight,
     this.enableStreet,
@@ -129,6 +136,7 @@ class CityPickerWidget extends StatefulWidget {
     this.itemSelectedTextStyle,
     this.itemUnSelectedTextStyle,
     this.initialAddress,
+    this.confirmWidget,
     required this.cityPickerListener,
   });
 
@@ -183,28 +191,39 @@ class CityPickerState extends State<CityPickerWidget>
                 code: ''),
             TabTitle(
               index: 1,
-              title: widget.initialAddress!.city?.name,
+              title: (widget.initialAddress!.city == null ||
+                      widget.initialAddress!.city!.name == null)
+                  ? widget.selectText ?? "请选择"
+                  : widget.initialAddress!.city!.name,
               name: widget.initialAddress!.province?.name,
               code: widget.initialAddress!.province?.code,
             ),
             TabTitle(
               index: 2,
-              title: widget.initialAddress!.district?.name,
+              title: (widget.initialAddress!.district == null ||
+                      widget.initialAddress!.district!.name!.isEmpty)
+                  ? widget.selectText ?? "请选择"
+                  : widget.initialAddress!.district!.name,
               name: widget.initialAddress!.city?.name,
               code: widget.initialAddress!.city?.code,
             ),
             if (widget.enableStreet == true)
               TabTitle(
                 index: 3,
-                title: widget.initialAddress!.street == null
-                    ? '请选择'
+                title: (widget.initialAddress!.street == null ||
+                        widget.initialAddress!.street!.name!.isEmpty)
+                    ? widget.selectText ?? "请选择"
                     : widget.initialAddress!.street!.name,
                 name: widget.initialAddress!.district?.name,
                 code: widget.initialAddress!.district?.code,
               ),
           ]
         : [
-            TabTitle(index: 0, title: '请选择', name: '', code: ''),
+            TabTitle(
+                index: 0,
+                title: widget.selectText ?? "请选择",
+                name: '',
+                code: ''),
           ];
     _initValue();
   }
@@ -212,8 +231,8 @@ class CityPickerState extends State<CityPickerWidget>
   @override
   void dispose() {
     if (mounted) {
-      _tabController?.dispose();
-      _pageController?.dispose();
+      _tabController!.dispose();
+      _pageController!.dispose();
     }
     super.dispose();
   }
@@ -221,12 +240,12 @@ class CityPickerState extends State<CityPickerWidget>
   void _initValue() {
     if (_hasInitialValue) {
       final address = widget.initialAddress!;
-      _provinceName = address.province!.name!;
-      _provinceCode = address.province!.code!;
-      _cityName = address.city!.name!;
-      _cityCode = address.city!.code!;
-      _districtName = address.district!.name!;
-      _districtCode = address.district!.code!;
+      _provinceName = address.province?.name;
+      _provinceCode = address.province?.code;
+      _cityName = address.city?.name;
+      _cityCode = address.city?.code;
+      _districtName = address.district?.name;
+      _districtCode = address.district?.code;
       if (widget.enableStreet == true) {
         _streetName = address.street?.name;
         _streetCode = address.street?.code;
@@ -253,7 +272,10 @@ class CityPickerState extends State<CityPickerWidget>
         _myTabs = [
           TabTitle(index: 0, title: _provinceName, name: "", code: ""),
           TabTitle(
-              index: 1, title: "请选择", name: _provinceName, code: _provinceCode),
+              index: 1,
+              title: widget.selectText ?? "请选择",
+              name: _provinceName,
+              code: _provinceCode),
         ];
         _tabController = TabController(vsync: this, length: _myTabs.length);
         _pageController!.jumpToPage(1);
@@ -265,10 +287,18 @@ class CityPickerState extends State<CityPickerWidget>
       case 1:
         _cityName = name;
         _cityCode = code;
+        _districtName = "";
+        _districtCode = "";
+        _streetName = "";
+        _streetCode = "";
         _myTabs = [
           TabTitle(index: 0, title: _provinceName, name: "", code: ""),
           TabTitle(index: 1, title: _cityName, name: "", code: ""),
-          TabTitle(index: 2, title: "请选择", name: _cityName, code: _cityCode),
+          TabTitle(
+              index: 2,
+              title: widget.selectText ?? "请选择",
+              name: _cityName,
+              code: _cityCode),
         ];
         _tabController =
             TabController(vsync: this, length: _myTabs.length, initialIndex: 1);
@@ -282,13 +312,15 @@ class CityPickerState extends State<CityPickerWidget>
         if (widget.enableStreet!) {
           _districtName = name;
           _districtCode = code;
+          _streetName = "";
+          _streetCode = "";
           _myTabs = [
             TabTitle(index: 0, title: _provinceName, name: "", code: ""),
             TabTitle(index: 1, title: _cityName, name: "", code: ""),
             TabTitle(index: 2, title: _districtName, name: "", code: ""),
             TabTitle(
                 index: 3,
-                title: "请选择",
+                title: widget.selectText ?? "请选择",
                 name: _districtName,
                 code: _districtCode),
           ];
@@ -302,7 +334,12 @@ class CityPickerState extends State<CityPickerWidget>
         } else {
           _districtName = name;
           _districtCode = code;
-          widget.cityPickerListener?.onFinish(Address(
+          _streetName = "";
+          _streetCode = "";
+          if (mounted) {
+            setState(() {});
+          }
+          widget.cityPickerListener!.onFinish(Address(
             province: AddressNode(code: _provinceCode, name: _provinceName),
             city: AddressNode(code: _cityCode, name: _cityName),
             district: AddressNode(code: _districtCode, name: _districtName),
@@ -313,7 +350,10 @@ class CityPickerState extends State<CityPickerWidget>
       case 3:
         _streetName = name;
         _streetCode = code;
-        widget.cityPickerListener?.onFinish(Address(
+        if (mounted) {
+          setState(() {});
+        }
+        widget.cityPickerListener!.onFinish(Address(
           province: AddressNode(code: _provinceCode, name: _provinceName),
           city: AddressNode(code: _cityCode, name: _cityName),
           district: AddressNode(code: _districtCode, name: _districtName),
@@ -322,6 +362,17 @@ class CityPickerState extends State<CityPickerWidget>
         Navigator.pop(context);
         break;
     }
+  }
+
+  @override
+  void itemEmpty() {
+    widget.cityPickerListener!.onFinish(Address(
+      province: AddressNode(code: _provinceCode, name: _provinceName),
+      city: AddressNode(code: _cityCode, name: _cityName),
+      district: AddressNode(code: _districtCode, name: _districtName),
+      street: AddressNode(code: _streetCode, name: _streetName),
+    ));
+    Navigator.pop(context);
   }
 
   @override
@@ -413,7 +464,7 @@ class CityPickerState extends State<CityPickerWidget>
         unselectedLabelColor: widget.unselectedLabelColor ?? Colors.black54,
         labelColor: widget.selectedLabelColor ?? Theme.of(context).primaryColor,
         tabs: _myTabs.map((data) {
-          return Text("${data.title ?? ""}",
+          return Text(data.title!,
               style: TextStyle(fontSize: widget.labelTextSize));
         }).toList(),
       ),
@@ -433,6 +484,7 @@ class CityPickerState extends State<CityPickerWidget>
           code: tab.code,
           name: tab.name,
           title: tab.title,
+          selectText: widget.selectText,
           paddingLeft: widget.paddingLeft,
           itemHeadHeight: widget.itemHeadHeight,
           itemHeadBackgroundColor: widget.itemHeadBackgroundColor,
@@ -448,6 +500,7 @@ class CityPickerState extends State<CityPickerWidget>
           itemSelectedTextStyle: widget.itemSelectedTextStyle,
           itemUnSelectedTextStyle: widget.itemUnSelectedTextStyle,
           cityPickerListener: widget.cityPickerListener,
+          confirmWidget: widget.confirmWidget,
           itemClickListener: this,
         );
       }).toList(),

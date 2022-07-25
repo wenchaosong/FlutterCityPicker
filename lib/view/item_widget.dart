@@ -20,6 +20,9 @@ class ItemWidget extends StatefulWidget {
   /// 选中 tab
   final String? title;
 
+  /// 选择文字
+  final String? selectText;
+
   /// 左边间距
   final double? paddingLeft;
 
@@ -62,6 +65,9 @@ class ItemWidget extends StatefulWidget {
   /// 未选中城市文字样式
   final TextStyle? itemUnSelectedTextStyle;
 
+  /// 数据为空时确认按钮组件
+  final Widget? confirmWidget;
+
   final CityPickerListener? cityPickerListener;
 
   final ItemClickListener? itemClickListener;
@@ -71,6 +77,7 @@ class ItemWidget extends StatefulWidget {
     this.code,
     this.name,
     this.title,
+    this.selectText,
     this.paddingLeft,
     this.itemHeadHeight,
     this.itemHeadBackgroundColor,
@@ -85,6 +92,7 @@ class ItemWidget extends StatefulWidget {
     this.itemSelectedIconWidget,
     this.itemSelectedTextStyle,
     this.itemUnSelectedTextStyle,
+    this.confirmWidget,
     this.cityPickerListener,
     this.itemClickListener,
   });
@@ -97,14 +105,15 @@ class ItemWidgetState extends State<ItemWidget>
     with AutomaticKeepAliveClientMixin {
   ScrollController? _scrollController = ScrollController();
 
-  // 选中的名称
-  late String? _title = widget.title ?? "请选择";
+  late String? _title = widget.title ?? widget.selectText ?? "请选择";
 
   // 上次保存的名称
   String _preName = "";
 
   // 列表数据
   List<SectionCity> _mList = [];
+
+  bool _emptyData = false;
 
   @override
   void initState() {
@@ -115,6 +124,9 @@ class ItemWidgetState extends State<ItemWidget>
         case 0:
           widget.cityPickerListener!.loadProvinceData().then((value) {
             _mList = sortCity(value);
+            if (_mList.length <= 0) {
+              _emptyData = true;
+            }
             if (mounted) {
               setState(() {});
             }
@@ -125,6 +137,9 @@ class ItemWidgetState extends State<ItemWidget>
               .onProvinceSelected(widget.code!, widget.name!)
               .then((value) {
             _mList = sortCity(value);
+            if (_mList.length <= 0) {
+              _emptyData = true;
+            }
             _preName = widget.name!;
             if (mounted) {
               setState(() {});
@@ -136,6 +151,9 @@ class ItemWidgetState extends State<ItemWidget>
               .onCitySelected(widget.code!, widget.name!)
               .then((value) {
             _mList = sortCity(value);
+            if (_mList.length <= 0) {
+              _emptyData = true;
+            }
             _preName = widget.name!;
             if (mounted) {
               setState(() {});
@@ -147,6 +165,9 @@ class ItemWidgetState extends State<ItemWidget>
               .onDistrictSelected(widget.code!, widget.name!)
               .then((value) {
             _mList = sortCity(value);
+            if (_mList.length <= 0) {
+              _emptyData = true;
+            }
             _preName = widget.name!;
             if (mounted) {
               setState(() {});
@@ -172,6 +193,9 @@ class ItemWidgetState extends State<ItemWidget>
                 .onProvinceSelected(widget.code!, widget.name!)
                 .then((value) {
               _mList = sortCity(value);
+              if (_mList.length <= 0) {
+                _emptyData = true;
+              }
               _preName = widget.name!;
               if (mounted) {
                 setState(() {});
@@ -184,6 +208,9 @@ class ItemWidgetState extends State<ItemWidget>
                 .onCitySelected(widget.code!, widget.name!)
                 .then((value) {
               _mList = sortCity(value);
+              if (_mList.length <= 0) {
+                _emptyData = true;
+              }
               _preName = widget.name!;
               if (mounted) {
                 setState(() {});
@@ -196,6 +223,9 @@ class ItemWidgetState extends State<ItemWidget>
                 .onDistrictSelected(widget.code!, widget.name!)
                 .then((value) {
               _mList = sortCity(value);
+              if (_mList.length <= 0) {
+                _emptyData = true;
+              }
               _preName = widget.name!;
               if (mounted) {
                 setState(() {});
@@ -265,7 +295,7 @@ class ItemWidgetState extends State<ItemWidget>
   @override
   void dispose() {
     if (mounted) {
-      _scrollController?.dispose();
+      _scrollController!.dispose();
     }
     super.dispose();
   }
@@ -279,73 +309,88 @@ class ItemWidgetState extends State<ItemWidget>
       color: Theme.of(context).dialogBackgroundColor,
       child: Stack(
         children: [
-          ExpandableListView(
-            controller: _scrollController,
-            builder: SliverExpandableChildDelegate<AddressNode, SectionCity>(
-                sectionList: _mList,
-                headerBuilder: (context, sectionIndex, index) {
-                  return Container(
-                    width: double.infinity,
-                    height: widget.itemHeadHeight,
-                    decoration: BoxDecoration(
-                      border: Border(
-                          bottom: BorderSide(
-                        width: widget.itemHeadLineHeight!,
-                        color: widget.itemHeadLineColor ?? Colors.black38,
-                      )),
-                      color: widget.itemHeadBackgroundColor ??
-                          Theme.of(context).dialogBackgroundColor,
-                    ),
-                    alignment: Alignment.centerLeft,
-                    padding: EdgeInsets.only(left: widget.paddingLeft!),
-                    child: Text(_mList[sectionIndex].letter!,
-                        style: widget.itemHeadTextStyle ??
-                            TextStyle(fontSize: 15, color: Colors.black)),
-                  );
-                },
-                itemBuilder: (context, sectionIndex, itemIndex, index) {
-                  AddressNode city = _mList[sectionIndex].data![itemIndex];
-                  bool isSelect = city.name == _title;
-                  return InkWell(
-                    onTap: () {
-                      _title = city.name!;
-                      if (mounted) {
-                        setState(() {});
-                      }
-                      if (widget.itemClickListener != null) {
-                        widget.itemClickListener!
-                            .onItemClick(widget.index!, city.name!, city.code!);
-                      }
-                    },
-                    child: Container(
-                      width: double.infinity,
-                      height: widget.itemHeight,
-                      padding: EdgeInsets.only(left: widget.paddingLeft!),
-                      alignment: Alignment.centerLeft,
-                      child: Row(children: <Widget>[
-                        Offstage(
-                          offstage: !isSelect,
-                          child: widget.itemSelectedIconWidget ??
-                              Icon(Icons.done,
-                                  color: Theme.of(context).primaryColor,
-                                  size: 16),
-                        ),
-                        SizedBox(width: isSelect ? 3 : 0),
-                        Text(city.name!,
-                            style: isSelect
-                                ? widget.itemSelectedTextStyle ??
-                                    TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                        color: Theme.of(context).primaryColor)
-                                : widget.itemUnSelectedTextStyle ??
-                                    TextStyle(
-                                        fontSize: 14, color: Colors.black54))
-                      ]),
-                    ),
-                  );
-                }),
-          ),
+          _emptyData
+              ? InkWell(
+                  onTap: () {
+                    widget.itemClickListener!.itemEmpty();
+                  },
+                  child: Center(
+                      child: widget.confirmWidget ??
+                          Text(
+                            "暂无数据, 点击后完成选择",
+                            style: widget.itemUnSelectedTextStyle ??
+                                TextStyle(fontSize: 14, color: Colors.black54),
+                          )),
+                )
+              : ExpandableListView(
+                  controller: _scrollController,
+                  builder: SliverExpandableChildDelegate<AddressNode,
+                          SectionCity>(
+                      sectionList: _mList,
+                      headerBuilder: (context, sectionIndex, index) {
+                        return Container(
+                          width: double.infinity,
+                          height: widget.itemHeadHeight,
+                          decoration: BoxDecoration(
+                            border: Border(
+                                bottom: BorderSide(
+                              width: widget.itemHeadLineHeight!,
+                              color: widget.itemHeadLineColor ?? Colors.black38,
+                            )),
+                            color: widget.itemHeadBackgroundColor ??
+                                Theme.of(context).dialogBackgroundColor,
+                          ),
+                          alignment: Alignment.centerLeft,
+                          padding: EdgeInsets.only(left: widget.paddingLeft!),
+                          child: Text(_mList[sectionIndex].letter!,
+                              style: widget.itemHeadTextStyle ??
+                                  TextStyle(fontSize: 15, color: Colors.black)),
+                        );
+                      },
+                      itemBuilder: (context, sectionIndex, itemIndex, index) {
+                        AddressNode city =
+                            _mList[sectionIndex].data![itemIndex];
+                        bool isSelect = city.name == _title;
+                        return InkWell(
+                          onTap: () {
+                            _title = city.name!;
+                            if (mounted) {
+                              setState(() {});
+                            }
+                            widget.itemClickListener!.onItemClick(
+                                widget.index!, city.name!, city.code!);
+                          },
+                          child: Container(
+                            width: double.infinity,
+                            height: widget.itemHeight,
+                            padding: EdgeInsets.only(left: widget.paddingLeft!),
+                            alignment: Alignment.centerLeft,
+                            child: Row(children: <Widget>[
+                              Offstage(
+                                offstage: !isSelect,
+                                child: widget.itemSelectedIconWidget ??
+                                    Icon(Icons.done,
+                                        color: Theme.of(context).primaryColor,
+                                        size: 16),
+                              ),
+                              SizedBox(width: isSelect ? 3 : 0),
+                              Text(city.name!,
+                                  style: isSelect
+                                      ? widget.itemSelectedTextStyle ??
+                                          TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold,
+                                              color: Theme.of(context)
+                                                  .primaryColor)
+                                      : widget.itemUnSelectedTextStyle ??
+                                          TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.black54))
+                            ]),
+                          ),
+                        );
+                      }),
+                ),
           Positioned(
             right: widget.paddingLeft,
             top: 0,

@@ -32,6 +32,8 @@ class CityPicker {
     double paddingLeft = 15.0,
     // 标题组件
     Widget? titleWidget,
+    // 选择文字
+    String? selectText,
     // 关闭图标组件
     Widget? closeWidget,
     // tab 高度
@@ -78,6 +80,8 @@ class CityPicker {
     TextStyle? itemUnSelectedTextStyle,
     // 地址初始值
     Address? initialAddress,
+    // 数据为空时确认按钮组件
+    Widget? confirmWidget,
     // 地址选择器监听事件
     required CityPickerListener cityPickerListener,
   }) {
@@ -93,6 +97,7 @@ class CityPicker {
             corner: corner,
             paddingLeft: paddingLeft,
             titleWidget: titleWidget,
+            selectText: selectText,
             closeWidget: closeWidget,
             tabHeight: tabHeight,
             enableStreet: enableStreet,
@@ -116,6 +121,7 @@ class CityPicker {
             itemSelectedTextStyle: itemSelectedTextStyle,
             itemUnSelectedTextStyle: itemUnSelectedTextStyle,
             initialAddress: initialAddress,
+            confirmWidget: confirmWidget,
             cityPickerListener: cityPickerListener,
           )),
     );

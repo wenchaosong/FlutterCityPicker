@@ -83,6 +83,7 @@ class HomeWidgetState extends State<HomeWidget> implements CityPickerListener {
           ),
         ),
       ),
+      selectText: "请选择",
       closeWidget: Icon(Icons.close),
       tabHeight: 40,
       enableStreet: _showStreet,
@@ -109,6 +110,22 @@ class HomeWidgetState extends State<HomeWidget> implements CityPickerListener {
           color: Theme.of(context).primaryColor),
       itemUnSelectedTextStyle: TextStyle(fontSize: 14, color: Colors.black54),
       initialAddress: _selectedAddress,
+      confirmWidget: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text("没有数据哦，点击完成选择"),
+          SizedBox(height: 5),
+          Container(
+            padding: EdgeInsets.all(6),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(5)),
+              color: Theme.of(context).primaryColor,
+            ),
+            child: Text("确认"),
+          ),
+        ],
+      ),
       cityPickerListener: this,
     );
   }
@@ -335,6 +352,9 @@ class HomeWidgetState extends State<HomeWidget> implements CityPickerListener {
   Future<List<AddressNode>> onProvinceSelected(
       String provinceCode, String provinceName) async {
     print("onProvinceSelected --- provinceName: $provinceName");
+    if (provinceName.isEmpty) {
+      return Future.value([]);
+    }
     return HttpUtils.getCityData(provinceName);
   }
 
@@ -342,6 +362,9 @@ class HomeWidgetState extends State<HomeWidget> implements CityPickerListener {
   Future<List<AddressNode>> onCitySelected(
       String cityCode, String cityName) async {
     print("onCitySelected --- cityName: $cityName");
+    if (cityName.isEmpty) {
+      return Future.value([]);
+    }
     return HttpUtils.getCityData(cityName);
   }
 
@@ -349,6 +372,9 @@ class HomeWidgetState extends State<HomeWidget> implements CityPickerListener {
   Future<List<AddressNode>> onDistrictSelected(
       String districtCode, String districtName) {
     print("onDistrictSelected --- districtName: $districtName");
+    if (districtName.isEmpty) {
+      return Future.value([]);
+    }
     return HttpUtils.getCityData(districtName);
   }
 
