@@ -1,9 +1,12 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_city_picker/model/address.dart';
 import 'package:lpinyin/lpinyin.dart';
-import '../model/section_city.dart';
+
 import '../listener/item_listener.dart';
 import '../listener/picker_listener.dart';
+import '../model/section_city.dart';
 import 'listview_section.dart';
 
 /// 城市列表组件
@@ -103,7 +106,7 @@ class ItemWidget extends StatefulWidget {
 
 class ItemWidgetState extends State<ItemWidget>
     with AutomaticKeepAliveClientMixin {
-  ScrollController? _scrollController = ScrollController();
+  final ScrollController? _scrollController = ScrollController();
 
   late String? _title = widget.title ?? widget.selectText ?? "请选择";
 
@@ -237,6 +240,14 @@ class ItemWidgetState extends State<ItemWidget>
     }
   }
 
+  @override
+  void dispose() {
+    if (mounted) {
+      _scrollController!.dispose();
+    }
+    super.dispose();
+  }
+
   /// 排序数据
   List<SectionCity> sortCity(List<AddressNode> value) {
     // 先排序
@@ -292,12 +303,19 @@ class ItemWidgetState extends State<ItemWidget>
         duration: Duration(milliseconds: 10), curve: Curves.linear);
   }
 
-  @override
-  void dispose() {
-    if (mounted) {
-      _scrollController!.dispose();
+  /// get index.
+  int _getIndex(double offset) {
+    int index = offset ~/ widget.indexBarItemHeight!;
+    return min(index, _mList.length - 1);
+  }
+
+  RenderBox? _getRenderBox(BuildContext context) {
+    RenderObject? renderObject = context.findRenderObject();
+    RenderBox? box;
+    if (renderObject != null) {
+      box = renderObject as RenderBox;
     }
-    super.dispose();
+    return box;
   }
 
   @override
@@ -397,11 +415,28 @@ class ItemWidgetState extends State<ItemWidget>
             bottom: 0,
             child: Container(
               width: widget.indexBarWidth,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(_mList.length, (index) {
-                  return _indexBarItem(index);
-                }),
+              child: GestureDetector(
+                onVerticalDragDown: (DragDownDetails details) {
+                  RenderBox? box = _getRenderBox(context);
+                  if (box == null) return;
+                  int index = _getIndex(details.localPosition.dy);
+                  if (index >= 0) {
+                    clickIndexBar(index);
+                  }
+                },
+                onVerticalDragUpdate: (DragUpdateDetails details) {
+                  int index = _getIndex(details.localPosition.dy);
+                  if (index >= 0) {
+                    clickIndexBar(index);
+                  }
+                },
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(_mList.length, (index) {
+                    return _indexBarItem(index);
+                  }),
+                ),
               ),
             ),
           ),
@@ -422,45 +457,40 @@ class ItemWidgetState extends State<ItemWidget>
     } else {
       type = 4;
     }
-    return InkWell(
-      onTap: () {
-        clickIndexBar(index);
-      },
-      child: Container(
-        width: widget.indexBarWidth,
-        height: type == 4
-            ? widget.indexBarItemHeight
-            : widget.indexBarItemHeight! + 4,
-        alignment: type == 2
-            ? Alignment.bottomCenter
-            : type == 3
-                ? Alignment.topCenter
-                : Alignment.center,
-        padding: type == 2
-            ? EdgeInsets.only(bottom: 2)
-            : type == 3
-                ? EdgeInsets.only(top: 2)
-                : EdgeInsets.all(0),
-        decoration: BoxDecoration(
-            color: widget.indexBarBackgroundColor,
-            borderRadius: BorderRadius.only(
-              topLeft: (type == 1 || type == 2)
-                  ? Radius.circular(50)
-                  : Radius.circular(0),
-              topRight: (type == 1 || type == 2)
-                  ? Radius.circular(50)
-                  : Radius.circular(0),
-              bottomLeft: (type == 1 || type == 3)
-                  ? Radius.circular(50)
-                  : Radius.circular(0),
-              bottomRight: (type == 1 || type == 3)
-                  ? Radius.circular(50)
-                  : Radius.circular(0),
-            )),
-        child: Text(_mList[index].letter!,
-            style: widget.indexBarTextStyle ??
-                TextStyle(fontSize: 14, color: Colors.black54)),
-      ),
+    return Container(
+      width: widget.indexBarWidth,
+      height: type == 4
+          ? widget.indexBarItemHeight
+          : widget.indexBarItemHeight! + 4,
+      alignment: type == 2
+          ? Alignment.bottomCenter
+          : type == 3
+              ? Alignment.topCenter
+              : Alignment.center,
+      padding: type == 2
+          ? EdgeInsets.only(bottom: 2)
+          : type == 3
+              ? EdgeInsets.only(top: 2)
+              : EdgeInsets.all(0),
+      decoration: BoxDecoration(
+          color: widget.indexBarBackgroundColor,
+          borderRadius: BorderRadius.only(
+            topLeft: (type == 1 || type == 2)
+                ? Radius.circular(50)
+                : Radius.circular(0),
+            topRight: (type == 1 || type == 2)
+                ? Radius.circular(50)
+                : Radius.circular(0),
+            bottomLeft: (type == 1 || type == 3)
+                ? Radius.circular(50)
+                : Radius.circular(0),
+            bottomRight: (type == 1 || type == 3)
+                ? Radius.circular(50)
+                : Radius.circular(0),
+          )),
+      child: Text(_mList[index].letter!,
+          style: widget.indexBarTextStyle ??
+              TextStyle(fontSize: 14, color: Colors.black54)),
     );
   }
 

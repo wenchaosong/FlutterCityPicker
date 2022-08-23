@@ -1,3 +1,7 @@
+## 1.0.8
+
+- add GestureDetector on indexBar
+
 ## 1.0.7
 
 - resolve empty data
