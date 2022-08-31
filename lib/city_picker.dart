@@ -23,7 +23,7 @@ class CityPicker {
     // 点击外部是否消失
     bool dismissible = true,
     // 高度
-    double height = 400.0,
+    double height = 500.0,
     // 标题高度
     double titleHeight = 50.0,
     // 顶部圆角
@@ -38,8 +38,6 @@ class CityPicker {
     Widget? closeWidget,
     // tab 高度
     double tabHeight = 40.0,
-    // 是否启用街道
-    bool enableStreet = false,
     // 是否显示指示器
     bool showTabIndicator = true,
     // 指示器颜色
@@ -79,9 +77,7 @@ class CityPicker {
     // 列表未选中的文字样式
     TextStyle? itemUnSelectedTextStyle,
     // 地址初始值
-    Address? initialAddress,
-    // 数据为空时确认按钮组件
-    Widget? confirmWidget,
+    List<AddressNode>? initialAddress,
     // 地址选择器监听事件
     required CityPickerListener cityPickerListener,
   }) {
@@ -100,7 +96,6 @@ class CityPicker {
             selectText: selectText,
             closeWidget: closeWidget,
             tabHeight: tabHeight,
-            enableStreet: enableStreet,
             showTabIndicator: showTabIndicator,
             tabIndicatorColor: tabIndicatorColor,
             tabIndicatorHeight: tabIndicatorHeight,
@@ -121,7 +116,6 @@ class CityPicker {
             itemSelectedTextStyle: itemSelectedTextStyle,
             itemUnSelectedTextStyle: itemUnSelectedTextStyle,
             initialAddress: initialAddress,
-            confirmWidget: confirmWidget,
             cityPickerListener: cityPickerListener,
           )),
     );

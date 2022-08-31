@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:lpinyin/lpinyin.dart';
 
 import '../city_picker.dart';
 import '../listener/item_listener.dart';
 import '../model/address.dart';
+import '../model/section_city.dart';
 import '../model/tab.dart';
 import '../view/item_widget.dart';
 import 'inherited_widget.dart';
@@ -36,9 +38,6 @@ class CityPickerWidget extends StatefulWidget {
 
   /// tab 高度
   final double? tabHeight;
-
-  /// 是否启用街道
-  final bool? enableStreet;
 
   /// 是否显示 indicator
   final bool? showTabIndicator;
@@ -98,10 +97,7 @@ class CityPickerWidget extends StatefulWidget {
   final TextStyle? itemUnSelectedTextStyle;
 
   /// 初始值
-  final Address? initialAddress;
-
-  /// 数据为空时确认按钮组件
-  final Widget? confirmWidget;
+  final List<AddressNode>? initialAddress;
 
   /// 监听事件
   final CityPickerListener? cityPickerListener;
@@ -115,7 +111,6 @@ class CityPickerWidget extends StatefulWidget {
     this.selectText,
     this.closeWidget,
     this.tabHeight,
-    this.enableStreet,
     this.showTabIndicator,
     this.tabIndicatorColor,
     this.tabIndicatorHeight,
@@ -136,7 +131,6 @@ class CityPickerWidget extends StatefulWidget {
     this.itemSelectedTextStyle,
     this.itemUnSelectedTextStyle,
     this.initialAddress,
-    this.confirmWidget,
     required this.cityPickerListener,
   });
 
@@ -150,82 +144,40 @@ class CityPickerState extends State<CityPickerWidget>
   TabController? _tabController;
   PageController? _pageController;
 
-  bool _hasInitialValue = false;
+  // 列表数据
+  Map<int, List<SectionCity>> _mData = {};
 
+  // 中间 tab
   List<TabTitle> _myTabs = [];
 
-  // 省级名称
-  String? _provinceName;
+  // 当前索引
+  int _currentIndex = 0;
 
-  // 省级代码
-  String? _provinceCode;
-
-  // 市级名称
-  String? _cityName;
-
-  // 市级代码
-  String? _cityCode;
-
-  // 区级名称
-  String? _districtName;
-
-  // 区级代码
-  String? _districtCode;
-
-  // 街道名称
-  String? _streetName;
-
-  // 街道代码
-  String? _streetCode;
+  // 已选择的数据
+  List<AddressNode> _selectData = [];
 
   @override
   void initState() {
     super.initState();
-    _hasInitialValue = widget.initialAddress != null;
-    _myTabs = _hasInitialValue
-        ? [
-            TabTitle(
-                index: 0,
-                title: widget.initialAddress!.province?.name,
-                name: '',
-                code: ''),
-            TabTitle(
-              index: 1,
-              title: (widget.initialAddress!.city == null ||
-                      widget.initialAddress!.city!.name == null)
-                  ? widget.selectText ?? "请选择"
-                  : widget.initialAddress!.city!.name,
-              name: widget.initialAddress!.province?.name,
-              code: widget.initialAddress!.province?.code,
-            ),
-            TabTitle(
-              index: 2,
-              title: (widget.initialAddress!.district == null ||
-                      widget.initialAddress!.district!.name!.isEmpty)
-                  ? widget.selectText ?? "请选择"
-                  : widget.initialAddress!.district!.name,
-              name: widget.initialAddress!.city?.name,
-              code: widget.initialAddress!.city?.code,
-            ),
-            if (widget.enableStreet == true)
-              TabTitle(
-                index: 3,
-                title: (widget.initialAddress!.street == null ||
-                        widget.initialAddress!.street!.name!.isEmpty)
-                    ? widget.selectText ?? "请选择"
-                    : widget.initialAddress!.street!.name,
-                name: widget.initialAddress!.district?.name,
-                code: widget.initialAddress!.district?.code,
-              ),
-          ]
-        : [
-            TabTitle(
-                index: 0,
-                title: widget.selectText ?? "请选择",
-                name: '',
-                code: ''),
-          ];
-    _initValue();
+
+    //TODO
+    widget.cityPickerListener!.onDataLoad(_currentIndex, "", "").then((value) {
+      List<SectionCity> list = sortCity(value);
+      if (list.length <= 0) {
+        widget.cityPickerListener!.onFinish(_selectData);
+        Navigator.pop(context);
+      } else {
+        _mData[_currentIndex] = list;
+        _myTabs.add(
+            TabTitle(index: _currentIndex, title: widget.selectText ?? "请选择"));
+        _tabController = TabController(vsync: this, length: _myTabs.length);
+        if (mounted) {
+          setState(() {});
+        }
+      }
+    });
+    _tabController = TabController(vsync: this, length: _myTabs.length);
+    _pageController = PageController();
   }
 
   @override
@@ -237,142 +189,80 @@ class CityPickerState extends State<CityPickerWidget>
     super.dispose();
   }
 
-  void _initValue() {
-    if (_hasInitialValue) {
-      final address = widget.initialAddress!;
-      _provinceName = address.province?.name;
-      _provinceCode = address.province?.code;
-      _cityName = address.city?.name;
-      _cityCode = address.city?.code;
-      _districtName = address.district?.name;
-      _districtCode = address.district?.code;
-      if (widget.enableStreet == true) {
-        _streetName = address.street?.name;
-        _streetCode = address.street?.code;
-        _tabController =
-            TabController(vsync: this, length: _myTabs.length, initialIndex: 3);
-        _pageController = PageController(initialPage: 3);
+  /// 排序数据
+  List<SectionCity> sortCity(List<AddressNode> value) {
+    // 先排序
+    List<AddressNode> _cityList = [];
+    value.forEach((city) {
+      String letter = PinyinHelper.getFirstWordPinyin(city.name!)
+          .substring(0, 1)
+          .toUpperCase();
+      _cityList
+          .add(AddressNode(code: city.code, letter: letter, name: city.name));
+    });
+    _cityList.sort((a, b) => a.letter!.compareTo(b.letter!));
+    // 组装数据
+    List<SectionCity> _sectionList = [];
+    String? _letter = "A";
+    List<AddressNode> _cityList2 = [];
+    for (int i = 0; i < _cityList.length; i++) {
+      if (_letter == _cityList[i].letter) {
+        _cityList2.add(_cityList[i]);
       } else {
-        _tabController =
-            TabController(vsync: this, length: _myTabs.length, initialIndex: 2);
-        _pageController = PageController(initialPage: 2);
+        if (_cityList2.length > 0) {
+          _sectionList.add(SectionCity(letter: _letter, data: _cityList2));
+        }
+        _cityList2 = [];
+        _cityList2.add(_cityList[i]);
+        _letter = _cityList[i].letter;
       }
-    } else {
-      _tabController = TabController(vsync: this, length: _myTabs.length);
-      _pageController = PageController();
+      if (i == _cityList.length - 1) {
+        if (_cityList2.length > 0) {
+          _sectionList.add(SectionCity(letter: _letter, data: _cityList2));
+        }
+      }
     }
+    return _sectionList;
   }
 
   @override
   void onItemClick(int tabIndex, String name, String code) {
-    switch (tabIndex) {
-      case 0:
-        _provinceName = name;
-        _provinceCode = code;
-        _myTabs = [
-          TabTitle(index: 0, title: _provinceName, name: "", code: ""),
-          TabTitle(
-              index: 1,
-              title: widget.selectText ?? "请选择",
-              name: _provinceName,
-              code: _provinceCode),
-        ];
-        _tabController = TabController(vsync: this, length: _myTabs.length);
-        _pageController!.jumpToPage(1);
-        _tabController!.animateTo(1);
-        if (mounted) {
-          setState(() {});
-        }
-        break;
-      case 1:
-        _cityName = name;
-        _cityCode = code;
-        _districtName = "";
-        _districtCode = "";
-        _streetName = "";
-        _streetCode = "";
-        _myTabs = [
-          TabTitle(index: 0, title: _provinceName, name: "", code: ""),
-          TabTitle(index: 1, title: _cityName, name: "", code: ""),
-          TabTitle(
-              index: 2,
-              title: widget.selectText ?? "请选择",
-              name: _cityName,
-              code: _cityCode),
-        ];
-        _tabController =
-            TabController(vsync: this, length: _myTabs.length, initialIndex: 1);
-        _pageController!.jumpToPage(2);
-        _tabController!.animateTo(2);
-        if (mounted) {
-          setState(() {});
-        }
-        break;
-      case 2:
-        if (widget.enableStreet!) {
-          _districtName = name;
-          _districtCode = code;
-          _streetName = "";
-          _streetCode = "";
-          _myTabs = [
-            TabTitle(index: 0, title: _provinceName, name: "", code: ""),
-            TabTitle(index: 1, title: _cityName, name: "", code: ""),
-            TabTitle(index: 2, title: _districtName, name: "", code: ""),
-            TabTitle(
-                index: 3,
-                title: widget.selectText ?? "请选择",
-                name: _districtName,
-                code: _districtCode),
-          ];
-          _tabController = TabController(
-              vsync: this, length: _myTabs.length, initialIndex: 2);
-          _pageController!.jumpToPage(3);
-          _tabController!.animateTo(3);
-          if (mounted) {
-            setState(() {});
-          }
-        } else {
-          _districtName = name;
-          _districtCode = code;
-          _streetName = "";
-          _streetCode = "";
-          if (mounted) {
-            setState(() {});
-          }
-          widget.cityPickerListener!.onFinish(Address(
-            province: AddressNode(code: _provinceCode, name: _provinceName),
-            city: AddressNode(code: _cityCode, name: _cityName),
-            district: AddressNode(code: _districtCode, name: _districtName),
-          ));
-          Navigator.pop(context);
-        }
-        break;
-      case 3:
-        _streetName = name;
-        _streetCode = code;
-        if (mounted) {
-          setState(() {});
-        }
-        widget.cityPickerListener!.onFinish(Address(
-          province: AddressNode(code: _provinceCode, name: _provinceName),
-          city: AddressNode(code: _cityCode, name: _cityName),
-          district: AddressNode(code: _districtCode, name: _districtName),
-          street: AddressNode(code: _streetCode, name: _streetName),
-        ));
-        Navigator.pop(context);
-        break;
+    // 点击永远是移动到下一个 tab
+    _currentIndex++;
+    // 先把后面的全部删除
+    if (_selectData.length >= _currentIndex) {
+      _selectData.removeRange(_currentIndex - 1, _selectData.length);
+      _myTabs.removeRange(_currentIndex - 1, _myTabs.length - 1);
+      _tabController = TabController(
+          vsync: this, length: _myTabs.length, initialIndex: _currentIndex - 1);
+      if (mounted) {
+        setState(() {});
+      }
     }
-  }
 
-  @override
-  void itemEmpty() {
-    widget.cityPickerListener!.onFinish(Address(
-      province: AddressNode(code: _provinceCode, name: _provinceName),
-      city: AddressNode(code: _cityCode, name: _cityName),
-      district: AddressNode(code: _districtCode, name: _districtName),
-      street: AddressNode(code: _streetCode, name: _streetName),
-    ));
-    Navigator.pop(context);
+    _selectData.insert(_currentIndex - 1, AddressNode(code: code, name: name));
+    widget.cityPickerListener!
+        .onDataLoad(_currentIndex, code, name)
+        .then((value) {
+      List<SectionCity> list = sortCity(value);
+      if (list.length <= 0) {
+        widget.cityPickerListener!.onFinish(_selectData);
+        Navigator.pop(context);
+      } else {
+        _mData[_currentIndex] = list;
+        _myTabs.elementAt(_currentIndex - 1).title =
+            _selectData[_currentIndex - 1].name;
+        _myTabs.add(
+            TabTitle(index: _currentIndex, title: widget.selectText ?? "请选择"));
+        _tabController = TabController(
+            vsync: this, length: _myTabs.length, initialIndex: _currentIndex);
+        _pageController!.animateToPage(_currentIndex,
+            duration: Duration(milliseconds: 10), curve: Curves.linear);
+        if (mounted) {
+          setState(() {});
+        }
+      }
+    });
   }
 
   @override
@@ -390,10 +280,13 @@ class CityPickerState extends State<CityPickerWidget>
                 child: Column(children: <Widget>[
                   _topTextWidget(),
                   Expanded(
-                    child: Column(children: <Widget>[
-                      _middleTabWidget(),
-                      Expanded(child: _bottomListWidget())
-                    ]),
+                    child: Container(
+                      color: Theme.of(context).dialogBackgroundColor,
+                      child: Column(children: <Widget>[
+                        _middleTabWidget(),
+                        Expanded(child: _bottomListWidget())
+                      ]),
+                    ),
                   )
                 ])),
           )),
@@ -444,7 +337,12 @@ class CityPickerState extends State<CityPickerWidget>
       child: TabBar(
         controller: _tabController,
         onTap: (index) {
-          _pageController!.jumpToPage(index);
+          _currentIndex = index;
+          if (mounted) {
+            setState(() {});
+          }
+          _pageController!.animateToPage(_currentIndex,
+              duration: Duration(milliseconds: 10), curve: Curves.linear);
         },
         isScrollable: true,
         indicatorSize: TabBarIndicatorSize.tab,
@@ -475,13 +373,16 @@ class CityPickerState extends State<CityPickerWidget>
     return PageView(
       controller: _pageController,
       onPageChanged: (index) {
-        _tabController!.animateTo(index);
+        _currentIndex = index;
+        if (mounted) {
+          setState(() {});
+        }
+        _tabController!.animateTo(_currentIndex);
       },
       children: _myTabs.map((tab) {
         return ItemWidget(
           index: tab.index,
-          code: tab.code,
-          name: tab.name,
+          list: _mData[tab.index],
           title: tab.title,
           selectText: widget.selectText,
           paddingLeft: widget.paddingLeft,
@@ -498,8 +399,6 @@ class CityPickerState extends State<CityPickerWidget>
           itemSelectedIconWidget: widget.itemSelectedIconWidget,
           itemSelectedTextStyle: widget.itemSelectedTextStyle,
           itemUnSelectedTextStyle: widget.itemUnSelectedTextStyle,
-          cityPickerListener: widget.cityPickerListener,
-          confirmWidget: widget.confirmWidget,
           itemClickListener: this,
         );
       }).toList(),

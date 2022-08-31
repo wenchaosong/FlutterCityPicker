@@ -46,13 +46,13 @@ class HomeWidgetState extends State<HomeWidget> implements CityPickerListener {
   String _address = "请选择地区";
   Color _themeColor = Colors.blue;
   Color _backgroundColor = Colors.white;
-  double _height = 400.0;
+  double _height = 500.0;
   double _opacity = 0.5;
   double _corner = 20;
   bool _dismissible = true;
   bool _showTabIndicator = true;
   bool _showStreet = false;
-  Address? _selectedAddress;
+  List<AddressNode> _selectedAddress = [];
 
   @override
   void initState() {
@@ -86,7 +86,6 @@ class HomeWidgetState extends State<HomeWidget> implements CityPickerListener {
       selectText: "请选择",
       closeWidget: Icon(Icons.close),
       tabHeight: 40,
-      enableStreet: _showStreet,
       showTabIndicator: _showTabIndicator,
       tabIndicatorColor: Theme.of(context).primaryColor,
       tabIndicatorHeight: 2,
@@ -110,22 +109,6 @@ class HomeWidgetState extends State<HomeWidget> implements CityPickerListener {
           color: Theme.of(context).primaryColor),
       itemUnSelectedTextStyle: TextStyle(fontSize: 14, color: Colors.black54),
       initialAddress: _selectedAddress,
-      confirmWidget: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text("没有数据哦，点击完成选择"),
-          SizedBox(height: 5),
-          Container(
-            padding: EdgeInsets.all(6),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(5)),
-              color: Theme.of(context).primaryColor,
-            ),
-            child: Text("确认"),
-          ),
-        ],
-      ),
       cityPickerListener: this,
     );
   }
@@ -343,47 +326,42 @@ class HomeWidgetState extends State<HomeWidget> implements CityPickerListener {
   }
 
   @override
-  Future<List<AddressNode>> loadProvinceData() async {
-    print("loadProvinceData");
-    return HttpUtils.getCityData("");
-  }
-
-  @override
-  Future<List<AddressNode>> onProvinceSelected(
-      String provinceCode, String provinceName) async {
-    print("onProvinceSelected --- provinceName: $provinceName");
-    if (provinceName.isEmpty) {
-      return Future.value([]);
+  Future<List<AddressNode>> onDataLoad(
+      int index, String code, String name) async {
+    print("onDataLoad ---> $index $name");
+    if (index == 0) {
+      return HttpUtils.getCityData("");
+    } else {
+      if (!_showStreet) {
+        if (index == 3) {
+          return Future.value([]);
+        }
+        return HttpUtils.getCityData(name);
+      } else {
+        return HttpUtils.getCityData(name);
+      }
     }
-    return HttpUtils.getCityData(provinceName);
   }
 
   @override
-  Future<List<AddressNode>> onCitySelected(
-      String cityCode, String cityName) async {
-    print("onCitySelected --- cityName: $cityName");
-    if (cityName.isEmpty) {
-      return Future.value([]);
-    }
-    return HttpUtils.getCityData(cityName);
-  }
-
-  @override
-  Future<List<AddressNode>> onDistrictSelected(
-      String districtCode, String districtName) {
-    print("onDistrictSelected --- districtName: $districtName");
-    if (districtName.isEmpty) {
-      return Future.value([]);
-    }
-    return HttpUtils.getCityData(districtName);
-  }
-
-  @override
-  void onFinish(Address address) {
+  void onFinish(List<AddressNode> data) {
     print("onFinish");
-    setState(() {
-      _address = address.toString();
-      _selectedAddress = address;
-    });
+    if (data.isNotEmpty) {
+      _address = "";
+      if (data.length > 0) {
+        _address += (data[0].name! + " ");
+      }
+      if (data.length > 1) {
+        _address += (data[1].name! + " ");
+      }
+      if (data.length > 2) {
+        _address += (data[2].name! + " ");
+      }
+      if (data.length > 3) {
+        _address += (data[3].name! + " ");
+      }
+      _selectedAddress = data;
+    }
+    setState(() {});
   }
 }

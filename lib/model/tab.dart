@@ -6,16 +6,8 @@ class TabTitle {
   /// 标题
   String? title;
 
-  /// 城市名称
-  String? name;
-
-  /// 城市代码
-  String? code;
-
   TabTitle({
     this.index,
     this.title,
-    this.name,
-    this.code,
   });
 }
