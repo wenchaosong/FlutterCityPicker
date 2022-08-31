@@ -383,20 +383,19 @@ class CityPickerState extends State<CityPickerWidget>
       builder: (BuildContext context, Widget? child) => CustomSingleChildLayout(
           delegate: CustomLayoutDelegate(
               progress: route.animation!.value, height: widget.height),
-          child: GestureDetector(
-            child: Material(
-                color: Colors.transparent,
-                child: Container(
-                    width: double.infinity,
+          child: Material(
+            color: Colors.transparent,
+            child: Container(
+                width: double.infinity,
+                child: Column(children: <Widget>[
+                  _topTextWidget(),
+                  Expanded(
                     child: Column(children: <Widget>[
-                      _topTextWidget(),
-                      Expanded(
-                        child: Column(children: <Widget>[
-                          _middleTabWidget(),
-                          Expanded(child: _bottomListWidget())
-                        ]),
-                      )
-                    ]))),
+                      _middleTabWidget(),
+                      Expanded(child: _bottomListWidget())
+                    ]),
+                  )
+                ])),
           )),
     );
   }
