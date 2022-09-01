@@ -9,6 +9,8 @@ import 'listview_section.dart';
 
 /// 城市列表组件
 class ItemWidget extends StatefulWidget {
+  final double? height;
+
   /// 当前列表的索引
   final int? index;
 
@@ -66,6 +68,7 @@ class ItemWidget extends StatefulWidget {
   final ItemClickListener? itemClickListener;
 
   ItemWidget({
+    this.height,
     this.index,
     this.list,
     this.title,
@@ -118,6 +121,16 @@ class ItemWidgetState extends State<ItemWidget>
     super.dispose();
   }
 
+  @override
+  void didUpdateWidget(covariant ItemWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    _mList = widget.list ?? [];
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
   /// 点击索引，列表滑动
   void clickIndexBar(int index) {
     double position = 0;
@@ -139,7 +152,9 @@ class ItemWidgetState extends State<ItemWidget>
 
   /// 获取索引
   int _getIndex(double offset) {
-    int index = offset ~/ widget.indexBarItemHeight!;
+    double h =
+        (widget.height! - (_mList.length * widget.indexBarItemHeight! + 4)) / 2;
+    int index = (offset - h) ~/ widget.indexBarItemHeight!;
     return min(index, _mList.length - 1);
   }
 
@@ -237,8 +252,6 @@ class ItemWidgetState extends State<ItemWidget>
                 onVerticalDragDown: (DragDownDetails details) {
                   RenderBox? box = _getRenderBox(context);
                   if (box == null) return;
-                  //TODO
-                  print("offset1 ---> ${details.localPosition.dy}");
                   int index = _getIndex(details.localPosition.dy);
                   if (index >= 0) {
                     clickIndexBar(index);
@@ -251,7 +264,6 @@ class ItemWidgetState extends State<ItemWidget>
                   }
                 },
                 child: Column(
-                  mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: List.generate(_mList.length, (index) {
                     return _indexBarItem(index);
@@ -269,19 +281,23 @@ class ItemWidgetState extends State<ItemWidget>
     // 有4种类型
     int type = 0;
     if (index == 0 && index == _mList.length - 1) {
+      // 只有1个
       type = 1;
     } else if (index == 0) {
+      // 顶部
       type = 2;
     } else if (index == _mList.length - 1) {
+      // 底部
       type = 3;
     } else {
+      // 中间
       type = 4;
     }
     return Container(
       width: widget.indexBarWidth,
-      height: type == 4
-          ? widget.indexBarItemHeight
-          : widget.indexBarItemHeight! + 4,
+      height: (index == 0 || index == _mList.length - 1)
+          ? widget.indexBarItemHeight! + 2
+          : widget.indexBarItemHeight!,
       alignment: type == 2
           ? Alignment.bottomCenter
           : type == 3

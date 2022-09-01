@@ -160,24 +160,61 @@ class CityPickerState extends State<CityPickerWidget>
   void initState() {
     super.initState();
 
-    //TODO
-    widget.cityPickerListener!.onDataLoad(_currentIndex, "", "").then((value) {
-      List<SectionCity> list = sortCity(value);
-      if (list.length <= 0) {
-        widget.cityPickerListener!.onFinish(_selectData);
-        Navigator.pop(context);
-      } else {
-        _mData[_currentIndex] = list;
-        _myTabs.add(
-            TabTitle(index: _currentIndex, title: widget.selectText ?? "请选择"));
-        _tabController = TabController(vsync: this, length: _myTabs.length);
-        if (mounted) {
-          setState(() {});
+    if (widget.initialAddress != null && widget.initialAddress!.length > 0) {
+      _currentIndex = widget.initialAddress!.length - 1;
+      _mData[_currentIndex] = [];
+      for (int i = 0; i < widget.initialAddress!.length; i++) {
+        _myTabs.add(TabTitle(index: i, title: widget.initialAddress![i].name));
+        if (i != widget.initialAddress!.length - 1) {
+          _selectData.add(AddressNode(
+              code: widget.initialAddress![i].code,
+              name: widget.initialAddress![i].name));
         }
       }
-    });
-    _tabController = TabController(vsync: this, length: _myTabs.length);
-    _pageController = PageController();
+      _tabController = TabController(
+          vsync: this, length: _myTabs.length, initialIndex: _currentIndex);
+      _pageController = PageController(initialPage: _currentIndex);
+      for (int i = 0; i < widget.initialAddress!.length; i++) {
+        if (i == 0) {
+          widget.cityPickerListener!.onDataLoad(i, "", "").then((value) {
+            List<SectionCity> list = sortCity(value);
+            _mData[i] = list;
+          });
+        } else {
+          widget.cityPickerListener!
+              .onDataLoad(i, widget.initialAddress![i - 1].code!,
+                  widget.initialAddress![i - 1].name!)
+              .then((value) {
+            List<SectionCity> list = sortCity(value);
+            _mData[i] = list;
+            if (mounted) {
+              setState(() {});
+            }
+          });
+        }
+      }
+    } else {
+      widget.cityPickerListener!
+          .onDataLoad(_currentIndex, "", "")
+          .then((value) {
+        List<SectionCity> list = sortCity(value);
+        if (list.length <= 0) {
+          widget.cityPickerListener!.onFinish(_selectData);
+          Navigator.pop(context);
+        } else {
+          _mData[_currentIndex] = list;
+          _myTabs.add(TabTitle(
+              index: _currentIndex, title: widget.selectText ?? "请选择"));
+          _tabController = TabController(
+              vsync: this, length: _myTabs.length, initialIndex: _currentIndex);
+          if (mounted) {
+            setState(() {});
+          }
+        }
+      });
+      _tabController = TabController(vsync: this, length: _myTabs.length);
+      _pageController = PageController();
+    }
   }
 
   @override
@@ -381,6 +418,7 @@ class CityPickerState extends State<CityPickerWidget>
       },
       children: _myTabs.map((tab) {
         return ItemWidget(
+          height: widget.height! - widget.titleHeight! - widget.tabHeight!,
           index: tab.index,
           list: _mData[tab.index],
           title: tab.title,
