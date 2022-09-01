@@ -1,3 +1,7 @@
+## 1.1.0
+
+- refactor
+
 ## 1.0.8
 
 - add GestureDetector on indexBar

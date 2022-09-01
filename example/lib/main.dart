@@ -51,7 +51,7 @@ class HomeWidgetState extends State<HomeWidget> implements CityPickerListener {
   double _corner = 20;
   bool _dismissible = true;
   bool _showTabIndicator = true;
-  bool _showStreet = false;
+  int _streetNum = 3;
   List<AddressNode> _selectedAddress = [];
 
   @override
@@ -278,17 +278,27 @@ class HomeWidgetState extends State<HomeWidget> implements CityPickerListener {
   }
 
   Widget _buildStreet() {
-    return Container(
-        alignment: Alignment.centerRight,
-        child: Switch(
-          value: _showStreet,
-          activeColor: Theme.of(context).primaryColor,
-          onChanged: (bool val) {
-            setState(() {
-              _showStreet = !_showStreet;
-            });
-          },
-        ));
+    return Row(
+      children: <Widget>[
+        Expanded(
+          flex: 1,
+          child: Slider(
+            value: _streetNum.toDouble(),
+            min: 1,
+            max: 4,
+            divisions: 3,
+            activeColor: Theme.of(context).primaryColor,
+            inactiveColor: Colors.grey,
+            onChanged: (double) {
+              setState(() {
+                _streetNum = double.toInt();
+              });
+            },
+          ),
+        ),
+        Text("${_streetNum.toStringAsFixed(0)}")
+      ],
+    );
   }
 
   @override
@@ -318,7 +328,7 @@ class HomeWidgetState extends State<HomeWidget> implements CityPickerListener {
             ItemTextWidget(title: '弹窗高度', subWidget: _buildHeight()),
             ItemTextWidget(title: '顶部圆角', subWidget: _buildCorner()),
             ItemTextWidget(title: '显示 Indicator', subWidget: _buildIndicator()),
-            ItemTextWidget(title: '开启第四级街道', subWidget: _buildStreet()),
+            ItemTextWidget(title: '城市层级', subWidget: _buildStreet()),
           ],
         ),
       ),
@@ -332,7 +342,14 @@ class HomeWidgetState extends State<HomeWidget> implements CityPickerListener {
     if (index == 0) {
       return HttpUtils.getCityData("");
     } else {
-      if (!_showStreet) {
+      if (_streetNum == 1) {
+        return Future.value([]);
+      } else if (_streetNum == 2) {
+        if (index == 2) {
+          return Future.value([]);
+        }
+        return HttpUtils.getCityData(name);
+      } else if (_streetNum == 3) {
         if (index == 3) {
           return Future.value([]);
         }

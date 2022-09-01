@@ -6,13 +6,13 @@
 由于地址选择的数据来源会更新，为了统一，在后台配置一份城市数据，前端获取，否则各个平台都配置一份数据，维护会很麻烦，而且有可能每个平台城市的数据结构都不一样。
 本库就是由此而来，数据从后台实时获取，只要解析成固定的数据结构就可以
 
-![效果示例](https://img.alicdn.com/imgextra/i1/2315514881/O1CN01U4ZUac1lvXuajSzCz_!!2315514881.gif)
+![效果示例](https://img.alicdn.com/imgextra/i4/2315514881/O1CN01Y3VhZC1lvXyQ1bV6n_!!2315514881.gif)
 
 #### 导入方式
 
 ```
 dependencies:
-    flutter_city_picker: ^1.0.8
+    flutter_city_picker: ^1.1.0
 ```
 
 #### 使用方法
@@ -63,8 +63,6 @@ dependencies:
           closeWidget: Icon(Icons.close),
           // tab 高度
           tabHeight: 40,
-          // 是否启用街道
-          enableStreet: _showStreet,
           // 是否显示指示器
           showTabIndicator: _showTabIndicator,
           // tab 指示器颜色
@@ -109,8 +107,6 @@ dependencies:
           itemUnSelectedTextStyle: TextStyle(fontSize: 14, color: Colors.black54),
           // 初始默认地址
           initialAddress: _selectedAddress,
-          // 数据为空时确认组件
-          confirmWidget: confirmWidget,
           cityPickerListener: this,
         );
 ```
@@ -120,35 +116,13 @@ dependencies:
     <你的组件> implements CityPickerListener
 
     @override
-    Future<List<AddressNode>> loadProvinceData() async {
-      // 发起网络请求，获取省级数据
-      return 返回省级数据;
+    Future<List<AddressNode>> onDataLoad(int index, String code, String name) async {
+      return 返回城市数据;
     }
 
     @override
-    Future<List<AddressNode>> onProvinceSelected(String provinceCode, String provinceName) async {
-      // 点击省份后的回调，根据城市代码或名称去请求市级数据
-      return 返回市级数据;
-    }
-
-    @override
-    Future<List<AddressNode>> onCitySelected(String cityCode, String cityName) async {
-      // 点击城市后的回调，根据城市代码或名称去请求区级数据
-      return 返回区级数据;
-    }
-
-    @override
-    Future<List<AddressNode>> onDistrictSelected(String districtCode, String districtName) {
-      // 点击区后的回调，根据城市代码或名称去请求街道数据
-      return 返回街道数据;
-    }
-
-    @override
-    void onFinish(Address address) {
+    void onFinish(List<AddressNode> data) {
       // 最终回调，返回省市区的代码和名称
-      setState(() {
-        _address = address.toString();
-      });
     }
 ```
 
