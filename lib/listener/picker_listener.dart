@@ -1,4 +1,4 @@
-import 'package:flutter_city_picker/model/address.dart';
+import '../model/address.dart';
 
 /// 事件监听
 abstract class CityPickerListener {

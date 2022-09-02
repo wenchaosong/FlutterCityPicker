@@ -179,6 +179,9 @@ class CityPickerState extends State<CityPickerWidget>
           widget.cityPickerListener!.onDataLoad(i, "", "").then((value) {
             List<SectionCity> list = sortCity(value);
             _mData[i] = list;
+            if (mounted) {
+              setState(() {});
+            }
           });
         } else {
           widget.cityPickerListener!

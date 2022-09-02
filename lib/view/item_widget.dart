@@ -1,9 +1,9 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_city_picker/model/address.dart';
 
 import '../listener/item_listener.dart';
+import '../model/address.dart';
 import '../model/section_city.dart';
 import 'listview_section.dart';
 
@@ -125,9 +125,11 @@ class ItemWidgetState extends State<ItemWidget>
   void didUpdateWidget(covariant ItemWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    _mList = widget.list ?? [];
-    if (mounted) {
-      setState(() {});
+    if (oldWidget.list != widget.list) {
+      _mList = widget.list ?? [];
+      if (mounted) {
+        setState(() {});
+      }
     }
   }
 

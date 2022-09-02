@@ -3,9 +3,9 @@ library citypicker;
 export 'listener/picker_listener.dart';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_city_picker/model/address.dart';
 
 import 'listener/picker_listener.dart';
+import 'model/address.dart';
 import 'view/city_picker.dart';
 import 'view/popup_route.dart';
 

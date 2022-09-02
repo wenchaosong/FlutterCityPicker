@@ -1,3 +1,7 @@
+## 1.1.1
+
+- fix not update when has one tab
+
 ## 1.1.0
 
 - refactor
