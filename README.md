@@ -12,7 +12,7 @@
 
 ```
 dependencies:
-    flutter_city_picker: ^1.1.1
+    flutter_city_picker: ^1.1.2
 ```
 
 #### 使用方法

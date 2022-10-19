@@ -1,3 +1,7 @@
+## 1.1.2
+
+- fix list data incorrect
+
 ## 1.1.1
 
 - fix not update when has one tab
