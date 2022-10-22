@@ -273,13 +273,16 @@ class CityPickerState extends State<CityPickerWidget>
     if (_selectData.length >= _currentIndex) {
       _selectData.removeRange(_currentIndex - 1, _selectData.length);
       _myTabs.removeRange(_currentIndex, _myTabs.length);
+      _tabController = TabController(
+          vsync: this, length: _myTabs.length, initialIndex: _currentIndex - 1);
+      if (mounted) {
+        setState(() {});
+      }
     }
 
     _selectData.insert(_currentIndex - 1, AddressNode(code: code, name: name));
     _myTabs.elementAt(_currentIndex - 1).title =
         _selectData[_currentIndex - 1].name;
-    _myTabs
-        .add(TabTitle(index: _currentIndex, title: widget.selectText ?? "请选择"));
 
     widget.cityPickerListener!
         .onDataLoad(_currentIndex, code, name)
@@ -290,6 +293,8 @@ class CityPickerState extends State<CityPickerWidget>
         Navigator.pop(context);
       } else {
         _mData[_currentIndex] = list;
+        _myTabs.add(
+            TabTitle(index: _currentIndex, title: widget.selectText ?? "请选择"));
         _tabController = TabController(
             vsync: this, length: _myTabs.length, initialIndex: _currentIndex);
         _pageController!.animateToPage(_currentIndex,

@@ -1,3 +1,7 @@
+## 1.1.3
+
+- fix controller length error
+
 ## 1.1.2
 
 - fix list data incorrect
