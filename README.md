@@ -12,27 +12,24 @@
 
 ```
 dependencies:
-    flutter_city_picker: ^1.1.3
+    flutter_city_picker: ^2.0.0
 ```
 
 #### 使用方法
 
 1. 简单使用
+
 ```
     CityPicker.show(context: context, cityPickerListener: this);
 ```
 
 2. 多配置的使用
+
 ```
     CityPicker.show(
           context: context,
-          // 主题颜色
-          theme: ThemeData(
-            // 弹窗的背景颜色
-            dialogBackgroundColor: Colors.white,
-          ),
-          // 底部弹出框动画时间
-          duration: 200,
+          // 动画控制器
+          animController: _animationController,
           // 背景透明度
           opacity: 0.5,
           // 点击外部是否消失
@@ -43,6 +40,8 @@ dependencies:
           titleHeight: 50,
           // 顶部圆角
           corner: 20,
+          // 背景颜色
+          backgroundColor: Colors.white
           // 距离左边的间距
           paddingLeft: 15,
           // 标题组件
@@ -112,6 +111,7 @@ dependencies:
 ```
 
 3. 监听事件
+
 ```
     <你的组件> implements CityPickerListener
 

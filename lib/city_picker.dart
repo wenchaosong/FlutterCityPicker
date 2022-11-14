@@ -7,17 +7,13 @@ import 'package:flutter/material.dart';
 import 'listener/picker_listener.dart';
 import 'model/address.dart';
 import 'view/city_picker.dart';
-import 'view/popup_route.dart';
 
 /// 外部调用
 class CityPicker {
   /// 展示
   static void show({
     required BuildContext context,
-    // 主题颜色
-    ThemeData? theme,
-    // 底部弹出框动画时间
-    int duration = 200,
+    AnimationController? animController,
     // 背景透明度
     double opacity = 0.5,
     // 点击外部是否消失
@@ -28,6 +24,8 @@ class CityPicker {
     double titleHeight = 50.0,
     // 顶部圆角
     double corner = 20.0,
+    // 背景颜色
+    Color? backgroundColor,
     // 距离左边的间距
     double paddingLeft = 15.0,
     // 标题组件
@@ -81,16 +79,25 @@ class CityPicker {
     // 地址选择器监听事件
     required CityPickerListener cityPickerListener,
   }) {
-    Navigator.of(context, rootNavigator: true).push(
-      CustomPopupRoute(
-          theme: theme ?? Theme.of(context),
-          duration: duration,
-          opacity: opacity,
-          dismissible: dismissible,
-          child: CityPickerWidget(
+    showModalBottomSheet<void>(
+        context: context,
+        backgroundColor: backgroundColor,
+        isScrollControlled: true,
+        isDismissible: dismissible,
+        barrierColor: Colors.black.withOpacity(opacity),
+        transitionAnimationController: animController,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(corner),
+            topRight: Radius.circular(corner),
+          ),
+        ),
+        builder: (BuildContext context) {
+          return CityPickerWidget(
             height: height,
             titleHeight: titleHeight,
             corner: corner,
+            backgroundColor: backgroundColor,
             paddingLeft: paddingLeft,
             titleWidget: titleWidget,
             selectText: selectText,
@@ -117,7 +124,7 @@ class CityPicker {
             itemUnSelectedTextStyle: itemUnSelectedTextStyle,
             initialAddress: initialAddress,
             cityPickerListener: cityPickerListener,
-          )),
-    );
+          );
+        });
   }
 }

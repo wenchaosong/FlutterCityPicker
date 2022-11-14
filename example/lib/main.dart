@@ -42,7 +42,10 @@ class HomeWidget extends StatefulWidget {
   HomeWidgetState createState() => HomeWidgetState();
 }
 
-class HomeWidgetState extends State<HomeWidget> implements CityPickerListener {
+class HomeWidgetState extends State<HomeWidget>
+    with SingleTickerProviderStateMixin
+    implements CityPickerListener {
+  AnimationController? _animationController;
   String _address = "请选择地区";
   Color _themeColor = Colors.blue;
   Color _backgroundColor = Colors.white;
@@ -57,20 +60,20 @@ class HomeWidgetState extends State<HomeWidget> implements CityPickerListener {
   @override
   void initState() {
     super.initState();
+
+    _animationController = AnimationController(vsync: this);
   }
 
   void show() {
     CityPicker.show(
       context: context,
-      theme: ThemeData(
-        dialogBackgroundColor: _backgroundColor,
-      ),
-      duration: 200,
+      animController: _animationController,
       opacity: _opacity,
       dismissible: _dismissible,
       height: _height,
       titleHeight: 50,
       corner: _corner,
+      backgroundColor: _backgroundColor,
       paddingLeft: 15,
       titleWidget: Container(
         padding: EdgeInsets.only(left: 15),
@@ -93,6 +96,7 @@ class HomeWidgetState extends State<HomeWidget> implements CityPickerListener {
       selectedLabelColor: Theme.of(context).primaryColor,
       unselectedLabelColor: Colors.black54,
       itemHeadHeight: 30,
+      itemHeadBackgroundColor: _backgroundColor,
       itemHeadLineColor: Colors.black,
       itemHeadLineHeight: 0.1,
       itemHeadTextStyle: TextStyle(fontSize: 15, color: Colors.black),
@@ -339,6 +343,8 @@ class HomeWidgetState extends State<HomeWidget> implements CityPickerListener {
   Future<List<AddressNode>> onDataLoad(
       int index, String code, String name) async {
     print("onDataLoad ---> $index $name");
+    await Future.delayed(Duration(milliseconds: 200));
+
     if (index == 0) {
       return HttpUtils.getCityData("");
     } else {

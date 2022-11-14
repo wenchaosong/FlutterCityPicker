@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lpinyin/lpinyin.dart';
 
 import '../city_picker.dart';
 import '../listener/item_listener.dart';
@@ -7,8 +6,6 @@ import '../model/address.dart';
 import '../model/section_city.dart';
 import '../model/tab.dart';
 import '../view/item_widget.dart';
-import 'inherited_widget.dart';
-import 'layout_delegate.dart';
 
 /// 省市区选择器
 ///
@@ -23,6 +20,9 @@ class CityPickerWidget extends StatefulWidget {
 
   /// 顶部圆角
   final double? corner;
+
+  /// 顶部圆角
+  final Color? backgroundColor;
 
   /// 左边间距
   final double? paddingLeft;
@@ -106,6 +106,7 @@ class CityPickerWidget extends StatefulWidget {
     this.height,
     this.titleHeight,
     this.corner,
+    this.backgroundColor,
     this.paddingLeft,
     this.titleWidget,
     this.selectText,
@@ -206,12 +207,16 @@ class CityPickerState extends State<CityPickerWidget>
           Navigator.pop(context);
         } else {
           _mData[_currentIndex] = list;
-          _myTabs.add(TabTitle(
-              index: _currentIndex, title: widget.selectText ?? "请选择"));
-          _tabController = TabController(
-              vsync: this, length: _myTabs.length, initialIndex: _currentIndex);
           if (mounted) {
-            setState(() {});
+            _myTabs.add(TabTitle(
+                index: _currentIndex, title: widget.selectText ?? "请选择"));
+            _tabController = TabController(
+                vsync: this,
+                length: _myTabs.length,
+                initialIndex: _currentIndex);
+            if (mounted) {
+              setState(() {});
+            }
           }
         }
       });
@@ -223,40 +228,32 @@ class CityPickerState extends State<CityPickerWidget>
   @override
   void dispose() {
     if (mounted) {
-      _tabController!.dispose();
-      _pageController!.dispose();
+      _tabController?.dispose();
+      _pageController?.dispose();
     }
     super.dispose();
   }
 
   /// 排序数据
-  List<SectionCity> sortCity(List<AddressNode> value) {
+  List<SectionCity> sortCity(List<AddressNode> data) {
     // 先排序
-    List<AddressNode> _cityList = [];
-    value.forEach((city) {
-      String letter = PinyinHelper.getFirstWordPinyin(city.name!)
-          .substring(0, 1)
-          .toUpperCase();
-      _cityList
-          .add(AddressNode(code: city.code, letter: letter, name: city.name));
-    });
-    _cityList.sort((a, b) => a.letter!.compareTo(b.letter!));
+    data.sort((a, b) => a.letter!.compareTo(b.letter!));
     // 组装数据
     List<SectionCity> _sectionList = [];
     String? _letter = "A";
     List<AddressNode> _cityList2 = [];
-    for (int i = 0; i < _cityList.length; i++) {
-      if (_letter == _cityList[i].letter) {
-        _cityList2.add(_cityList[i]);
+    for (int i = 0; i < data.length; i++) {
+      if (_letter == data[i].letter) {
+        _cityList2.add(data[i]);
       } else {
         if (_cityList2.length > 0) {
           _sectionList.add(SectionCity(letter: _letter, data: _cityList2));
         }
         _cityList2 = [];
-        _cityList2.add(_cityList[i]);
-        _letter = _cityList[i].letter;
+        _cityList2.add(data[i]);
+        _letter = data[i].letter;
       }
-      if (i == _cityList.length - 1) {
+      if (i == data.length - 1) {
         if (_cityList2.length > 0) {
           _sectionList.add(SectionCity(letter: _letter, data: _cityList2));
         }
@@ -308,30 +305,19 @@ class CityPickerState extends State<CityPickerWidget>
 
   @override
   Widget build(BuildContext context) {
-    final route = CustomInheritedWidget.of(context)!.router;
-    return AnimatedBuilder(
-      animation: route.animation!,
-      builder: (BuildContext context, Widget? child) => CustomSingleChildLayout(
-          delegate: CustomLayoutDelegate(
-              progress: route.animation!.value, height: widget.height),
-          child: Material(
-            color: Colors.transparent,
+    return Container(
+        height: widget.height,
+        child: Column(children: <Widget>[
+          _topTextWidget(),
+          Expanded(
             child: Container(
-                width: double.infinity,
-                child: Column(children: <Widget>[
-                  _topTextWidget(),
-                  Expanded(
-                    child: Container(
-                      color: Theme.of(context).dialogBackgroundColor,
-                      child: Column(children: <Widget>[
-                        _middleTabWidget(),
-                        Expanded(child: _bottomListWidget())
-                      ]),
-                    ),
-                  )
-                ])),
-          )),
-    );
+              child: Column(children: <Widget>[
+                _middleTabWidget(),
+                Expanded(child: _bottomListWidget())
+              ]),
+            ),
+          )
+        ]));
   }
 
   /// 头部文字组件
@@ -339,7 +325,8 @@ class CityPickerState extends State<CityPickerWidget>
     return Container(
       height: widget.titleHeight,
       decoration: BoxDecoration(
-          color: Theme.of(context).dialogBackgroundColor,
+          color:
+              widget.backgroundColor ?? Theme.of(context).dialogBackgroundColor,
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(widget.corner!),
               topRight: Radius.circular(widget.corner!))),
@@ -374,7 +361,7 @@ class CityPickerState extends State<CityPickerWidget>
     return Container(
       width: double.infinity,
       height: widget.tabHeight,
-      color: Theme.of(context).dialogBackgroundColor,
+      color: widget.backgroundColor ?? Theme.of(context).dialogBackgroundColor,
       child: TabBar(
         controller: _tabController,
         onTap: (index) {
@@ -427,6 +414,7 @@ class CityPickerState extends State<CityPickerWidget>
           list: _mData[tab.index],
           title: tab.title,
           selectText: widget.selectText,
+          backgroundColor: widget.backgroundColor,
           paddingLeft: widget.paddingLeft,
           itemHeadHeight: widget.itemHeadHeight,
           itemHeadBackgroundColor: widget.itemHeadBackgroundColor,

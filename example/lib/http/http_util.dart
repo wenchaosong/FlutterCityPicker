@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_city_picker/model/address.dart';
+import 'package:lpinyin/lpinyin.dart';
 
 import 'model.dart';
 
@@ -18,8 +19,17 @@ class HttpUtils {
     if (data.info == "OK") {
       DistrictsModel model = data.districts!.first;
       for (int i = 0; i < model.districts!.length; i++) {
-        result.add(AddressNode(
-            name: model.districts![i].name, code: model.districts![i].adcode));
+        String letter =
+            PinyinHelper.getFirstWordPinyin(model.districts![i].name!)
+                .substring(0, 1)
+                .toUpperCase();
+        result.add(
+          AddressNode(
+            name: model.districts![i].name,
+            code: model.districts![i].adcode,
+            letter: letter,
+          ),
+        );
       }
     }
     return result;
