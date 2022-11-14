@@ -61,7 +61,10 @@ class HomeWidgetState extends State<HomeWidget>
   void initState() {
     super.initState();
 
-    _animationController = AnimationController(vsync: this);
+    _animationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 100),
+    );
   }
 
   void show() {
@@ -343,7 +346,7 @@ class HomeWidgetState extends State<HomeWidget>
   Future<List<AddressNode>> onDataLoad(
       int index, String code, String name) async {
     print("onDataLoad ---> $index $name");
-    await Future.delayed(Duration(milliseconds: 200));
+    await Future.delayed(Duration(milliseconds: 100));
 
     if (index == 0) {
       return HttpUtils.getCityData("");
