@@ -1,3 +1,8 @@
+## 2.0.0
+
+- change the base widget
+- remove letter generator, and put it in user side
+
 ## 1.1.3
 
 - fix controller length error
