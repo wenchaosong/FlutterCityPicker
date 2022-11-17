@@ -46,7 +46,10 @@ class HomeWidgetState extends State<HomeWidget>
     with SingleTickerProviderStateMixin
     implements CityPickerListener {
   AnimationController? _animationController;
-  String _address = "请选择地区";
+  String _addressProvince = "请选择省";
+  String _addressCity = "请选择市";
+  String _addressArea = "请选择地区";
+  String _addressStreet = "请选择街道";
   Color _themeColor = Colors.blue;
   Color _backgroundColor = Colors.white;
   double _height = 500.0;
@@ -54,8 +57,16 @@ class HomeWidgetState extends State<HomeWidget>
   double _corner = 20;
   bool _dismissible = true;
   bool _showTabIndicator = true;
-  int _streetNum = 3;
-  List<AddressNode> _selectedAddress = [];
+  List<AddressNode> _selectProvince = [];
+  List<AddressNode> _selectCity = [];
+  List<AddressNode> _selectArea = [];
+  List<AddressNode> _selectStreet = [];
+
+  /// 0: 省
+  /// 1: 市
+  /// 2: 地区
+  /// 3: 街道
+  int _currentType = 0;
 
   @override
   void initState() {
@@ -63,11 +74,11 @@ class HomeWidgetState extends State<HomeWidget>
 
     _animationController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 100),
+      duration: Duration(milliseconds: 200),
     );
   }
 
-  void show() {
+  void show(List<AddressNode> initData) {
     CityPicker.show(
       context: context,
       animController: _animationController,
@@ -115,7 +126,7 @@ class HomeWidgetState extends State<HomeWidget>
           fontWeight: FontWeight.bold,
           color: Theme.of(context).primaryColor),
       itemUnSelectedTextStyle: TextStyle(fontSize: 14, color: Colors.black54),
-      initialAddress: _selectedAddress,
+      initialAddress: initData,
       cityPickerListener: this,
     );
   }
@@ -284,30 +295,6 @@ class HomeWidgetState extends State<HomeWidget>
         ));
   }
 
-  Widget _buildStreet() {
-    return Row(
-      children: <Widget>[
-        Expanded(
-          flex: 1,
-          child: Slider(
-            value: _streetNum.toDouble(),
-            min: 1,
-            max: 4,
-            divisions: 3,
-            activeColor: Theme.of(context).primaryColor,
-            inactiveColor: Colors.grey,
-            onChanged: (double) {
-              setState(() {
-                _streetNum = double.toInt();
-              });
-            },
-          ),
-        ),
-        Text("${_streetNum.toStringAsFixed(0)}")
-      ],
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -319,12 +306,58 @@ class HomeWidgetState extends State<HomeWidget>
         child: Column(
           children: [
             ItemTextWidget(
-              title: '选择城市',
+              title: '省',
               subWidget: InkWell(
-                onTap: () => show(),
+                onTap: () {
+                  _currentType = 0;
+                  setState(() {});
+                  show(_selectProvince);
+                },
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
-                  child: Text(_address),
+                  child: Text(_addressProvince),
+                ),
+              ),
+            ),
+            ItemTextWidget(
+              title: '市',
+              subWidget: InkWell(
+                onTap: () {
+                  _currentType = 1;
+                  setState(() {});
+                  show(_selectCity);
+                },
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
+                  child: Text(_addressCity),
+                ),
+              ),
+            ),
+            ItemTextWidget(
+              title: '地区',
+              subWidget: InkWell(
+                onTap: () {
+                  _currentType = 2;
+                  setState(() {});
+                  show(_selectArea);
+                },
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
+                  child: Text(_addressArea),
+                ),
+              ),
+            ),
+            ItemTextWidget(
+              title: '街道',
+              subWidget: InkWell(
+                onTap: () {
+                  _currentType = 3;
+                  setState(() {});
+                  show(_selectStreet);
+                },
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
+                  child: Text(_addressStreet),
                 ),
               ),
             ),
@@ -335,7 +368,6 @@ class HomeWidgetState extends State<HomeWidget>
             ItemTextWidget(title: '弹窗高度', subWidget: _buildHeight()),
             ItemTextWidget(title: '顶部圆角', subWidget: _buildCorner()),
             ItemTextWidget(title: '显示 Indicator', subWidget: _buildIndicator()),
-            ItemTextWidget(title: '城市层级', subWidget: _buildStreet()),
           ],
         ),
       ),
@@ -346,19 +378,19 @@ class HomeWidgetState extends State<HomeWidget>
   Future<List<AddressNode>> onDataLoad(
       int index, String code, String name) async {
     print("onDataLoad ---> $index $name");
-    await Future.delayed(Duration(milliseconds: 100));
 
     if (index == 0) {
+      await Future.delayed(Duration(milliseconds: 200));
       return HttpUtils.getCityData("");
     } else {
-      if (_streetNum == 1) {
+      if (_currentType == 0) {
         return Future.value([]);
-      } else if (_streetNum == 2) {
+      } else if (_currentType == 1) {
         if (index == 2) {
           return Future.value([]);
         }
         return HttpUtils.getCityData(name);
-      } else if (_streetNum == 3) {
+      } else if (_currentType == 2) {
         if (index == 3) {
           return Future.value([]);
         }
@@ -373,21 +405,28 @@ class HomeWidgetState extends State<HomeWidget>
   void onFinish(List<AddressNode> data) {
     print("onFinish");
     if (data.isNotEmpty) {
-      _address = "";
-      if (data.length > 0) {
-        _address += (data[0].name! + " ");
+      if (_currentType == 0) {
+        _addressProvince = data[0].name!;
+        _selectProvince = data;
+      } else if (_currentType == 1) {
+        _addressCity = data[0].name! + " " + data[1].name!;
+        _selectCity = data;
+      } else if (_currentType == 2) {
+        _addressArea =
+            data[0].name! + " " + data[1].name! + " " + data[2].name!;
+        _selectArea = data;
+      } else {
+        _addressStreet = data[0].name! +
+            " " +
+            data[1].name! +
+            " " +
+            data[2].name! +
+            " " +
+            data[3].name!;
+        _selectStreet = data;
       }
-      if (data.length > 1) {
-        _address += (data[1].name! + " ");
-      }
-      if (data.length > 2) {
-        _address += (data[2].name! + " ");
-      }
-      if (data.length > 3) {
-        _address += (data[3].name! + " ");
-      }
-      _selectedAddress = data;
+
+      setState(() {});
     }
-    setState(() {});
   }
 }
