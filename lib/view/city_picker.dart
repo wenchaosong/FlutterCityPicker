@@ -157,6 +157,9 @@ class CityPickerState extends State<CityPickerWidget>
   // 已选择的数据
   List<AddressNode> _selectData = [];
 
+  // 防止重复点击
+  bool _isClick = false;
+
   @override
   void initState() {
     super.initState();
@@ -264,6 +267,11 @@ class CityPickerState extends State<CityPickerWidget>
 
   @override
   void onItemClick(int tabIndex, String name, String code) {
+    if (_isClick) {
+      return;
+    }
+    _isClick = true;
+
     // 点击永远是移动到下一个 tab
     _currentIndex++;
     // 先把后面的全部删除
@@ -286,6 +294,10 @@ class CityPickerState extends State<CityPickerWidget>
         .then((value) {
       List<SectionCity> list = sortCity(value);
       if (list.length <= 0) {
+        _isClick = false;
+        if (mounted) {
+          setState(() {});
+        }
         widget.cityPickerListener!.onFinish(_selectData);
         Navigator.pop(context);
       } else {
@@ -296,6 +308,7 @@ class CityPickerState extends State<CityPickerWidget>
             vsync: this, length: _myTabs.length, initialIndex: _currentIndex);
         _pageController!.animateToPage(_currentIndex,
             duration: Duration(milliseconds: 10), curve: Curves.linear);
+        _isClick = false;
         if (mounted) {
           setState(() {});
         }

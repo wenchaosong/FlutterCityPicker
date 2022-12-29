@@ -1,3 +1,7 @@
+## 2.0.1
+
+- fix fast click
+
 ## 2.0.0
 
 - change the base widget
