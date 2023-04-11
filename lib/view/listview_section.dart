@@ -117,13 +117,13 @@ class ExpandableSectionContainer extends MultiChildRenderObjectWidget {
         context.findAncestorRenderObjectOfType<RenderExpandableSliverList>()!;
     return RenderExpandableSectionContainer(
       renderSliver: renderSliver,
-      scrollable: Scrollable.of(context)!,
-      controller: this.info.controller,
-      sticky: this.info.sticky,
-      overlapsContent: this.info.overlapsContent,
-      listIndex: this.info.listIndex,
-      sectionRealIndexes: this.info.sectionRealIndexes,
-      separated: this.info.separated,
+      scrollable: Scrollable.of(context),
+      controller: info.controller,
+      sticky: info.sticky,
+      overlapsContent: info.overlapsContent,
+      listIndex: info.listIndex,
+      sectionRealIndexes: info.sectionRealIndexes,
+      separated: info.separated,
     );
   }
 
@@ -131,13 +131,13 @@ class ExpandableSectionContainer extends MultiChildRenderObjectWidget {
   void updateRenderObject(
       BuildContext context, RenderExpandableSectionContainer renderObject) {
     renderObject
-      ..scrollable = Scrollable.of(context)!
-      ..controller = this.info.controller
-      ..sticky = this.info.sticky
-      ..overlapsContent = this.info.overlapsContent
-      ..listIndex = this.info.listIndex
-      ..sectionRealIndexes = this.info.sectionRealIndexes
-      ..separated = this.info.separated;
+      ..scrollable = Scrollable.of(context)
+      ..controller = info.controller
+      ..sticky = info.sticky
+      ..overlapsContent = info.overlapsContent
+      ..listIndex = info.listIndex
+      ..sectionRealIndexes = info.sectionRealIndexes
+      ..separated = info.separated;
   }
 }
 
@@ -146,12 +146,11 @@ class RenderExpandableSectionContainer extends RenderBox
     with
         ContainerRenderObjectMixin<RenderBox, MultiChildLayoutParentData>,
         RenderBoxContainerDefaultsMixin<RenderBox, MultiChildLayoutParentData> {
-  static const String TAG = "ExpandableSectionContainer";
   bool _sticky;
   bool _overlapsContent;
   ScrollableState _scrollable;
   ExpandableListController _controller;
-  RenderExpandableSliverList _renderSliver;
+  final RenderExpandableSliverList _renderSliver;
   int _listIndex;
   int _stickyIndex = -1;
 
@@ -270,8 +269,9 @@ class RenderExpandableSectionContainer extends RenderBox
 
   @override
   void setupParentData(RenderBox child) {
-    if (child.parentData is! MultiChildLayoutParentData)
+    if (child.parentData is! MultiChildLayoutParentData) {
       child.parentData = MultiChildLayoutParentData();
+    }
   }
 
   @override
@@ -626,9 +626,7 @@ class SliverExpandableChildDelegate<T, S extends ExpandableListSection<T>> {
           'You must specify either headerBuilder or sectionBuilder.',
         ),
         sectionRealIndexes = _buildSectionRealIndexes(sectionList) {
-    if (controller == null) {
-      controller = ExpandableListController();
-    }
+    controller ??= ExpandableListController();
     if (separatorBuilder == null) {
       delegate = SliverChildBuilderDelegate(
         (BuildContext context, int index) {
@@ -882,11 +880,12 @@ class ExpandableAutoLayoutWidget extends StatefulWidget {
   ///build section header
   final WidgetBuilder builder;
 
-  ExpandableAutoLayoutWidget({required this.builder, required this.trigger});
+  const ExpandableAutoLayoutWidget(
+      {Key? key, required this.builder, required this.trigger})
+      : super(key: key);
 
   @override
-  _ExpandableAutoLayoutWidgetState createState() =>
-      _ExpandableAutoLayoutWidgetState();
+  State<StatefulWidget> createState() => _ExpandableAutoLayoutWidgetState();
 }
 
 class _ExpandableAutoLayoutWidgetState

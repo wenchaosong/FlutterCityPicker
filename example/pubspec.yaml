@@ -10,8 +10,8 @@ dependencies:
 
   flutter_city_picker:
     path: ../
-  provider: ^6.0.3
-  dio: ^4.0.6
+  provider: ^6.0.5
+  dio: ^5.1.1
   flutter_colorpicker: ^1.0.3
   lpinyin: ^2.0.3
 

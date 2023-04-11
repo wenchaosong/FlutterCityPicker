@@ -70,7 +70,8 @@ class ItemWidget extends StatefulWidget {
 
   final ItemClickListener? itemClickListener;
 
-  ItemWidget({
+  const ItemWidget({
+    Key? key,
     this.height,
     this.index,
     this.list,
@@ -92,7 +93,7 @@ class ItemWidget extends StatefulWidget {
     this.itemSelectedTextStyle,
     this.itemUnSelectedTextStyle,
     this.itemClickListener,
-  });
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => ItemWidgetState();
@@ -203,7 +204,7 @@ class ItemWidgetState extends State<ItemWidget>
                   padding: EdgeInsets.only(left: widget.paddingLeft!),
                   child: Text(_mList[sectionIndex].letter!,
                       style: widget.itemHeadTextStyle ??
-                          TextStyle(fontSize: 15, color: Colors.black)),
+                          const TextStyle(fontSize: 15, color: Colors.black)),
                 );
               },
               itemBuilder: (context, sectionIndex, itemIndex, index) {
@@ -240,7 +241,7 @@ class ItemWidgetState extends State<ItemWidget>
                                       fontWeight: FontWeight.bold,
                                       color: Theme.of(context).primaryColor)
                               : widget.itemUnSelectedTextStyle ??
-                                  TextStyle(
+                                  const TextStyle(
                                       fontSize: 14, color: Colors.black54))
                     ]),
                   ),
@@ -252,7 +253,7 @@ class ItemWidgetState extends State<ItemWidget>
             right: widget.paddingLeft,
             top: 0,
             bottom: 0,
-            child: Container(
+            child: SizedBox(
               width: widget.indexBarWidth,
               child: GestureDetector(
                 onVerticalDragDown: (DragDownDetails details) {
@@ -310,29 +311,29 @@ class ItemWidgetState extends State<ItemWidget>
               ? Alignment.topCenter
               : Alignment.center,
       padding: type == 2
-          ? EdgeInsets.only(bottom: 2)
+          ? const EdgeInsets.only(bottom: 2)
           : type == 3
-              ? EdgeInsets.only(top: 2)
-              : EdgeInsets.all(0),
+              ? const EdgeInsets.only(top: 2)
+              : const EdgeInsets.all(0),
       decoration: BoxDecoration(
           color: widget.indexBarBackgroundColor,
           borderRadius: BorderRadius.only(
             topLeft: (type == 1 || type == 2)
-                ? Radius.circular(50)
-                : Radius.circular(0),
+                ? const Radius.circular(50)
+                : const Radius.circular(0),
             topRight: (type == 1 || type == 2)
-                ? Radius.circular(50)
-                : Radius.circular(0),
+                ? const Radius.circular(50)
+                : const Radius.circular(0),
             bottomLeft: (type == 1 || type == 3)
-                ? Radius.circular(50)
-                : Radius.circular(0),
+                ? const Radius.circular(50)
+                : const Radius.circular(0),
             bottomRight: (type == 1 || type == 3)
-                ? Radius.circular(50)
-                : Radius.circular(0),
+                ? const Radius.circular(50)
+                : const Radius.circular(0),
           )),
       child: Text(_mList[index].letter!,
           style: widget.indexBarTextStyle ??
-              TextStyle(fontSize: 14, color: Colors.black54)),
+              const TextStyle(fontSize: 14, color: Colors.black54)),
     );
   }
 

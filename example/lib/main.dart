@@ -377,7 +377,7 @@ class HomeWidgetState extends State<HomeWidget>
   @override
   Future<List<AddressNode>> onDataLoad(
       int index, String code, String name) async {
-    print("onDataLoad ---> $index $name");
+    debugPrint("onDataLoad ---> $index $name");
 
     if (index == 0) {
       await Future.delayed(Duration(milliseconds: 200));
@@ -403,7 +403,7 @@ class HomeWidgetState extends State<HomeWidget>
 
   @override
   void onFinish(List<AddressNode> data) {
-    print("onFinish");
+    debugPrint("onFinish");
     if (data.isNotEmpty) {
       if (_currentType == 0) {
         _addressProvince = data[0].name!;

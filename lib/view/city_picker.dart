@@ -102,7 +102,8 @@ class CityPickerWidget extends StatefulWidget {
   /// 监听事件
   final CityPickerListener? cityPickerListener;
 
-  CityPickerWidget({
+  const CityPickerWidget({
+    Key? key,
     this.height,
     this.titleHeight,
     this.corner,
@@ -133,7 +134,7 @@ class CityPickerWidget extends StatefulWidget {
     this.itemUnSelectedTextStyle,
     this.initialAddress,
     required this.cityPickerListener,
-  });
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => CityPickerState();
@@ -146,16 +147,16 @@ class CityPickerState extends State<CityPickerWidget>
   PageController? _pageController;
 
   // 列表数据
-  Map<int, List<SectionCity>> _mData = {};
+  final Map<int, List<SectionCity>> _mData = {};
 
   // 中间 tab
-  List<TabTitle> _myTabs = [];
+  final List<TabTitle> _myTabs = [];
 
   // 当前索引
   int _currentIndex = 0;
 
   // 已选择的数据
-  List<AddressNode> _selectData = [];
+  final List<AddressNode> _selectData = [];
 
   // 防止重复点击
   bool _isClick = false;
@@ -164,7 +165,7 @@ class CityPickerState extends State<CityPickerWidget>
   void initState() {
     super.initState();
 
-    if (widget.initialAddress != null && widget.initialAddress!.length > 0) {
+    if (widget.initialAddress != null && widget.initialAddress!.isNotEmpty) {
       _currentIndex = widget.initialAddress!.length - 1;
       _mData[_currentIndex] = [];
       for (int i = 0; i < widget.initialAddress!.length; i++) {
@@ -205,7 +206,7 @@ class CityPickerState extends State<CityPickerWidget>
           .onDataLoad(_currentIndex, "", "")
           .then((value) {
         List<SectionCity> list = sortCity(value);
-        if (list.length <= 0) {
+        if (list.isEmpty) {
           widget.cityPickerListener!.onFinish(_selectData);
           Navigator.pop(context);
         } else {
@@ -242,27 +243,27 @@ class CityPickerState extends State<CityPickerWidget>
     // 先排序
     data.sort((a, b) => a.letter!.compareTo(b.letter!));
     // 组装数据
-    List<SectionCity> _sectionList = [];
-    String? _letter = "A";
-    List<AddressNode> _cityList2 = [];
+    List<SectionCity> sectionList = [];
+    String? letter = "A";
+    List<AddressNode> cityList2 = [];
     for (int i = 0; i < data.length; i++) {
-      if (_letter == data[i].letter) {
-        _cityList2.add(data[i]);
+      if (letter == data[i].letter) {
+        cityList2.add(data[i]);
       } else {
-        if (_cityList2.length > 0) {
-          _sectionList.add(SectionCity(letter: _letter, data: _cityList2));
+        if (cityList2.isNotEmpty) {
+          sectionList.add(SectionCity(letter: letter, data: cityList2));
         }
-        _cityList2 = [];
-        _cityList2.add(data[i]);
-        _letter = data[i].letter;
+        cityList2 = [];
+        cityList2.add(data[i]);
+        letter = data[i].letter;
       }
       if (i == data.length - 1) {
-        if (_cityList2.length > 0) {
-          _sectionList.add(SectionCity(letter: _letter, data: _cityList2));
+        if (cityList2.isNotEmpty) {
+          sectionList.add(SectionCity(letter: letter, data: cityList2));
         }
       }
     }
-    return _sectionList;
+    return sectionList;
   }
 
   @override
@@ -293,7 +294,7 @@ class CityPickerState extends State<CityPickerWidget>
         .onDataLoad(_currentIndex, code, name)
         .then((value) {
       List<SectionCity> list = sortCity(value);
-      if (list.length <= 0) {
+      if (list.isEmpty) {
         _isClick = false;
         if (mounted) {
           setState(() {});
@@ -307,7 +308,7 @@ class CityPickerState extends State<CityPickerWidget>
         _tabController = TabController(
             vsync: this, length: _myTabs.length, initialIndex: _currentIndex);
         _pageController!.animateToPage(_currentIndex,
-            duration: Duration(milliseconds: 10), curve: Curves.linear);
+            duration: const Duration(milliseconds: 10), curve: Curves.linear);
         _isClick = false;
         if (mounted) {
           setState(() {});
@@ -318,17 +319,15 @@ class CityPickerState extends State<CityPickerWidget>
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
         height: widget.height,
         child: Column(children: <Widget>[
           _topTextWidget(),
           Expanded(
-            child: Container(
-              child: Column(children: <Widget>[
-                _middleTabWidget(),
-                Expanded(child: _bottomListWidget())
-              ]),
-            ),
+            child: Column(children: <Widget>[
+              _middleTabWidget(),
+              Expanded(child: _bottomListWidget())
+            ]),
           )
         ]));
   }
@@ -349,7 +348,7 @@ class CityPickerState extends State<CityPickerWidget>
             widget.titleWidget ??
                 Container(
                   padding: EdgeInsets.only(left: widget.paddingLeft!),
-                  child: Text(
+                  child: const Text(
                     '请选择所在地区',
                     style: TextStyle(
                       color: Colors.black54,
@@ -360,10 +359,11 @@ class CityPickerState extends State<CityPickerWidget>
                 ),
             InkWell(
                 onTap: () => {Navigator.pop(context)},
-                child: Container(
+                child: SizedBox(
                   width: widget.titleHeight,
                   height: double.infinity,
-                  child: widget.closeWidget ?? Icon(Icons.close, size: 26),
+                  child:
+                      widget.closeWidget ?? const Icon(Icons.close, size: 26),
                 )),
           ]),
     );
@@ -383,7 +383,7 @@ class CityPickerState extends State<CityPickerWidget>
             setState(() {});
           }
           _pageController!.animateToPage(_currentIndex,
-              duration: Duration(milliseconds: 10), curve: Curves.linear);
+              duration: const Duration(milliseconds: 10), curve: Curves.linear);
         },
         isScrollable: true,
         indicatorSize: TabBarIndicatorSize.tab,
@@ -396,7 +396,7 @@ class CityPickerState extends State<CityPickerWidget>
                     color: widget.tabIndicatorColor ??
                         Theme.of(context).primaryColor),
               )
-            : BoxDecoration(),
+            : const BoxDecoration(),
         indicatorColor:
             widget.tabIndicatorColor ?? Theme.of(context).primaryColor,
         unselectedLabelColor: widget.unselectedLabelColor ?? Colors.black54,
