@@ -1,0 +1,17 @@
+name: Gh-Pages
+
+on:
+  push:
+    branches: ["master"]
+
+jobs:
+  # Build job
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v1
+      - uses: bluefireteam/flutter-gh-pages@v7
+      
+      
