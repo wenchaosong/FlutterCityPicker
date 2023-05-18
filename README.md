@@ -7,7 +7,7 @@
 本库就是由此而来，数据从后台实时获取，只要解析成固定的数据结构就可以
 
 ### Demo
-[web 预览](https://wenchaosong.github.io/FlutterCityPicker/)
+[web 预览](https://github.com/wenchaosong/FlutterCityPicker/)
 
 [![](https://img.shields.io/badge/click_to_download_APK-FlutterCityPicker-ff69b4)](https://github.com/wenchaosong/FlutterCityPicker/releases/download/v2.0.0/app-release.apk)
 
