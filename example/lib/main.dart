@@ -404,25 +404,22 @@ class HomeWidgetState extends State<HomeWidget>
   @override
   void onFinish(List<AddressNode> data) {
     debugPrint("onFinish");
-    if (data.isNotEmpty) {
+    String add = "";
+    for (var node in data) {
+      add += "${node.name} ";
+    }
+    if (add.isNotEmpty) {
       if (_currentType == 0) {
-        _addressProvince = data[0].name!;
+        _addressProvince = add;
         _selectProvince = data;
       } else if (_currentType == 1) {
-        _addressCity = data[0].name! + " " + data[1].name!;
+        _addressCity = add;
         _selectCity = data;
       } else if (_currentType == 2) {
-        _addressArea =
-            data[0].name! + " " + data[1].name! + " " + data[2].name!;
+        _addressArea = add;
         _selectArea = data;
       } else {
-        _addressStreet = data[0].name! +
-            " " +
-            data[1].name! +
-            " " +
-            data[2].name! +
-            " " +
-            data[3].name!;
+        _addressStreet = add;
         _selectStreet = data;
       }
 

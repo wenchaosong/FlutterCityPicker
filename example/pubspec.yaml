@@ -2,16 +2,17 @@ name: city_picker_example
 description: Demo for how to use the city_pickers plugin.
 
 environment:
-  sdk: ">=2.17.0 <3.0.0"
+  sdk: '>=3.1.5 <4.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
 
-  flutter_city_picker:
-    path: ../
-  provider: ^6.0.5
-  dio: ^5.1.1
+#  flutter_city_picker:
+#    path: ../
+  flutter_city_picker: ^2.0.1
+  provider: ^6.1.1
+  dio: ^5.3.3
   flutter_colorpicker: ^1.0.3
   lpinyin: ^2.0.3
 
