@@ -9,7 +9,7 @@
 ### Demo
 [web 预览](https://wenchaosong.github.io/FlutterCityPicker/)
 
-[![](https://img.shields.io/badge/click_to_download_APK-FlutterCityPicker-ff69b4)](https://github.com/wenchaosong/FlutterCityPicker/releases/download/v2.0.0/app-release.apk)
+[![](https://img.shields.io/badge/click_to_download_APK-FlutterCityPicker-ff69b4)](https://github.com/wenchaosong/FlutterCityPicker/releases/download/v2.1.1/app-release.apk)
 
 ![效果示例](https://img.alicdn.com/imgextra/i4/2315514881/O1CN01Y3VhZC1lvXyQ1bV6n_!!2315514881.gif)
 
