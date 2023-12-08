@@ -38,6 +38,8 @@ class CityPicker {
     double tabHeight = 40.0,
     // 是否显示指示器
     bool showTabIndicator = true,
+    // tab 间隔
+    double tabPadding = 10.0,
     // 指示器颜色
     Color? tabIndicatorColor,
     // 指示器高度
@@ -104,6 +106,7 @@ class CityPicker {
             closeWidget: closeWidget,
             tabHeight: tabHeight,
             showTabIndicator: showTabIndicator,
+            tabPadding: tabPadding,
             tabIndicatorColor: tabIndicatorColor,
             tabIndicatorHeight: tabIndicatorHeight,
             labelTextSize: labelTextSize,

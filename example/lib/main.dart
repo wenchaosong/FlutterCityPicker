@@ -1,12 +1,12 @@
 import 'dart:async';
 
-import 'package:city_picker_example/http/http_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_city_picker/city_picker.dart';
 import 'package:flutter_city_picker/model/address.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:provider/provider.dart';
 
+import 'http/http_util.dart';
 import 'provider/theme_provider.dart';
 import 'view/item_text.dart';
 
@@ -28,6 +28,10 @@ class MyApp extends StatelessWidget {
             theme: ThemeData(
               primaryColor: color,
               dialogBackgroundColor: Colors.white,
+              bottomSheetTheme: BottomSheetThemeData(
+                  constraints: BoxConstraints(
+                maxWidth: MediaQuery.of(context).size.width,
+              )),
             ),
             home: HomeWidget(),
           );
@@ -89,21 +93,19 @@ class HomeWidgetState extends State<HomeWidget>
       corner: _corner,
       backgroundColor: _backgroundColor,
       paddingLeft: 15,
-      titleWidget: Container(
-        padding: EdgeInsets.only(left: 15),
-        child: Text(
-          '请选择地址',
-          style: TextStyle(
-            color: Colors.black54,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
+      titleWidget: Text(
+        '请选择地址',
+        style: TextStyle(
+          color: Colors.black54,
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
         ),
       ),
       selectText: "请选择",
       closeWidget: Icon(Icons.close),
       tabHeight: 40,
       showTabIndicator: _showTabIndicator,
+      tabPadding: 15,
       tabIndicatorColor: Theme.of(context).primaryColor,
       tabIndicatorHeight: 2,
       labelTextSize: 15,
@@ -408,22 +410,20 @@ class HomeWidgetState extends State<HomeWidget>
     for (var node in data) {
       add += "${node.name} ";
     }
-    if (add.isNotEmpty) {
-      if (_currentType == 0) {
-        _addressProvince = add;
-        _selectProvince = data;
-      } else if (_currentType == 1) {
-        _addressCity = add;
-        _selectCity = data;
-      } else if (_currentType == 2) {
-        _addressArea = add;
-        _selectArea = data;
-      } else {
-        _addressStreet = add;
-        _selectStreet = data;
-      }
-
-      setState(() {});
+    if (_currentType == 0) {
+      _addressProvince = add;
+      _selectProvince = data;
+    } else if (_currentType == 1) {
+      _addressCity = add;
+      _selectCity = data;
+    } else if (_currentType == 2) {
+      _addressArea = add;
+      _selectArea = data;
+    } else {
+      _addressStreet = add;
+      _selectStreet = data;
     }
+
+    setState(() {});
   }
 }

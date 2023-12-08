@@ -1,3 +1,8 @@
+## 2.1.0
+
+- update sdk
+- add tab padding
+
 ## 2.0.1
 
 - fix fast click

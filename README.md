@@ -17,7 +17,7 @@
 
 ```
 dependencies:
-    flutter_city_picker: ^2.0.1
+    flutter_city_picker: ^2.1.0
 ```
 
 #### 使用方法
@@ -69,6 +69,8 @@ dependencies:
           tabHeight: 40,
           // 是否显示指示器
           showTabIndicator: _showTabIndicator,
+          // tab 间隔
+          tabPadding: 15,
           // tab 指示器颜色
           tabIndicatorColor: Theme.of(context).primaryColor,
           // tab 指示器高度

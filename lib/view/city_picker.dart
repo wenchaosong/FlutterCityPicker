@@ -42,6 +42,9 @@ class CityPickerWidget extends StatefulWidget {
   /// 是否显示 indicator
   final bool? showTabIndicator;
 
+  /// tab 间隔
+  final double? tabPadding;
+
   /// indicator 颜色
   final Color? tabIndicatorColor;
 
@@ -114,6 +117,7 @@ class CityPickerWidget extends StatefulWidget {
     this.closeWidget,
     this.tabHeight,
     this.showTabIndicator,
+    this.tabPadding,
     this.tabIndicatorColor,
     this.tabIndicatorHeight,
     this.labelTextSize,
@@ -321,15 +325,19 @@ class CityPickerState extends State<CityPickerWidget>
   Widget build(BuildContext context) {
     return SizedBox(
         height: widget.height,
-        child: Column(children: <Widget>[
-          _topTextWidget(),
-          Expanded(
-            child: Column(children: <Widget>[
-              _middleTabWidget(),
-              Expanded(child: _bottomListWidget())
-            ]),
-          )
-        ]));
+        child: Column(
+          children: [
+            _topTextWidget(),
+            Expanded(
+              child: Column(
+                children: [
+                  _middleTabWidget(),
+                  Expanded(child: _bottomListWidget())
+                ],
+              ),
+            )
+          ],
+        ));
   }
 
   /// 头部文字组件
@@ -337,35 +345,35 @@ class CityPickerState extends State<CityPickerWidget>
     return Container(
       height: widget.titleHeight,
       decoration: BoxDecoration(
-          color:
-              widget.backgroundColor ?? Theme.of(context).dialogBackgroundColor,
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(widget.corner!),
-              topRight: Radius.circular(widget.corner!))),
+        color:
+            widget.backgroundColor ?? Theme.of(context).dialogBackgroundColor,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(widget.corner!),
+          topRight: Radius.circular(widget.corner!),
+        ),
+      ),
       child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            widget.titleWidget ??
-                Container(
-                  padding: EdgeInsets.only(left: widget.paddingLeft!),
-                  child: const Text(
-                    '请选择所在地区',
-                    style: TextStyle(
-                      color: Colors.black54,
-                      fontSize: 17,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+        children: [
+          SizedBox(width: widget.paddingLeft),
+          widget.titleWidget ??
+              const Text(
+                '请选择所在地区',
+                style: TextStyle(
+                  color: Colors.black54,
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold,
                 ),
-            InkWell(
-                onTap: () => {Navigator.pop(context)},
-                child: SizedBox(
-                  width: widget.titleHeight,
-                  height: double.infinity,
-                  child:
-                      widget.closeWidget ?? const Icon(Icons.close, size: 26),
-                )),
-          ]),
+              ),
+          Expanded(child: Container()),
+          InkWell(
+              onTap: () => Navigator.pop(context),
+              child: SizedBox(
+                width: widget.titleHeight,
+                height: double.infinity,
+                child: widget.closeWidget ?? const Icon(Icons.close, size: 26),
+              )),
+        ],
+      ),
     );
   }
 
@@ -387,14 +395,24 @@ class CityPickerState extends State<CityPickerWidget>
         },
         isScrollable: true,
         indicatorSize: TabBarIndicatorSize.tab,
-        labelPadding: EdgeInsets.only(left: widget.paddingLeft!),
+        tabAlignment: TabAlignment.start,
+        padding:
+            EdgeInsets.only(left: widget.paddingLeft! - widget.tabPadding! / 2),
+        indicatorPadding: EdgeInsets.only(
+          left: widget.tabPadding! / 2,
+          right: widget.tabPadding! / 2,
+        ),
+        labelPadding: EdgeInsets.only(
+          left: widget.tabPadding! / 2,
+          right: widget.tabPadding! / 2,
+        ),
         indicator: widget.showTabIndicator!
             ? UnderlineTabIndicator(
-                insets: EdgeInsets.only(left: widget.paddingLeft!),
                 borderSide: BorderSide(
-                    width: widget.tabIndicatorHeight!,
-                    color: widget.tabIndicatorColor ??
-                        Theme.of(context).primaryColor),
+                  width: widget.tabIndicatorHeight!,
+                  color: widget.tabIndicatorColor ??
+                      Theme.of(context).primaryColor,
+                ),
               )
             : const BoxDecoration(),
         indicatorColor:
@@ -402,8 +420,10 @@ class CityPickerState extends State<CityPickerWidget>
         unselectedLabelColor: widget.unselectedLabelColor ?? Colors.black54,
         labelColor: widget.selectedLabelColor ?? Theme.of(context).primaryColor,
         tabs: _myTabs.map((data) {
-          return Text(data.title!,
-              style: TextStyle(fontSize: widget.labelTextSize));
+          return Text(
+            data.title!,
+            style: TextStyle(fontSize: widget.labelTextSize),
+          );
         }).toList(),
       ),
     );

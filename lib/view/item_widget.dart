@@ -202,9 +202,11 @@ class ItemWidgetState extends State<ItemWidget>
                   ),
                   alignment: Alignment.centerLeft,
                   padding: EdgeInsets.only(left: widget.paddingLeft!),
-                  child: Text(_mList[sectionIndex].letter!,
-                      style: widget.itemHeadTextStyle ??
-                          const TextStyle(fontSize: 15, color: Colors.black)),
+                  child: Text(
+                    _mList[sectionIndex].letter!,
+                    style: widget.itemHeadTextStyle ??
+                        const TextStyle(fontSize: 15, color: Colors.black),
+                  ),
                 );
               },
               itemBuilder: (context, sectionIndex, itemIndex, index) {
@@ -224,7 +226,7 @@ class ItemWidgetState extends State<ItemWidget>
                     height: widget.itemHeight,
                     padding: EdgeInsets.only(left: widget.paddingLeft!),
                     alignment: Alignment.centerLeft,
-                    child: Row(children: <Widget>[
+                    child: Row(children: [
                       Offstage(
                         offstage: !isSelect,
                         child: widget.itemSelectedIconWidget ??
@@ -237,12 +239,15 @@ class ItemWidgetState extends State<ItemWidget>
                           style: isSelect
                               ? widget.itemSelectedTextStyle ??
                                   TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
-                                      color: Theme.of(context).primaryColor)
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: Theme.of(context).primaryColor,
+                                  )
                               : widget.itemUnSelectedTextStyle ??
                                   const TextStyle(
-                                      fontSize: 14, color: Colors.black54))
+                                    fontSize: 14,
+                                    color: Colors.black54,
+                                  ))
                     ]),
                   ),
                 );
@@ -305,35 +310,34 @@ class ItemWidgetState extends State<ItemWidget>
       height: (index == 0 || index == _mList.length - 1)
           ? widget.indexBarItemHeight! + 2
           : widget.indexBarItemHeight!,
-      alignment: type == 2
-          ? Alignment.bottomCenter
-          : type == 3
-              ? Alignment.topCenter
-              : Alignment.center,
+      alignment: Alignment.center,
       padding: type == 2
-          ? const EdgeInsets.only(bottom: 2)
+          ? const EdgeInsets.only(top: 1)
           : type == 3
-              ? const EdgeInsets.only(top: 2)
+              ? const EdgeInsets.only(bottom: 1)
               : const EdgeInsets.all(0),
       decoration: BoxDecoration(
-          color: widget.indexBarBackgroundColor,
-          borderRadius: BorderRadius.only(
-            topLeft: (type == 1 || type == 2)
-                ? const Radius.circular(50)
-                : const Radius.circular(0),
-            topRight: (type == 1 || type == 2)
-                ? const Radius.circular(50)
-                : const Radius.circular(0),
-            bottomLeft: (type == 1 || type == 3)
-                ? const Radius.circular(50)
-                : const Radius.circular(0),
-            bottomRight: (type == 1 || type == 3)
-                ? const Radius.circular(50)
-                : const Radius.circular(0),
-          )),
-      child: Text(_mList[index].letter!,
-          style: widget.indexBarTextStyle ??
-              const TextStyle(fontSize: 14, color: Colors.black54)),
+        color: widget.indexBarBackgroundColor,
+        borderRadius: BorderRadius.only(
+          topLeft: (type == 1 || type == 2)
+              ? const Radius.circular(50)
+              : const Radius.circular(0),
+          topRight: (type == 1 || type == 2)
+              ? const Radius.circular(50)
+              : const Radius.circular(0),
+          bottomLeft: (type == 1 || type == 3)
+              ? const Radius.circular(50)
+              : const Radius.circular(0),
+          bottomRight: (type == 1 || type == 3)
+              ? const Radius.circular(50)
+              : const Radius.circular(0),
+        ),
+      ),
+      child: Text(
+        _mList[index].letter!,
+        style: widget.indexBarTextStyle ??
+            const TextStyle(fontSize: 14, color: Colors.black54),
+      ),
     );
   }
 
