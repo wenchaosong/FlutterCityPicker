@@ -1,3 +1,7 @@
+## 2.1.1
+
+- remove divide
+
 ## 2.1.0
 
 - update sdk

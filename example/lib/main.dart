@@ -406,6 +406,7 @@ class HomeWidgetState extends State<HomeWidget>
   @override
   void onFinish(List<AddressNode> data) {
     debugPrint("onFinish");
+
     String add = "";
     for (var node in data) {
       add += "${node.name} ";
@@ -423,7 +424,6 @@ class HomeWidgetState extends State<HomeWidget>
       _addressStreet = add;
       _selectStreet = data;
     }
-
     setState(() {});
   }
 }

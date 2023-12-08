@@ -406,6 +406,7 @@ class CityPickerState extends State<CityPickerWidget>
           left: widget.tabPadding! / 2,
           right: widget.tabPadding! / 2,
         ),
+        dividerHeight: 0,
         indicator: widget.showTabIndicator!
             ? UnderlineTabIndicator(
                 borderSide: BorderSide(
