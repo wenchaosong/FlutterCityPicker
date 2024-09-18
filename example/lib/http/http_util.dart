@@ -6,11 +6,11 @@ import 'model.dart';
 
 class HttpUtils {
   static Future<List<AddressNode>> getCityData(String keywords) async {
-    var url = 'https://restapi.amap.com/v3/config/district';
+    var url = 'Your key or other api';
     var param = {
       "keywords": keywords,
       "subdistrict": 1,
-      "key": "6c8a3421379a8f7aa41e452175355c4b",
+      "key": "Your key or other api",
     };
     var dio = Dio();
     Response response = await dio.request(url, queryParameters: param);
